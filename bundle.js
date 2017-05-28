@@ -127,9 +127,9 @@ var Game = function () {
       window.addEventListener("keydown", function (event) {
         _this.keyStatus[event.key] = true;
         var direction = _this.assignDirection();
-        if (!_this.collides(_this.point.nextPos(direction))) {
-          _this.point.move(direction);
-        }
+        // if (!this.collides(this.point.nextPos(direction))){
+        _this.point.move(direction);
+        // }
       });
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
@@ -280,8 +280,7 @@ var Point = function () {
 
       console.log("WAVY");
       var counter = 10;
-      _ray2.default.DIRECTIONS.map(function (dir) {
-        // console.log(dir);
+      _ray2.default.DIRECTIONS.forEach(function (dir) {
         new _ray2.default(_this.c, _this.pos, dir[0] * 10, dir[1] * 10, board);
       });
 
@@ -355,6 +354,7 @@ var Ray = function () {
     this.head = startPos;
     this.tail = startPos;
     this.c.beginPath();
+    this.startPos = startPos;
     this.c.moveTo(startPos[0], startPos[1]);
     this.c.lineTo(startPos[0] + xDir, startPos[1] + yDir);
     this.c.strokeStyle = "blue";
@@ -362,18 +362,23 @@ var Ray = function () {
     this.xDir = xDir;
     this.yDir = yDir;
     this.board = board;
+    this.draw();
   }
 
   _createClass(Ray, [{
     key: "grow",
     value: function grow() {
+      this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+    }
+  }, {
+    key: "draw",
+    value: function draw() {
       while (this.lifespan > 0) {
-        // this.c.beginPath();
-        this.c.moveTo(this.startPos);
-        this.head[0] += this.xDir;
-        this.head[1] += this.yDir;
+        var oldHead = this.head;
+        this.c.beginPath();
+        this.c.moveTo(oldHead[0], oldHead[1]);
+        this.grow();
         this.c.lineTo(this.head[0], this.head[1]);
-        this.c.strokeStyle = "blue";
         this.c.stroke();
         this.lifespan -= 1;
       }

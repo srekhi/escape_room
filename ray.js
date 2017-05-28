@@ -6,6 +6,7 @@ class Ray {
     this.head = startPos;
     this.tail = startPos;
     this.c.beginPath();
+    this.startPos = startPos;
     this.c.moveTo(startPos[0], startPos[1]);
     this.c.lineTo(startPos[0] + xDir, startPos[1] + yDir);
     this.c.strokeStyle = "blue";
@@ -13,16 +14,20 @@ class Ray {
     this.xDir = xDir;
     this.yDir = yDir;
     this.board = board;
+    this.draw();
   }
 
   grow(){
+    this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+  }
+
+  draw(){
     while (this.lifespan > 0){
-      // this.c.beginPath();
-      this.c.moveTo(this.startPos);
-      this.head[0] += this.xDir;
-      this.head[1] += this.yDir;
+      let oldHead = this.head;
+      this.c.beginPath();
+      this.c.moveTo(oldHead[0], oldHead[1]);
+      this.grow();
       this.c.lineTo(this.head[0], this.head[1]);
-      this.c.strokeStyle = "blue";
       this.c.stroke();
       this.lifespan -= 1;
     }

@@ -21,9 +21,9 @@ class Game {
     window.addEventListener("keydown", event => {
       this.keyStatus[event.key] = true;
       let direction = this.assignDirection();
-      if (!this.collides(this.point.nextPos(direction))){
+      // if (!this.collides(this.point.nextPos(direction))){
           this.point.move(direction);
-        }
+        // }
       });
     window.addEventListener("keydown", event => {
       if (event.key === " ") {
