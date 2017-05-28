@@ -127,11 +127,8 @@ var Game = function () {
       var self = this;
       window.addEventListener("keydown", function (event) {
         _this.keyStatus[event.key] = true;
-        var direction = _this.assignDirection();
-        if (!_this.collides(_this.point.nextPos(direction))) {
-          _this.point.move(direction);
-        }
       });
+
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
           event.preventDefault();
@@ -140,21 +137,24 @@ var Game = function () {
       });
       window.addEventListener("keyup", function (event) {
         _this.keyStatus[event.key] = false;
-        // this.point.stopMoving();
       });
     }
-
-    // start(){
-    //   requestAnimationFrame(this.step);
-    // }
-
+  }, {
+    key: 'analyzeKeyMap',
+    value: function analyzeKeyMap() {
+      var direction = this.assignDirection();
+      if (!this.collides(this.point.nextPos(direction))) {
+        this.point.move(direction);
+      }
+    }
   }, {
     key: 'step',
     value: function step() {
       //clear out the board
+      // this.keyStatus = {};
       this.context.fillStyle = "#222";
       this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
-      // console.log('steppin');
+      this.analyzeKeyMap();
       this.board.draw(); //will redraw board based on position of everything.
       requestAnimationFrame(this.step);
     }
@@ -256,8 +256,8 @@ var Point = function () {
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
-    this.draw();
-    this.animate = this.animate.bind(this);
+    // this.draw();
+    // this.animate = this.animate.bind(this);
     this.movementDeltas = {
       "NW": [-this.dx, this.dy],
       "SW": [-this.dx, -this.dy],
@@ -319,20 +319,18 @@ var Point = function () {
       this.moving = false;
       window.cancelAnimationFrame(window.animationFrameId);
     }
-  }, {
-    key: 'animate',
-    value: function animate(direction) {
-      var _this2 = this;
 
-      // this.c.clearRect(0, 0, innerHeight, innerWidth);
-      this.move(direction);
-      window.animationFrameId = window.requestAnimationFrame(function () {
-        if (_this2.moving) {
-          _this2.animate(direction);
-          if (_this2.collides()) _this2.stopMoving();
-        }
-      });
-    }
+    // animate(direction){
+    //   // this.c.clearRect(0, 0, innerHeight, innerWidth);
+    //   this.move(direction);
+    //   window.animationFrameId = window.requestAnimationFrame(() =>{
+    //     if (this.moving){
+    //       this.animate(direction);
+    //       if (this.collides()) this.stopMoving();
+    //     }
+    //   });
+    // }
+
   }]);
 
   return Point;

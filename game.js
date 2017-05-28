@@ -21,11 +21,8 @@ class Game {
     const self = this;
     window.addEventListener("keydown", event => {
       this.keyStatus[event.key] = true;
-      let direction = this.assignDirection();
-      if (!this.collides(this.point.nextPos(direction))){
-          this.point.move(direction);
-        }
-      });
+    });
+
     window.addEventListener("keydown", event => {
       if (event.key === " ") {
           event.preventDefault();
@@ -34,19 +31,22 @@ class Game {
     });
     window.addEventListener("keyup", event => {
       this.keyStatus[event.key] = false;
-      // this.point.stopMoving();
     });
   }
 
-  // start(){
-  //   requestAnimationFrame(this.step);
-  // }
+  analyzeKeyMap(){
+    let direction = this.assignDirection();
+    if (!this.collides(this.point.nextPos(direction))){
+        this.point.move(direction);
+      }
+    }
 
   step(){
     //clear out the board
+    // this.keyStatus = {};
     this.context.fillStyle = "#222";
     this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    // console.log('steppin');
+    this.analyzeKeyMap();
     this.board.draw(); //will redraw board based on position of everything.
     requestAnimationFrame(this.step);
   }

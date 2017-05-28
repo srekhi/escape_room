@@ -8,8 +8,8 @@ class Point {
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
-    this.draw();
-    this.animate = this.animate.bind(this);
+    // this.draw();
+    // this.animate = this.animate.bind(this);
     this.movementDeltas = {
       "NW": [-this.dx, this.dy],
       "SW": [-this.dx, -this.dy],
@@ -64,15 +64,15 @@ class Point {
     window.cancelAnimationFrame(window.animationFrameId);
   }
 
-  animate(direction){
-    // this.c.clearRect(0, 0, innerHeight, innerWidth);
-    this.move(direction);
-    window.animationFrameId = window.requestAnimationFrame(() =>{
-      if (this.moving){
-        this.animate(direction);
-        if (this.collides()) this.stopMoving();
-      }
-    });
-  }
+  // animate(direction){
+  //   // this.c.clearRect(0, 0, innerHeight, innerWidth);
+  //   this.move(direction);
+  //   window.animationFrameId = window.requestAnimationFrame(() =>{
+  //     if (this.moving){
+  //       this.animate(direction);
+  //       if (this.collides()) this.stopMoving();
+  //     }
+  //   });
+  // }
 }
 export default Point;
