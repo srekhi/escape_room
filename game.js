@@ -15,28 +15,51 @@ class Game {
     let level = new Level(context, walls);
     level.draw();
     point.draw();
+    this.keyStatus = {}; //keep tally of which keys are pressed down.
     this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
-    document.addEventListener("keydown", event => {
-      let direction;
-      if (this.directions[event.key]){
-        direction = this.directions[event.key];
-      }else if (event.key === " "){
-        for (var i = 0; i < 10; i++) {
-          let ray = new Ray(context, this.point.pos);
-          ray.grow();
-          return;
-        }
-      } else {
-        direction = "";
-      }
+    this.createEventListeners();
+  }
+  createEventListeners(){
+    window.addEventListener("keydown", event => {
+      let direction = this.directions[event.key] || "";
+      if (this.directions[event.key]) this.keyStatus[event.key] = true;
       if (!this.collides(this.point.nextPos(direction))){
-        this.point.move(direction);
-      }
+          this.assignDirection();
+        }
+      });
+    window.addEventListener("keydown", event => {
+      if (event.key === " ") {
+          event.preventDefault();
+          this.point.makeSound();
+        }
     });
+    window.addEventListener("keyup", event => {
+      this.keyStatus[event.key] = false;
+      // this.point.stopMoving();
+    });
+  }
 
-    document.addEventListener("keyup", event => {
-      point.stopMoving();
-    });
+  assignDirection(){
+      let dir;
+      dir = ( dir => {
+      if (this.keyStatus["w'"] && this.keyStatus["a"]) {
+          return "NW";
+      } else if (this.keyStatus["a"] && this.keyStatus["s"]){
+          dir =  "SW";
+      } else if (this.keyStatus["w"] && this.keyStatus["d"]){
+          dir = "NE";
+      } else if (this.keyStatus["d"] && this.keyStatus["s"]){
+          dir = "SE";
+      } else if (this.keyStatus["a"]) {
+        this.point.move("W");
+      } else if (this.keyStatus["d"]) {
+        this.point.move("E");
+      } else if (this.keyStatus["w"]) {
+        this.point.move("N");
+      } else if (this.keyStatus["s"]) {
+        this.point.move("S");
+      }
+    }
   }
 
   collides(coords){

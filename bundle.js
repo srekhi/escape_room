@@ -226,7 +226,16 @@ var Point = function () {
     this.moving = false;
     this.draw();
     this.animate = this.animate.bind(this);
-    this.deltas = { "right": this.dx, "left": this.dx * -1, "up": this.dy, "down": -1 * this.dy };
+    this.movementDeltas = {
+      "NW": [-this.dx, this.dy],
+      "SW": [-this.dx, -this.dy],
+      "NE": [this.dx, this.dy],
+      "SE": [this.dx, -this.dy],
+      "W": [-this.dx, 0],
+      "E": [this.dx, 0],
+      "N": [0, this.dy],
+      "S": [0, -this.dy]
+    };
   }
 
   _createClass(Point, [{
@@ -244,24 +253,24 @@ var Point = function () {
     value: function move(direction) {
       var delta = void 0;
       this.moving = true;
-      delta = this.deltas[direction];
-      if (direction === "right" || direction === "left") {
-        this.pos[0] += delta;
-      } else if (direction === "up" || direction === "down") {
-        this.pos[1] += delta;
-      }
+      delta = this.movementDeltas[direction];
+      this.pos = this.nextPos(direction);
       this.draw();
+    }
+  }, {
+    key: "makeSound",
+    value: function makeSound() {
+      console.log("WAVY");
+      //make the rays here.
     }
   }, {
     key: "nextPos",
     value: function nextPos(direction) {
-      if (direction === "right" || direction === "left") {
-        return [this.pos[0] + this.deltas[direction], this.pos[1]];
-      } else if (direction === "up" || direction === "down") {
-        return [this.pos[0], this.pos[1] + this.deltas[direction]];
-      } else {
-        return this.pos;
-      }
+      var delta = void 0;
+      delta = this.movementDeltas[direction];
+      return this.pos.map(function (posDir, index) {
+        return posDir + delta[index];
+      });
     }
   }, {
     key: "stopMoving",
@@ -320,7 +329,9 @@ var Ray = function () {
     this.tail = startPos;
     this.c.beginPath();
     this.c.moveTo(startPos[0], startPos[1]);
+    this.c.lineTo(startPos[0] + 10, startPos[1] + 10);
     this.c.strokeStyle = "blue";
+    this.c.stroke();
     this.xGrowthFactor = xGrowthFactor;
     this.yGrowthFactor = yGrowthFactor;
   }
@@ -329,17 +340,19 @@ var Ray = function () {
     key: "grow",
     value: function grow() {
       while (this.lifespan > 0) {
-        this.head[0] += this.yGrowthFactor;
-        this.head[1] += this.xGrowthFactor;
+        console.log(this.lifespan);
+        this.head[0] += this.xGrowthFactor;
+        this.head[1] += this.yGrowthFactor;
         this.c.lineTo(this.head[0], this.head[1]);
         this.c.strokeStyle = "blue";
         this.c.stroke();
         this.lifespan -= 1;
+        console.log(this.head[0], this.head[1]);
       }
     }
   }, {
     key: "handleCollision",
-    value: function handleCollision(wall) {}
+    value: function handleCollision() {}
   }]);
 
   return Ray;
@@ -349,120 +362,10 @@ exports.default = Ray;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _wall = __webpack_require__(0);
-
-var _wall2 = _interopRequireDefault(_wall);
-
-var _level = __webpack_require__(2);
-
-var _level2 = _interopRequireDefault(_level);
-
-var _point = __webpack_require__(3);
-
-var _point2 = _interopRequireDefault(_point);
-
-var _ray = __webpack_require__(4);
-
-var _ray2 = _interopRequireDefault(_ray);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// let walls = [
-//   new Wall(0, 0, window.innerWidth /2, window.innerHeight / 2),
-//   new Wall(0, window.innerHeight/2 + 50, window.innerWidth, window.innerHeight / 2),
-//   new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight)
-// ];
-var Game = function () {
-  function Game(context, walls, point) {
-    var _this = this;
-
-    _classCallCheck(this, Game);
-
-    this.context = context;
-    this.walls = walls;
-    this.point = point;
-    var level = new _level2.default(context, walls);
-    level.draw();
-    point.draw();
-    this.directions = { "w": "up", "s": "down", "d": "right", "a": "left" };
-    document.addEventListener("keydown", function (event) {
-      var direction = void 0;
-      if (_this.directions[event.key]) {
-        direction = _this.directions[event.key];
-      } else if (event.key === " ") {
-        for (var i = 0; i < 10; i++) {
-          var ray = new _ray2.default(context, _this.point.pos);
-          ray.grow();
-          return;
-        }
-      } else {
-        direction = "";
-      }
-      if (!_this.collides(_this.point.nextPos(direction))) {
-        _this.point.move(direction);
-      }
-    });
-
-    document.addEventListener("keyup", function (event) {
-      point.stopMoving();
-    });
-  }
-
-  _createClass(Game, [{
-    key: 'collides',
-    value: function collides(coords) {
-      return this.walls.some(function (wall) {
-        return !(coords[0] < wall.topLeft[0] || coords[0] > wall.bottomRight[0] || coords[1] < wall.topLeft[1] || coords[1] > wall.bottomRight[1]);
-      }); //if any of these 4 conditions are met, no collision.
-    }
-  }]);
-
-  return Game;
-}();
-
-exports.default = Game;
-
-//   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
-//   let level1 = new Level(ctx, walls);
-//   level1.draw();
-//   p.draw();
-//   document.addEventListener("keypress", event => {
-//     if (event.key === "w"){
-//       animate(p,"up");
-//     }else if (event.key === "a") {
-//       animate(p,"left");
-//     }else if (event.key === "s"){
-//       animate(p,"down");
-//     }else if (event.key === "d"){
-//       animate(p,"right");
-//     }else if (event.key === " "){
-//       let ray = new Ray(ctx, p.pos);
-//       ray.grow();
-//     }
-//   });
-// });
-//
-//
-// function animate(point, direction){
-//   console.log(direction);
-//   point.move(direction);
-//   requestAnimationFrame(() =>{
-//     animate(point, direction);
-//   });
-// }
+throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (63:2)\n\n\u001b[0m \u001b[90m 61 | \u001b[39m      }\n \u001b[90m 62 | \u001b[39m    }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 63 | \u001b[39m  }\n \u001b[90m    | \u001b[39m  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 64 | \u001b[39m\n \u001b[90m 65 | \u001b[39m  collides(coords){\n \u001b[90m 66 | \u001b[39m    \u001b[36mreturn\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mwalls\u001b[33m.\u001b[39msome( wall \u001b[33m=>\u001b[39m {\u001b[0m\n");
 
 /***/ })
 /******/ ]);

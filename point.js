@@ -8,7 +8,16 @@ class Point {
     this.moving = false;
     this.draw();
     this.animate = this.animate.bind(this);
-    this.deltas = { "right": this.dx, "left": this.dx * -1, "up": this.dy, "down": -1 * this.dy};
+    this.movementDeltas = {
+      "NW": [-this.dx, this.dy],
+      "SW": [-this.dx, -this.dy],
+      "NE": [this.dx, this.dy],
+      "SE": [this.dx, -this.dy],
+      "W": [-this.dx, 0],
+      "E": [this.dx, 0],
+      "N": [0, this.dy],
+      "S": [0, -this.dy]
+     };
   }
 
   draw(){
@@ -23,25 +32,20 @@ class Point {
   move(direction){
     let delta;
     this.moving = true;
-    delta = this.deltas[direction];
-    if (direction === "right" || direction === "left"){
-      this.pos[0] += delta;
-    }
-    else if (direction === "up" || direction === "down"){
-      this.pos[1] += delta;
-    }
+    delta = this.movementDeltas[direction];
+    this.pos = this.nextPos(direction);
     this.draw();
   }
 
+  makeSound(){
+    console.log("WAVY");
+    //make the rays here.
+  }
+
   nextPos(direction){
-    if (direction === "right" || direction === "left"){
-      return [this.pos[0] + this.deltas[direction], this.pos[1]];
-    }
-    else if (direction === "up" || direction === "down"){
-      return [this.pos[0], this.pos[1] + this.deltas[direction]];
-    } else {
-      return this.pos;
-    }
+    let delta;
+    delta = this.movementDeltas[direction];
+    return this.pos.map((posDir, index) => posDir + delta[index]);
   }
 
   stopMoving(){
