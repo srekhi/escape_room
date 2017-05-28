@@ -20,6 +20,7 @@ class Board {
   }
 
   advanceRays(){ //each step reduces the rays lifetimes by 1.
+    this.rays = this.removeDeadRays();
     this.rays.forEach(ray =>
       ray.draw()
     );

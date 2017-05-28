@@ -373,6 +373,7 @@ var Ray = function () {
     this.startPos = startPos;
     this.c.moveTo(startPos[0], startPos[1]);
     this.c.lineTo(startPos[0] + xDir, startPos[1] + yDir);
+    this.lifespan -= 1;
     this.c.strokeStyle = "blue";
     this.c.stroke();
     this.xDir = xDir;
@@ -385,8 +386,9 @@ var Ray = function () {
   _createClass(Ray, [{
     key: "grow",
     value: function grow() {
-      if (!this.collision()) {
+      if (this.lifespan > 0 && !this.collision()) {
         this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+        this.lifespan -= 1;
         return true;
       } else {
         return false;
@@ -401,7 +403,6 @@ var Ray = function () {
       if (this.grow()) {
         this.c.lineTo(this.head[0], this.head[1]);
         this.c.stroke();
-        this.lifespan -= 1;
       }
     }
   }, {
@@ -418,7 +419,7 @@ var Ray = function () {
 
       var newHeadY = this.head[1] + this.yDir;
       var newYPoint = [this.head[0], newHeadY];
-
+      console.log(this.lifespan);
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
       if (xCollision || yCollision) {
@@ -430,7 +431,7 @@ var Ray = function () {
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         }
-        var reflection = new Ray(this.c, this.lifespan, this.head, newXDir, newYDir, this.board);
+        var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board);
         this.board.rays.push(reflection);
         this.xDir = 0;
         this.yDir = 0;
@@ -556,6 +557,7 @@ var Board = function () {
     key: 'advanceRays',
     value: function advanceRays() {
       //each step reduces the rays lifetimes by 1.
+      this.rays = this.removeDeadRays();
       this.rays.forEach(function (ray) {
         return ray.draw();
       });

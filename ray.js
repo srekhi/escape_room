@@ -9,6 +9,7 @@ class Ray {
     this.startPos = startPos;
     this.c.moveTo(startPos[0], startPos[1]);
     this.c.lineTo(startPos[0] + xDir, startPos[1] + yDir);
+    this.lifespan -=1 ;
     this.c.strokeStyle = "blue";
     this.c.stroke();
     this.xDir = xDir;
@@ -19,8 +20,9 @@ class Ray {
   }
 
   grow(){
-    if (!this.collision()){
+    if (this.lifespan > 0 && !this.collision()){
       this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+      this.lifespan -=1;
       return true;
     } else {
       return false;
@@ -34,7 +36,6 @@ class Ray {
     if (this.grow()){
       this.c.lineTo(this.head[0], this.head[1]);
       this.c.stroke();
-      this.lifespan -= 1;
     }
   }
 
@@ -50,7 +51,7 @@ class Ray {
 
     const newHeadY = this.head[1] + (this.yDir);
     const newYPoint = [this.head[0], newHeadY];
-
+    console.log(this.lifespan);
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
     if (xCollision || yCollision){
@@ -62,7 +63,7 @@ class Ray {
       }else if (yCollision){
         newYDir = -1 * this.yDir;
       }
-      const reflection = new Ray(this.c, this.lifespan,this.head, newXDir, newYDir, this.board);
+      const reflection = new Ray(this.c, this.lifespan - 1,this.head, newXDir, newYDir, this.board);
       this.board.rays.push(reflection);
       this.xDir = 0;
       this.yDir = 0;
