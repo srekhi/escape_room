@@ -51,6 +51,8 @@ class Point {
       // ray.grow();
   }
 
+  
+
   nextPos(direction){
     let delta;
     delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant

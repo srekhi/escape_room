@@ -110,12 +110,13 @@ var Game = function () {
     this.context = context;
     this.board = board;
     this.point = point;
-    var level = new _level2.default(context, this.board.walls);
-    level.draw();
+
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
     // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
     this.createEventListeners();
+    this.step = this.step.bind(this);
+    this.step();
   }
 
   _createClass(Game, [{
@@ -141,6 +142,21 @@ var Game = function () {
         _this.keyStatus[event.key] = false;
         // this.point.stopMoving();
       });
+    }
+
+    // start(){
+    //   requestAnimationFrame(this.step);
+    // }
+
+  }, {
+    key: 'step',
+    value: function step() {
+      //clear out the board
+      this.context.fillStyle = "#222";
+      this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+      // console.log('steppin');
+      this.board.draw(); //will redraw board based on position of everything.
+      requestAnimationFrame(this.step);
     }
   }, {
     key: 'assignDirection',
@@ -363,6 +379,7 @@ var Ray = function () {
     this.yDir = yDir;
     this.board = board;
     this.draw();
+    this.board.rays.push(this);
   }
 
   _createClass(Ray, [{
@@ -378,17 +395,13 @@ var Ray = function () {
   }, {
     key: "draw",
     value: function draw() {
-      while (this.lifespan > 0) {
-        var oldHead = this.head;
-        this.c.beginPath();
-        this.c.moveTo(oldHead[0], oldHead[1]);
-        if (this.grow()) {
-          this.c.lineTo(this.head[0], this.head[1]);
-          this.c.stroke();
-          this.lifespan -= 1;
-        } else {
-          break;
-        }
+      var oldHead = this.head;
+      this.c.beginPath();
+      this.c.moveTo(oldHead[0], oldHead[1]);
+      if (this.grow()) {
+        this.c.lineTo(this.head[0], this.head[1]);
+        this.c.stroke();
+        this.lifespan -= 1;
       }
     }
   }, {
@@ -417,16 +430,11 @@ var Ray = function () {
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         }
-        // debugger;
         var reflection = new Ray(this.c, this.lifespan, this.head, newXDir, newYDir, this.board);
-
-        //cease moving current ray
+        this.board.rays.push(reflection);
         this.xDir = 0;
         this.yDir = 0;
 
-        //use the next position.
-        //check if reflects on x or y.
-        //adjust ray position accordingly.
         return true;
       } else {
         return false;
@@ -519,15 +527,24 @@ var _wall = __webpack_require__(3);
 
 var _wall2 = _interopRequireDefault(_wall);
 
+var _level = __webpack_require__(5);
+
+var _level2 = _interopRequireDefault(_level);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Board = function () {
-  function Board() {
+  function Board(ctx, point) {
     _classCallCheck(this, Board);
 
+    this.context = ctx;
+    this.point = point;
     this.walls = [new _wall2.default(0, 0, window.innerWidth / 2, window.innerHeight / 2), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight)];
+    var level = new _level2.default(this.context, this.walls);
+    this.level = level;
+    this.rays = []; //store all rays in the game.
   }
 
   _createClass(Board, [{
@@ -536,11 +553,33 @@ var Board = function () {
       return this.walls;
     }
   }, {
+    key: 'advanceRays',
+    value: function advanceRays() {
+      //each step reduces the rays lifetimes by 1.
+      this.rays.forEach(function (ray) {
+        return ray.draw();
+      });
+    }
+  }, {
+    key: 'removeDeadRays',
+    value: function removeDeadRays() {
+      return this.rays.filter(function (ray) {
+        return ray.lifespan > 0;
+      });
+    }
+  }, {
     key: 'collides',
     value: function collides(coords) {
       return this.walls.some(function (wall) {
         return !(coords[0] < wall.topLeft[0] || coords[0] > wall.bottomRight[0] || coords[1] < wall.topLeft[1] || coords[1] > wall.bottomRight[1]);
       });
+    }
+  }, {
+    key: 'draw',
+    value: function draw() {
+      this.point.draw();
+      this.advanceRays();
+      this.level.draw(); //draw the structure of the level
     }
   }]);
 
@@ -633,8 +672,8 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
-  var board = new _board2.default();
   var p = new _point2.default(ctx, [0, window.innerHeight / 2 + 25]);
+  var board = new _board2.default(ctx, p);
   window.game = new _game2.default(ctx, board, p);
 });
 

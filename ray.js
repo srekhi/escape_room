@@ -15,6 +15,7 @@ class Ray {
     this.yDir = yDir;
     this.board = board;
     this.draw();
+    this.board.rays.push(this);
   }
 
   grow(){
@@ -27,17 +28,13 @@ class Ray {
   }
 
   draw(){
-    while (this.lifespan > 0){
-      let oldHead = this.head;
-      this.c.beginPath();
-      this.c.moveTo(oldHead[0], oldHead[1]);
-      if (this.grow()){
-        this.c.lineTo(this.head[0], this.head[1]);
-        this.c.stroke();
-        this.lifespan -= 1;
-      } else{
-        break;
-      }
+    let oldHead = this.head;
+    this.c.beginPath();
+    this.c.moveTo(oldHead[0], oldHead[1]);
+    if (this.grow()){
+      this.c.lineTo(this.head[0], this.head[1]);
+      this.c.stroke();
+      this.lifespan -= 1;
     }
   }
 
@@ -65,16 +62,11 @@ class Ray {
       }else if (yCollision){
         newYDir = -1 * this.yDir;
       }
-      // debugger;
       const reflection = new Ray(this.c, this.lifespan,this.head, newXDir, newYDir, this.board);
-
-      //cease moving current ray
+      this.board.rays.push(reflection);
       this.xDir = 0;
       this.yDir = 0;
 
-      //use the next position.
-      //check if reflects on x or y.
-      //adjust ray position accordingly.
       return true;
     }else{
       return false;

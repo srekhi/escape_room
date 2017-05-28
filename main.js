@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext("2d");
-  const board = new Board();
   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
+  const board = new Board(ctx, p);
   window.game = new Game(ctx, board, p);
 });

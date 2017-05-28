@@ -9,12 +9,13 @@ class Game {
     this.context = context;
     this.board = board;
     this.point = point;
-    let level = new Level(context, this.board.walls);
-    level.draw();
+
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
     // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
     this.createEventListeners();
+    this.step = this.step.bind(this);
+    this.step();
   }
   createEventListeners(){
     const self = this;
@@ -35,6 +36,19 @@ class Game {
       this.keyStatus[event.key] = false;
       // this.point.stopMoving();
     });
+  }
+
+  // start(){
+  //   requestAnimationFrame(this.step);
+  // }
+
+  step(){
+    //clear out the board
+    this.context.fillStyle = "#222";
+    this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    // console.log('steppin');
+    this.board.draw(); //will redraw board based on position of everything.
+    requestAnimationFrame(this.step);
   }
 
   assignDirection() {
