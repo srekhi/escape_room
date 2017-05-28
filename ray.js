@@ -6,22 +6,30 @@ class Ray {
     this.head = startPos;
     this.tail = startPos;
     this.c.beginPath();
+    this.body = [this.startPos]; //records each point along the ray's line.
     this.startPos = startPos;
     this.c.moveTo(startPos[0], startPos[1]);
     this.c.lineTo(startPos[0] + xDir, startPos[1] + yDir);
-    this.lifespan -=1 ;
+    this.lifespan -= 1;
     this.c.strokeStyle = "blue";
+    this.maxLen = 50;
     this.c.stroke();
     this.xDir = xDir;
     this.yDir = yDir;
     this.board = board;
     this.draw();
     this.board.rays.push(this);
+    this.length = 0;
   }
 
   grow(){
     if (this.lifespan > 0 && !this.collision()){
       this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+      this.length += 1;
+      this.body.push(this.head);
+      if (this.length > this.maxLen){
+        this.fadeOut();
+      }
       this.lifespan -=1;
       return true;
     } else {
@@ -29,14 +37,25 @@ class Ray {
     }
   }
 
+  fadeOut(){
+    this.body.shift();
+    this.tail = this.body[0];
+    }
+
+  // length(){
+  //   let xDistance = this.head[0] - this.tail[0];
+  //   let yDistance = this.head[1] - this.tail[1];
+  //
+  //   return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+  // }
+
   draw(){
-    let oldHead = this.head;
     this.c.beginPath();
     this.c.moveTo(this.tail[0], this.tail[1]);
     if (this.grow()){
       this.c.lineTo(this.head[0], this.head[1]);
       let gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-      gradient.addColorStop(0, 'blue');
+      gradient.addColorStop(0, '#808080');
       gradient.addColorStop(1, 'white');
       this.c.strokeStyle = gradient;
       this.c.stroke();
@@ -55,7 +74,7 @@ class Ray {
 
     const newHeadY = this.head[1] + (this.yDir);
     const newYPoint = [this.head[0], newHeadY];
-    console.log(this.lifespan);
+    // console.log(this.lifespan);
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
     if (xCollision || yCollision){

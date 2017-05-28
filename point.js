@@ -1,6 +1,6 @@
 import Game from './game';
 import Ray from './ray';
-
+import Board from './board';
 class Point {
   constructor(context, startingPos){
     this.c = context;
@@ -8,6 +8,7 @@ class Point {
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
+    // this.board = board;
     // this.draw();
     // this.animate = this.animate.bind(this);
     this.movementDeltas = {
@@ -25,10 +26,14 @@ class Point {
   draw(){
     this.c.beginPath();
     this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
-    this.c.fillStyle = "blue";
-    this.c.strokeStyle = "blue";
+    this.c.fillStyle = "white";
+    this.c.strokeStyle = "white";
 
     this.c.stroke();
+  }
+
+  hasWon(){
+    // if this.pos[0]
   }
 
   move(direction){
@@ -43,7 +48,7 @@ class Point {
     console.log("WAVY");
     let counter = 10;
     Ray.DIRECTIONS.forEach(dir => {
-      new Ray(this.c, 50, this.pos, dir[0] * 10, dir[1] * 10, board);
+      new Ray(this.c, 100, this.pos, dir[0] * 3, dir[1] * 3, board);
     });
 
       // let ray = new Ray(this.c, this.pos, 1, 1, board);

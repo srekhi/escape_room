@@ -2,7 +2,15 @@ html, body, main {
   height: 100%;
   width: 100%;
 }
-canvas {
-  border: 1px solid black;
+#game-container {
+  width: 70vw;
+  height: 90vh;
   margin: 0 auto;
+  display: block;
+  background-color: black;
+  color: white;
+}
+
+.hidden {
+  visibility: hidden;
 }

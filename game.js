@@ -41,6 +41,10 @@ class Game {
       }
     }
 
+  hasWon(){
+    //check if player is out of bounds 
+  }
+
   step(){
     //clear out the board
     // this.keyStatus = {};

@@ -148,6 +148,11 @@ var Game = function () {
       }
     }
   }, {
+    key: 'hasWon',
+    value: function hasWon() {
+      //check if player is out of bounds 
+    }
+  }, {
     key: 'step',
     value: function step() {
       //clear out the board
@@ -243,6 +248,10 @@ var _ray = __webpack_require__(2);
 
 var _ray2 = _interopRequireDefault(_ray);
 
+var _board = __webpack_require__(4);
+
+var _board2 = _interopRequireDefault(_board);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -256,6 +265,7 @@ var Point = function () {
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
+    // this.board = board;
     // this.draw();
     // this.animate = this.animate.bind(this);
     this.movementDeltas = {
@@ -275,10 +285,15 @@ var Point = function () {
     value: function draw() {
       this.c.beginPath();
       this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
-      this.c.fillStyle = "blue";
-      this.c.strokeStyle = "blue";
+      this.c.fillStyle = "white";
+      this.c.strokeStyle = "white";
 
       this.c.stroke();
+    }
+  }, {
+    key: 'hasWon',
+    value: function hasWon() {
+      // if this.pos[0]
     }
   }, {
     key: 'move',
@@ -297,7 +312,7 @@ var Point = function () {
       console.log("WAVY");
       var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
-        new _ray2.default(_this.c, 50, _this.pos, dir[0] * 10, dir[1] * 10, board);
+        new _ray2.default(_this.c, 100, _this.pos, dir[0] * 3, dir[1] * 3, board);
       });
 
       // let ray = new Ray(this.c, this.pos, 1, 1, board);
@@ -368,17 +383,20 @@ var Ray = function () {
     this.head = startPos;
     this.tail = startPos;
     this.c.beginPath();
+    this.body = [this.startPos]; //records each point along the ray's line.
     this.startPos = startPos;
     this.c.moveTo(startPos[0], startPos[1]);
     this.c.lineTo(startPos[0] + xDir, startPos[1] + yDir);
     this.lifespan -= 1;
     this.c.strokeStyle = "blue";
+    this.maxLen = 50;
     this.c.stroke();
     this.xDir = xDir;
     this.yDir = yDir;
     this.board = board;
     this.draw();
     this.board.rays.push(this);
+    this.length = 0;
   }
 
   _createClass(Ray, [{
@@ -386,6 +404,11 @@ var Ray = function () {
     value: function grow() {
       if (this.lifespan > 0 && !this.collision()) {
         this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+        this.length += 1;
+        this.body.push(this.head);
+        if (this.length > this.maxLen) {
+          this.fadeOut();
+        }
         this.lifespan -= 1;
         return true;
       } else {
@@ -393,15 +416,28 @@ var Ray = function () {
       }
     }
   }, {
+    key: 'fadeOut',
+    value: function fadeOut() {
+      this.body.shift();
+      this.tail = this.body[0];
+    }
+
+    // length(){
+    //   let xDistance = this.head[0] - this.tail[0];
+    //   let yDistance = this.head[1] - this.tail[1];
+    //
+    //   return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+    // }
+
+  }, {
     key: 'draw',
     value: function draw() {
-      var oldHead = this.head;
       this.c.beginPath();
       this.c.moveTo(this.tail[0], this.tail[1]);
       if (this.grow()) {
         this.c.lineTo(this.head[0], this.head[1]);
         var gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-        gradient.addColorStop(0, 'blue');
+        gradient.addColorStop(0, '#808080');
         gradient.addColorStop(1, 'white');
         this.c.strokeStyle = gradient;
         this.c.stroke();
@@ -421,7 +457,7 @@ var Ray = function () {
 
       var newHeadY = this.head[1] + this.yDir;
       var newYPoint = [this.head[0], newHeadY];
-      console.log(this.lifespan);
+      // console.log(this.lifespan);
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
       if (xCollision || yCollision) {
@@ -544,7 +580,7 @@ var Board = function () {
 
     this.context = ctx;
     this.point = point;
-    this.walls = [new _wall2.default(0, 0, window.innerWidth / 2, window.innerHeight / 2), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight)];
+    this.walls = [new _wall2.default(0, 0, window.innerWidth / 2 - 50, window.innerHeight / 2 - 50), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight)];
     var level = new _level2.default(this.context, this.walls);
     this.level = level;
     this.rays = []; //store all rays in the game.
@@ -554,6 +590,12 @@ var Board = function () {
     key: 'walls',
     value: function walls() {
       return this.walls;
+    }
+  }, {
+    key: 'inBounds',
+    value: function inBounds(coords) {
+      // if point is outside of cavas, return false, else true
+      return !(coords[0] > window.innerWidth || coords[0] < 0 || coords[1] > window.innerHeihgt || coords[1] < 0);
     }
   }, {
     key: 'advanceRays',
@@ -673,6 +715,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener("DOMContentLoaded", function () {
   var canvas = document.getElementById('canvas');
+  document.addEventListener("keypress", hideSplashText);
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
@@ -680,6 +724,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var board = new _board2.default(ctx, p);
   window.game = new _game2.default(ctx, board, p);
 });
+
+var hideSplashText = function hideSplashText() {
+  var introText = document.getElementById("game-intro");
+  introText.classList.add("hidden");
+  document.removeEventListener("keypress", hideSplashText);
+};
 
 /***/ })
 /******/ ]);
