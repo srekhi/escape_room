@@ -127,9 +127,9 @@ var Game = function () {
       window.addEventListener("keydown", function (event) {
         _this.keyStatus[event.key] = true;
         var direction = _this.assignDirection();
-        // if (!this.collides(this.point.nextPos(direction))){
-        _this.point.move(direction);
-        // }
+        if (!_this.collides(_this.point.nextPos(direction))) {
+          _this.point.move(direction);
+        }
       });
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
@@ -281,7 +281,7 @@ var Point = function () {
       console.log("WAVY");
       var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
-        new _ray2.default(_this.c, _this.pos, dir[0] * 10, dir[1] * 10, board);
+        new _ray2.default(_this.c, 10, _this.pos, dir[0] * 10, dir[1] * 10, board);
       });
 
       // let ray = new Ray(this.c, this.pos, 1, 1, board);
@@ -346,11 +346,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Ray = function () {
-  function Ray(context, startPos, xDir, yDir, board) {
+  function Ray(context, lifespan, startPos, xDir, yDir, board) {
     _classCallCheck(this, Ray);
 
     this.c = context;
-    this.lifespan = 10;
+    this.lifespan = lifespan;
     this.head = startPos;
     this.tail = startPos;
     this.c.beginPath();
@@ -368,7 +368,12 @@ var Ray = function () {
   _createClass(Ray, [{
     key: "grow",
     value: function grow() {
-      this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+      if (!this.collision()) {
+        this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+        return true;
+      } else {
+        return false;
+      }
     }
   }, {
     key: "draw",
@@ -377,21 +382,55 @@ var Ray = function () {
         var oldHead = this.head;
         this.c.beginPath();
         this.c.moveTo(oldHead[0], oldHead[1]);
-        this.grow();
-        this.c.lineTo(this.head[0], this.head[1]);
-        this.c.stroke();
-        this.lifespan -= 1;
+        if (this.grow()) {
+          this.c.lineTo(this.head[0], this.head[1]);
+          this.c.stroke();
+          this.lifespan -= 1;
+        } else {
+          break;
+        }
       }
     }
   }, {
     key: "nextPos",
     value: function nextPos() {}
   }, {
-    key: "handleCollision",
-    value: function handleCollision() {
-      //use the next position.
-      //check if reflects on x or y.
-      //adjust ray position accordingly.
+    key: "collision",
+    value: function collision() {
+      var newXDir = this.xDir;
+      var newYDir = this.yDir;
+
+      var newHeadX = this.head[0] + this.xDir;
+      var newXPoint = [newHeadX, this.head[1]];
+
+      var newHeadY = this.head[1] + this.yDir;
+      var newYPoint = [this.head[0], newHeadY];
+
+      var xCollision = this.board.collides(newXPoint);
+      var yCollision = this.board.collides(newYPoint);
+      if (xCollision || yCollision) {
+        if (xCollision && yCollision) {
+          newXDir = -1 * this.xDir;
+          newYDir = -1 * this.yDir;
+        } else if (xCollision) {
+          newXDir = -1 * this.xDir;
+        } else if (yCollision) {
+          newYDir = -1 * this.yDir;
+        }
+        // debugger;
+        var reflection = new Ray(this.c, this.lifespan, this.head, newXDir, newYDir, this.board);
+
+        //cease moving current ray
+        this.xDir = 0;
+        this.yDir = 0;
+
+        //use the next position.
+        //check if reflects on x or y.
+        //adjust ray position accordingly.
+        return true;
+      } else {
+        return false;
+      }
     }
   }]);
 

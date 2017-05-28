@@ -1,8 +1,8 @@
 import Game from './game';
 class Ray {
-  constructor(context, startPos, xDir, yDir, board){
+  constructor(context, lifespan, startPos, xDir, yDir, board){
     this.c = context;
-    this.lifespan = 10;
+    this.lifespan = lifespan;
     this.head = startPos;
     this.tail = startPos;
     this.c.beginPath();
@@ -18,7 +18,12 @@ class Ray {
   }
 
   grow(){
-    this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+    if (!this.collision()){
+      this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
+      return true;
+    } else {
+      return false;
+    }
   }
 
   draw(){
@@ -26,20 +31,54 @@ class Ray {
       let oldHead = this.head;
       this.c.beginPath();
       this.c.moveTo(oldHead[0], oldHead[1]);
-      this.grow();
-      this.c.lineTo(this.head[0], this.head[1]);
-      this.c.stroke();
-      this.lifespan -= 1;
+      if (this.grow()){
+        this.c.lineTo(this.head[0], this.head[1]);
+        this.c.stroke();
+        this.lifespan -= 1;
+      } else{
+        break;
+      }
     }
   }
 
   nextPos(){
 
   }
-  handleCollision(){
-    //use the next position.
-    //check if reflects on x or y.
-    //adjust ray position accordingly.
+  collision(){
+    let newXDir = this.xDir;
+    let newYDir = this.yDir;
+
+    const newHeadX = this.head[0] + (this.xDir);
+    const newXPoint = [newHeadX, this.head[1]];
+
+    const newHeadY = this.head[1] + (this.yDir);
+    const newYPoint = [this.head[0], newHeadY];
+
+    let xCollision = this.board.collides(newXPoint);
+    let yCollision = this.board.collides(newYPoint);
+    if (xCollision || yCollision){
+      if (xCollision && yCollision){
+        newXDir = -1 * this.xDir;
+        newYDir = -1 * this.yDir;
+      }else if (xCollision){
+        newXDir = -1 * this.xDir;
+      }else if (yCollision){
+        newYDir = -1 * this.yDir;
+      }
+      // debugger;
+      const reflection = new Ray(this.c, this.lifespan,this.head, newXDir, newYDir, this.board);
+
+      //cease moving current ray
+      this.xDir = 0;
+      this.yDir = 0;
+
+      //use the next position.
+      //check if reflects on x or y.
+      //adjust ray position accordingly.
+      return true;
+    }else{
+      return false;
+    }
   }
 }
 
