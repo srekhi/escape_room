@@ -1,3 +1,4 @@
+import Game from './game';
 class Ray {
   constructor(context, startPos, xGrowthFactor, yGrowthFactor){
     this.c = context;
@@ -15,18 +16,16 @@ class Ray {
 
   grow(){
     while (this.lifespan > 0){
-      console.log(this.lifespan);
       this.head[0] += this.xGrowthFactor;
       this.head[1] += this.yGrowthFactor;
       this.c.lineTo(this.head[0], this.head[1]);
       this.c.strokeStyle = "blue";
       this.c.stroke();
       this.lifespan -= 1;
-      console.log(this.head[0], this.head[1]);
     }
   }
   handleCollision(){
-
+    
   }
 }
 

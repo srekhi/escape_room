@@ -1,4 +1,6 @@
 import Game from './game';
+import Ray from './ray';
+
 class Point {
   constructor(context, startingPos){
     this.c = context;
@@ -39,6 +41,9 @@ class Point {
 
   makeSound(){
     console.log("WAVY");
+    let counter = 10;
+    let ray = new Ray(this.c, this.pos, 1, 1);
+    // ray.grow();
     //make the rays here.
   }
 
@@ -51,10 +56,6 @@ class Point {
   stopMoving(){
     this.moving = false;
     window.cancelAnimationFrame(window.animationFrameId);
-  }
-
-  collides(){
-    return Game.collides(this.pos);
   }
 
   animate(direction){

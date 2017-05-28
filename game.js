@@ -2,17 +2,14 @@ import Wall from './wall';
 import Level from './level';
 import Point from './point';
 import Ray from './ray';
-// let walls = [
-//   new Wall(0, 0, window.innerWidth /2, window.innerHeight / 2),
-//   new Wall(0, window.innerHeight/2 + 50, window.innerWidth, window.innerHeight / 2),
-//   new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight)
-// ];
+import Board from './board';
+
 class Game {
-  constructor(context, walls, point) {
+  constructor(context, board, point) {
     this.context = context;
-    this.walls = walls;
+    this.board = board;
     this.point = point;
-    let level = new Level(context, walls);
+    let level = new Level(context, this.board.walls);
     level.draw();
     point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
@@ -62,7 +59,7 @@ class Game {
     }
 
   collides(coords) {
-    return this.walls.some( wall => {
+    return this.board.walls.some( wall => {
       return !(
         (coords[0] < wall.topLeft[0])
           || (coords[0] > wall.bottomRight[0])

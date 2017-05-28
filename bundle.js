@@ -135,6 +135,10 @@ var _game = __webpack_require__(5);
 
 var _game2 = _interopRequireDefault(_game);
 
+var _board = __webpack_require__(6);
+
+var _board2 = _interopRequireDefault(_board);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -142,10 +146,9 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
-  var walls = [new _wall2.default(0, 0, window.innerWidth / 2, window.innerHeight / 2), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight)];
-
+  var board = new _board2.default();
   var p = new _point2.default(ctx, [0, window.innerHeight / 2 + 25]);
-  window.game = new _game2.default(ctx, walls, p);
+  window.game = new _game2.default(ctx, board, p);
 });
 
 /***/ }),
@@ -211,6 +214,10 @@ var _game = __webpack_require__(5);
 
 var _game2 = _interopRequireDefault(_game);
 
+var _ray = __webpack_require__(4);
+
+var _ray2 = _interopRequireDefault(_ray);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -239,7 +246,7 @@ var Point = function () {
   }
 
   _createClass(Point, [{
-    key: "draw",
+    key: 'draw',
     value: function draw() {
       this.c.beginPath();
       this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
@@ -249,7 +256,7 @@ var Point = function () {
       this.c.stroke();
     }
   }, {
-    key: "move",
+    key: 'move',
     value: function move(direction) {
       var delta = void 0;
       this.moving = true;
@@ -258,13 +265,16 @@ var Point = function () {
       this.draw();
     }
   }, {
-    key: "makeSound",
+    key: 'makeSound',
     value: function makeSound() {
       console.log("WAVY");
+      var counter = 10;
+      var ray = new _ray2.default(this.c, this.pos, 1, 1);
+      // ray.grow();
       //make the rays here.
     }
   }, {
-    key: "nextPos",
+    key: 'nextPos',
     value: function nextPos(direction) {
       var delta = void 0;
       delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant
@@ -273,18 +283,13 @@ var Point = function () {
       });
     }
   }, {
-    key: "stopMoving",
+    key: 'stopMoving',
     value: function stopMoving() {
       this.moving = false;
       window.cancelAnimationFrame(window.animationFrameId);
     }
   }, {
-    key: "collides",
-    value: function collides() {
-      return _game2.default.collides(this.pos);
-    }
-  }, {
-    key: "animate",
+    key: 'animate',
     value: function animate(direction) {
       var _this = this;
 
@@ -317,6 +322,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _game = __webpack_require__(5);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Ray = function () {
@@ -340,14 +351,12 @@ var Ray = function () {
     key: "grow",
     value: function grow() {
       while (this.lifespan > 0) {
-        console.log(this.lifespan);
         this.head[0] += this.xGrowthFactor;
         this.head[1] += this.yGrowthFactor;
         this.c.lineTo(this.head[0], this.head[1]);
         this.c.strokeStyle = "blue";
         this.c.stroke();
         this.lifespan -= 1;
-        console.log(this.head[0], this.head[1]);
       }
     }
   }, {
@@ -389,23 +398,22 @@ var _ray = __webpack_require__(4);
 
 var _ray2 = _interopRequireDefault(_ray);
 
+var _board = __webpack_require__(6);
+
+var _board2 = _interopRequireDefault(_board);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// let walls = [
-//   new Wall(0, 0, window.innerWidth /2, window.innerHeight / 2),
-//   new Wall(0, window.innerHeight/2 + 50, window.innerWidth, window.innerHeight / 2),
-//   new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight)
-// ];
 var Game = function () {
-  function Game(context, walls, point) {
+  function Game(context, board, point) {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.walls = walls;
+    this.board = board;
     this.point = point;
-    var level = new _level2.default(context, walls);
+    var level = new _level2.default(context, this.board.walls);
     level.draw();
     point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
@@ -462,7 +470,7 @@ var Game = function () {
   }, {
     key: 'collides',
     value: function collides(coords) {
-      return this.walls.some(function (wall) {
+      return this.board.walls.some(function (wall) {
         return !(coords[0] < wall.topLeft[0] || coords[0] > wall.bottomRight[0] || coords[1] < wall.topLeft[1] || coords[1] > wall.bottomRight[1]);
       }); //if any of these 4 conditions are met, no collision.
     }
@@ -501,6 +509,57 @@ exports.default = Game;
 //     animate(point, direction);
 //   });
 // }
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _game = __webpack_require__(5);
+
+var _game2 = _interopRequireDefault(_game);
+
+var _wall = __webpack_require__(0);
+
+var _wall2 = _interopRequireDefault(_wall);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Board = function () {
+  function Board() {
+    _classCallCheck(this, Board);
+
+    this.walls = [new _wall2.default(0, 0, window.innerWidth / 2, window.innerHeight / 2), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight)];
+  }
+
+  _createClass(Board, [{
+    key: 'walls',
+    value: function walls() {
+      return this.walls;
+    }
+  }, {
+    key: 'collides',
+    value: function collides(coords) {
+      return this.walls.some(function (wall) {
+        return !(coords[0] < wall.topLeft[0] || coords[0] > wall.bottomRight[0] || coords[1] < wall.topLeft[1] || coords[1] > wall.bottomRight[1]);
+      });
+    }
+  }]);
+
+  return Board;
+}();
+
+exports.default = Board;
 
 /***/ })
 /******/ ]);
