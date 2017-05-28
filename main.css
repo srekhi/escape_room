@@ -1,0 +1,8 @@
+html, body, main {
+  height: 100%;
+  width: 100%;
+}
+canvas {
+  border: 1px solid black;
+  margin: 0 auto;
+}

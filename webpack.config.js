@@ -1,8 +1,9 @@
+var path = require("path");
 module.exports = {
   context: __dirname,
-  entry: "./js/main.js",
+  entry: "./main.js",
   output: {
-    path: "./",
+    path: path.resolve(__dirname),
     filename: "bundle.js"
   },
   module: {
@@ -19,6 +20,6 @@ module.exports = {
 },
   devtool: 'source-maps',
   resolve: {
-    extensions: [".js", ""]
+    extensions: [".js", "*"]
   }
 };
