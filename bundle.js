@@ -267,7 +267,7 @@ var Point = function () {
     key: "nextPos",
     value: function nextPos(direction) {
       var delta = void 0;
-      delta = this.movementDeltas[direction];
+      delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant
       return this.pos.map(function (posDir, index) {
         return posDir + delta[index];
       });
@@ -362,10 +362,145 @@ exports.default = Ray;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (63:2)\n\n\u001b[0m \u001b[90m 61 | \u001b[39m      }\n \u001b[90m 62 | \u001b[39m    }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 63 | \u001b[39m  }\n \u001b[90m    | \u001b[39m  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 64 | \u001b[39m\n \u001b[90m 65 | \u001b[39m  collides(coords){\n \u001b[90m 66 | \u001b[39m    \u001b[36mreturn\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mwalls\u001b[33m.\u001b[39msome( wall \u001b[33m=>\u001b[39m {\u001b[0m\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _wall = __webpack_require__(0);
+
+var _wall2 = _interopRequireDefault(_wall);
+
+var _level = __webpack_require__(2);
+
+var _level2 = _interopRequireDefault(_level);
+
+var _point = __webpack_require__(3);
+
+var _point2 = _interopRequireDefault(_point);
+
+var _ray = __webpack_require__(4);
+
+var _ray2 = _interopRequireDefault(_ray);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// let walls = [
+//   new Wall(0, 0, window.innerWidth /2, window.innerHeight / 2),
+//   new Wall(0, window.innerHeight/2 + 50, window.innerWidth, window.innerHeight / 2),
+//   new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight)
+// ];
+var Game = function () {
+  function Game(context, walls, point) {
+    _classCallCheck(this, Game);
+
+    this.context = context;
+    this.walls = walls;
+    this.point = point;
+    var level = new _level2.default(context, walls);
+    level.draw();
+    point.draw();
+    this.keyStatus = {}; //keep tally of which keys are pressed down.
+    // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
+    this.createEventListeners();
+  }
+
+  _createClass(Game, [{
+    key: 'createEventListeners',
+    value: function createEventListeners() {
+      var _this = this;
+
+      window.addEventListener("keydown", function (event) {
+        _this.keyStatus[event.key] = true;
+        var direction = _this.assignDirection();
+        if (!_this.collides(_this.point.nextPos(direction))) {
+          _this.point.move(direction);
+        }
+      });
+      window.addEventListener("keydown", function (event) {
+        if (event.key === " ") {
+          event.preventDefault();
+          _this.point.makeSound();
+        }
+      });
+      window.addEventListener("keyup", function (event) {
+        _this.keyStatus[event.key] = false;
+        // this.point.stopMoving();
+      });
+    }
+  }, {
+    key: 'assignDirection',
+    value: function assignDirection() {
+      if (this.keyStatus["w'"] && this.keyStatus["a"]) {
+        return "NW";
+      } else if (this.keyStatus["a"] && this.keyStatus["s"]) {
+        return "SW";
+      } else if (this.keyStatus["w"] && this.keyStatus["d"]) {
+        return "NE";
+      } else if (this.keyStatus["d"] && this.keyStatus["s"]) {
+        return "SE";
+      } else if (this.keyStatus["a"]) {
+        return "W";
+      } else if (this.keyStatus["d"]) {
+        return "E";
+      } else if (this.keyStatus["w"]) {
+        return "N";
+      } else if (this.keyStatus["s"]) {
+        return "S";
+      } else {
+        return "";
+      }
+    }
+  }, {
+    key: 'collides',
+    value: function collides(coords) {
+      return this.walls.some(function (wall) {
+        return !(coords[0] < wall.topLeft[0] || coords[0] > wall.bottomRight[0] || coords[1] < wall.topLeft[1] || coords[1] > wall.bottomRight[1]);
+      }); //if any of these 4 conditions are met, no collision.
+    }
+  }]);
+
+  return Game;
+}();
+
+exports.default = Game;
+
+//   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
+//   let level1 = new Level(ctx, walls);
+//   level1.draw();
+//   p.draw();
+//   document.addEventListener("keypress", event => {
+//     if (event.key === "w"){
+//       animate(p,"up");
+//     }else if (event.key === "a") {
+//       animate(p,"left");
+//     }else if (event.key === "s"){
+//       animate(p,"down");
+//     }else if (event.key === "d"){
+//       animate(p,"right");
+//     }else if (event.key === " "){
+//       let ray = new Ray(ctx, p.pos);
+//       ray.grow();
+//     }
+//   });
+// });
+//
+//
+// function animate(point, direction){
+//   console.log(direction);
+//   point.move(direction);
+//   requestAnimationFrame(() =>{
+//     animate(point, direction);
+//   });
+// }
 
 /***/ })
 /******/ ]);

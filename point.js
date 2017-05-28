@@ -44,7 +44,7 @@ class Point {
 
   nextPos(direction){
     let delta;
-    delta = this.movementDeltas[direction];
+    delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant
     return this.pos.map((posDir, index) => posDir + delta[index]);
   }
 

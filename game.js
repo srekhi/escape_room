@@ -16,15 +16,15 @@ class Game {
     level.draw();
     point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
-    this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
+    // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
     this.createEventListeners();
   }
   createEventListeners(){
     window.addEventListener("keydown", event => {
-      let direction = this.directions[event.key] || "";
-      if (this.directions[event.key]) this.keyStatus[event.key] = true;
+      this.keyStatus[event.key] = true;
+      let direction = this.assignDirection();
       if (!this.collides(this.point.nextPos(direction))){
-          this.assignDirection();
+          this.point.move(direction);
         }
       });
     window.addEventListener("keydown", event => {
@@ -39,30 +39,29 @@ class Game {
     });
   }
 
-  assignDirection(){
-      let dir;
-      dir = ( dir => {
+  assignDirection() {
       if (this.keyStatus["w'"] && this.keyStatus["a"]) {
           return "NW";
       } else if (this.keyStatus["a"] && this.keyStatus["s"]){
-          dir =  "SW";
+          return "SW";
       } else if (this.keyStatus["w"] && this.keyStatus["d"]){
-          dir = "NE";
+          return "NE";
       } else if (this.keyStatus["d"] && this.keyStatus["s"]){
-          dir = "SE";
+          return "SE";
       } else if (this.keyStatus["a"]) {
-        this.point.move("W");
+          return "W";
       } else if (this.keyStatus["d"]) {
-        this.point.move("E");
+          return "E";
       } else if (this.keyStatus["w"]) {
-        this.point.move("N");
+          return "N";
       } else if (this.keyStatus["s"]) {
-        this.point.move("S");
+          return "S";
+      } else{
+        return "";
       }
     }
-  }
 
-  collides(coords){
+  collides(coords) {
     return this.walls.some( wall => {
       return !(
         (coords[0] < wall.topLeft[0])
