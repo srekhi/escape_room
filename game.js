@@ -15,19 +15,22 @@ class Game {
     let level = new Level(context, walls);
     level.draw();
     point.draw();
-
+    this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
     document.addEventListener("keydown", event => {
-      if (event.key === "w"){
-        this.point.animate(this.point,"up");
-      }else if (event.key === "a") {
-        this.point.animate(this.point,"left");
-      }else if (event.key === "s"){
-        this.point.animate(this.point,"down");
-      }else if (event.key === "d"){
-        this.point.animate(this.point,"right");
+      let direction;
+      if (this.directions[event.key]){
+        direction = this.directions[event.key];
       }else if (event.key === " "){
-        let ray = new Ray(context, this.point.pos);
-        ray.grow();
+        for (var i = 0; i < 10; i++) {
+          let ray = new Ray(context, this.point.pos);
+          ray.grow();
+          return;
+        }
+      } else {
+        direction = "";
+      }
+      if (!this.collides(this.point.nextPos(direction))){
+        this.point.move(direction);
       }
     });
 
@@ -36,8 +39,18 @@ class Game {
     });
   }
 
-
+  collides(coords){
+    return this.walls.some( wall => {
+      return !(
+        (coords[0] < wall.topLeft[0])
+          || (coords[0] > wall.bottomRight[0])
+          || (coords[1] < wall.topLeft[1])
+          || (coords[1] > wall.bottomRight[1])
+      );
+    }); //if any of these 4 conditions are met, no collision.
+  }
 }
+
 export default Game;
 
 

@@ -87,8 +87,12 @@ var Wall = function () {
 
     this.x = x;
     this.y = y;
-    this.width = width;
     this.height = height;
+    this.width = width;
+    this.topLeft = [x, y];
+    this.topRight = [x + width, y];
+    this.bottomLeft = [x, y + height];
+    this.bottomRight = [x + width, y + height];
   }
 
   _createClass(Wall, [{
@@ -203,6 +207,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _game = __webpack_require__(5);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Point = function () {
@@ -211,11 +221,12 @@ var Point = function () {
 
     this.c = context;
     this.pos = startingPos;
-    this.dx = 1;
-    this.dy = 1;
+    this.dx = 5;
+    this.dy = -5;
     this.moving = false;
     this.draw();
     this.animate = this.animate.bind(this);
+    this.deltas = { "right": this.dx, "left": this.dx * -1, "up": this.dy, "down": -1 * this.dy };
   }
 
   _createClass(Point, [{
@@ -223,23 +234,34 @@ var Point = function () {
     value: function draw() {
       this.c.beginPath();
       this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
-      this.c.fillStyle = "white";
+      this.c.fillStyle = "blue";
+      this.c.strokeStyle = "blue";
+
       this.c.stroke();
     }
   }, {
     key: "move",
     value: function move(direction) {
+      var delta = void 0;
       this.moving = true;
-      if (direction === "right") {
-        this.pos[0] += 1;
-      } else if (direction === "left") {
-        this.pos[0] -= 1;
-      } else if (direction === "up") {
-        this.pos[1] -= 1;
-      } else if (direction === "down") {
-        this.pos[1] += 1;
+      delta = this.deltas[direction];
+      if (direction === "right" || direction === "left") {
+        this.pos[0] += delta;
+      } else if (direction === "up" || direction === "down") {
+        this.pos[1] += delta;
       }
       this.draw();
+    }
+  }, {
+    key: "nextPos",
+    value: function nextPos(direction) {
+      if (direction === "right" || direction === "left") {
+        return [this.pos[0] + this.deltas[direction], this.pos[1]];
+      } else if (direction === "up" || direction === "down") {
+        return [this.pos[0], this.pos[1] + this.deltas[direction]];
+      } else {
+        return this.pos;
+      }
     }
   }, {
     key: "stopMoving",
@@ -248,20 +270,24 @@ var Point = function () {
       window.cancelAnimationFrame(window.animationFrameId);
     }
   }, {
+    key: "collides",
+    value: function collides() {
+      return _game2.default.collides(this.pos);
+    }
+  }, {
     key: "animate",
-    value: function animate(point, direction) {
+    value: function animate(direction) {
       var _this = this;
 
-      point.move(direction);
+      // this.c.clearRect(0, 0, innerHeight, innerWidth);
+      this.move(direction);
       window.animationFrameId = window.requestAnimationFrame(function () {
         if (_this.moving) {
-          _this.animate(point, direction);
+          _this.animate(direction);
+          if (_this.collides()) _this.stopMoving();
         }
       });
     }
-  }, {
-    key: "handleCollision",
-    value: function handleCollision() {}
   }]);
 
   return Point;
@@ -332,6 +358,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _wall = __webpack_require__(0);
 
 var _wall2 = _interopRequireDefault(_wall);
@@ -357,37 +385,53 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //   new Wall(0, window.innerHeight/2 + 50, window.innerWidth, window.innerHeight / 2),
 //   new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight)
 // ];
-var Game = function Game(context, walls, point) {
-  var _this = this;
+var Game = function () {
+  function Game(context, walls, point) {
+    var _this = this;
 
-  _classCallCheck(this, Game);
+    _classCallCheck(this, Game);
 
-  this.context = context;
-  this.walls = walls;
-  this.point = point;
-  var level = new _level2.default(context, walls);
-  level.draw();
-  point.draw();
+    this.context = context;
+    this.walls = walls;
+    this.point = point;
+    var level = new _level2.default(context, walls);
+    level.draw();
+    point.draw();
+    this.directions = { "w": "up", "s": "down", "d": "right", "a": "left" };
+    document.addEventListener("keydown", function (event) {
+      var direction = void 0;
+      if (_this.directions[event.key]) {
+        direction = _this.directions[event.key];
+      } else if (event.key === " ") {
+        for (var i = 0; i < 10; i++) {
+          var ray = new _ray2.default(context, _this.point.pos);
+          ray.grow();
+          return;
+        }
+      } else {
+        direction = "";
+      }
+      if (!_this.collides(_this.point.nextPos(direction))) {
+        _this.point.move(direction);
+      }
+    });
 
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "w") {
-      _this.point.animate(_this.point, "up");
-    } else if (event.key === "a") {
-      _this.point.animate(_this.point, "left");
-    } else if (event.key === "s") {
-      _this.point.animate(_this.point, "down");
-    } else if (event.key === "d") {
-      _this.point.animate(_this.point, "right");
-    } else if (event.key === " ") {
-      var ray = new _ray2.default(context, _this.point.pos);
-      ray.grow();
+    document.addEventListener("keyup", function (event) {
+      point.stopMoving();
+    });
+  }
+
+  _createClass(Game, [{
+    key: 'collides',
+    value: function collides(coords) {
+      return this.walls.some(function (wall) {
+        return !(coords[0] < wall.topLeft[0] || coords[0] > wall.bottomRight[0] || coords[1] < wall.topLeft[1] || coords[1] > wall.bottomRight[1]);
+      }); //if any of these 4 conditions are met, no collision.
     }
-  });
+  }]);
 
-  document.addEventListener("keyup", function (event) {
-    point.stopMoving();
-  });
-};
+  return Game;
+}();
 
 exports.default = Game;
 

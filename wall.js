@@ -2,8 +2,12 @@ class Wall {
   constructor(x, y, width, height){
     this.x = x;
     this.y = y;
-    this.width = width;
     this.height = height;
+    this.width = width;
+    this.topLeft = [x, y];
+    this.topRight = [x + width, y];
+    this.bottomLeft = [x, y + height];
+    this.bottomRight = [x + width, y + height];
   }
 
   draw(context){
