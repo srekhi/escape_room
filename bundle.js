@@ -297,7 +297,7 @@ var Point = function () {
       console.log("WAVY");
       var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
-        new _ray2.default(_this.c, 10, _this.pos, dir[0] * 10, dir[1] * 10, board);
+        new _ray2.default(_this.c, 50, _this.pos, dir[0] * 10, dir[1] * 10, board);
       });
 
       // let ray = new Ray(this.c, this.pos, 1, 1, board);
@@ -384,7 +384,7 @@ var Ray = function () {
   }
 
   _createClass(Ray, [{
-    key: "grow",
+    key: 'grow',
     value: function grow() {
       if (this.lifespan > 0 && !this.collision()) {
         this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
@@ -395,21 +395,25 @@ var Ray = function () {
       }
     }
   }, {
-    key: "draw",
+    key: 'draw',
     value: function draw() {
       var oldHead = this.head;
       this.c.beginPath();
-      this.c.moveTo(oldHead[0], oldHead[1]);
+      this.c.moveTo(this.tail[0], this.tail[1]);
       if (this.grow()) {
         this.c.lineTo(this.head[0], this.head[1]);
+        var gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
+        gradient.addColorStop(0, 'blue');
+        gradient.addColorStop(1, 'white');
+        this.c.strokeStyle = gradient;
         this.c.stroke();
       }
     }
   }, {
-    key: "nextPos",
+    key: 'nextPos',
     value: function nextPos() {}
   }, {
-    key: "collision",
+    key: 'collision',
     value: function collision() {
       var newXDir = this.xDir;
       var newYDir = this.yDir;

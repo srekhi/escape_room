@@ -43,7 +43,7 @@ class Point {
     console.log("WAVY");
     let counter = 10;
     Ray.DIRECTIONS.forEach(dir => {
-      new Ray(this.c, 10, this.pos, dir[0] * 10, dir[1] * 10, board);
+      new Ray(this.c, 50, this.pos, dir[0] * 10, dir[1] * 10, board);
     });
 
       // let ray = new Ray(this.c, this.pos, 1, 1, board);
@@ -51,7 +51,7 @@ class Point {
       // ray.grow();
   }
 
-  
+
 
   nextPos(direction){
     let delta;

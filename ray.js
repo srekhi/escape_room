@@ -32,9 +32,13 @@ class Ray {
   draw(){
     let oldHead = this.head;
     this.c.beginPath();
-    this.c.moveTo(oldHead[0], oldHead[1]);
+    this.c.moveTo(this.tail[0], this.tail[1]);
     if (this.grow()){
       this.c.lineTo(this.head[0], this.head[1]);
+      let gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
+      gradient.addColorStop(0, 'blue');
+      gradient.addColorStop(1, 'white');
+      this.c.strokeStyle = gradient;
       this.c.stroke();
     }
   }
