@@ -11,12 +11,13 @@ class Game {
     this.point = point;
     let level = new Level(context, this.board.walls);
     level.draw();
-    point.draw();
+    this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
     // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
     this.createEventListeners();
   }
   createEventListeners(){
+    const self = this;
     window.addEventListener("keydown", event => {
       this.keyStatus[event.key] = true;
       let direction = this.assignDirection();
@@ -27,7 +28,7 @@ class Game {
     window.addEventListener("keydown", event => {
       if (event.key === " ") {
           event.preventDefault();
-          this.point.makeSound();
+          this.point.makeSound(this.board); //needs to be separate JS effect from point.
         }
     });
     window.addEventListener("keyup", event => {
@@ -59,14 +60,7 @@ class Game {
     }
 
   collides(coords) {
-    return this.board.walls.some( wall => {
-      return !(
-        (coords[0] < wall.topLeft[0])
-          || (coords[0] > wall.bottomRight[0])
-          || (coords[1] < wall.topLeft[1])
-          || (coords[1] > wall.bottomRight[1])
-      );
-    }); //if any of these 4 conditions are met, no collision.
+    return this.board.collides(coords);
   }
 }
 

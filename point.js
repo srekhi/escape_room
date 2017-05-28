@@ -39,12 +39,17 @@ class Point {
     this.draw();
   }
 
-  makeSound(){
+  makeSound(board){
     console.log("WAVY");
     let counter = 10;
-    let ray = new Ray(this.c, this.pos, 1, 1);
-    // ray.grow();
-    //make the rays here.
+    Ray.DIRECTIONS.map(dir => {
+      // console.log(dir);
+      new Ray(this.c, this.pos, dir[0] * 10, dir[1] * 10, board);
+    });
+
+      // let ray = new Ray(this.c, this.pos, 1, 1, board);
+      //
+      // ray.grow();
   }
 
   nextPos(direction){

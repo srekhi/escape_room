@@ -1,4 +1,3 @@
-import Game from './game';
 import Wall from './wall';
 class Board {
   constructor(){
@@ -17,9 +16,10 @@ class Board {
     return this.walls.some( wall => {
       return !(
         (coords[0] < wall.topLeft[0])
-          || (coords[0] > wall.bottomRight[0])
+          || (coords[0] > wall.bottomRight[0]
           || (coords[1] < wall.topLeft[1])
           || (coords[1] > wall.bottomRight[1])
+          )
       );
     });
   }
