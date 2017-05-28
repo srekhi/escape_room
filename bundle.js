@@ -439,7 +439,7 @@ var Game = function () {
   }, {
     key: 'assignDirection',
     value: function assignDirection() {
-      if (this.keyStatus["w'"] && this.keyStatus["a"]) {
+      if (this.keyStatus["w"] && this.keyStatus["a"]) {
         return "NW";
       } else if (this.keyStatus["a"] && this.keyStatus["s"]) {
         return "SW";
