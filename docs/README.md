@@ -10,7 +10,7 @@ Allow users to interact with the game by
   - Display win message if user escapes maze. 
   
 ### Wireframes:
-![Wireframe](/home-wireframe.png)
+![Wireframe](/docs/home-wireframe.png)
 
 ### Architecture and technologies
 Escape room will be implemented with only vanilla javascript and HTML5 Canvas. Webpack will bundle and serve up the various scripts involved.
