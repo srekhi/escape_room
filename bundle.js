@@ -112,7 +112,7 @@ var LEVELS = {
   },
   2: {
     walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
-    pointStartPos: [0.01, 0.01]
+    pointStartPos: [0.1, 0.1]
   }
 };
 
@@ -124,8 +124,8 @@ var Game = function () {
     this.levelCount = 1;
     // debugger;
     this.canvas = canvas;
-    this.point = new _point2.default(context, canvas, LEVELS[2].pointStartPos);
-    this.board = new _board2.default(context, canvas, this.point, LEVELS[2].walls);
+    this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
+    this.board = new _board2.default(context, canvas, this.point, LEVELS[this.levelCount].walls);
 
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
@@ -180,12 +180,11 @@ var Game = function () {
       if (this.point.hasEscaped()) {
         alert("YOU WON");
         this.levelCount += 1;
+        this.keyStatus = {};
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
         //instantiate next level board.
-        return;
       }
-
       requestAnimationFrame(this.step);
     }
   }, {

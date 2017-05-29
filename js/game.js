@@ -24,7 +24,7 @@ const LEVELS = {
       [0, 0.45, 0.4, 0.55],
       [0.4, 0.9, 0.2, 0.1]
     ],
-    pointStartPos: [0.01, 0.01],
+    pointStartPos: [0.1, 0.1],
   },
 };
 
@@ -36,8 +36,8 @@ class Game {
     this.levelCount = 1;
     // debugger;
     this.canvas = canvas;
-    this.point = new Point(context, canvas, LEVELS[2].pointStartPos);
-    this.board = new Board(context, canvas, this.point, LEVELS[2].walls);
+    this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
+    this.board = new Board(context, canvas, this.point, LEVELS[this.levelCount].walls);
 
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
@@ -84,12 +84,11 @@ class Game {
     if (this.point.hasEscaped()) {
       alert("YOU WON");
       this.levelCount += 1;
+      this.keyStatus = {};
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
       this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
       //instantiate next level board.
-      return;
     }
-
     requestAnimationFrame(this.step);
   }
 
