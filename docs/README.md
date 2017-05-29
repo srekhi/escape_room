@@ -25,15 +25,15 @@ In addition to the webpack entry file, some of the other scripts required by thi
 
 ### Implementation Timeline
   #### Day 1 
-    - Create webpack.config.js as well as package.json. Write a basic entry file and the bare bones of all three scripts outlined above and any others found to be necessary. Learn the basics of HTML5 Canvas. Goals for the day:
+   - Create webpack.config.js as well as package.json. Write a basic entry file and the bare bones of all three scripts outlined above and any others found to be necessary. Learn the basics of HTML5 Canvas. Goals for the day:
       * Get a green bundle with webpack
       * Learn enough HTML5 Canvas to render the maze on the canvas.
   #### Day 2 
-    - Build out point and sound ray functionality and display. Implement collision logic.
+   - Build out point and sound ray functionality and display. Implement collision logic.
  #### Day 3
-    - Add styling and splash page. Add logic and corresponding alerts for when the user has won the game.
+   - Add styling and splash page. Add logic and corresponding alerts for when the user has won the game.
  #### Day 4
-    - Add multiple levels to the game and the logic rerendering canvas after user passes each level.
+   - Add multiple levels to the game and the logic rerendering canvas after user passes each level.
     
 ### Bonus Features
   - Add monsters inside the maze to chase the user if awakened. If a user is caught by the monster, end the game.
