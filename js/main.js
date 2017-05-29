@@ -5,6 +5,7 @@ import Point from './point';
 import Ray from './ray';
 import Game from './game';
 import Board from './board';
+
 document.addEventListener("DOMContentLoaded", ()=>{
   const canvas = document.getElementById('canvas');
   const body = document.getElementsByTagName('body')[0];
@@ -20,8 +21,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   //           [0, 0, 0.02, 1],
   //       ];
   let levelCount = 1;
-  let p = new Point(ctx, canvas, [0.1 * canvas.width, canvas.height * 0.27]);
-  const game = new Game(ctx, canvas, p);
+  const game = new Game(ctx, canvas);
   document.addEventListener("keypress", hideSplashText);
 });
 

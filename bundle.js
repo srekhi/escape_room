@@ -63,11 +63,197 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+// import LEVELS from './levels_structure';
+
+
+var _wall = __webpack_require__(5);
+
+var _wall2 = _interopRequireDefault(_wall);
+
+var _level = __webpack_require__(2);
+
+var _level2 = _interopRequireDefault(_level);
+
+var _point = __webpack_require__(3);
+
+var _point2 = _interopRequireDefault(_point);
+
+var _ray = __webpack_require__(4);
+
+var _ray2 = _interopRequireDefault(_ray);
+
+var _board = __webpack_require__(1);
+
+var _board2 = _interopRequireDefault(_board);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LEVELS = {
+  1: {
+    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    pointStartPos: [.1, .27]
+  },
+  2: {
+    walls: [],
+    pointStartPos: []
+  }
+};
+
+var Game = function () {
+  function Game(context, canvas, point) {
+    _classCallCheck(this, Game);
+
+    this.context = context;
+    this.levelCount = 1;
+    // debugger;
+    this.canvas = canvas;
+    this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
+    this.board = new _board2.default(context, canvas, this.point, LEVELS[this.levelCount].walls);
+
+    this.point.draw();
+    this.keyStatus = {}; //keep tally of which keys are pressed down.
+    // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
+    this.createEventListeners();
+    this.step = this.step.bind(this);
+    this.step();
+  }
+
+  _createClass(Game, [{
+    key: 'createEventListeners',
+    value: function createEventListeners() {
+      var _this = this;
+
+      var self = this;
+      window.addEventListener("keydown", function (event) {
+        _this.keyStatus[event.key] = true;
+      });
+
+      window.addEventListener("keydown", function (event) {
+        if (event.key === " ") {
+          event.preventDefault();
+          _this.point.makeSound(_this.board); //needs to be separate JS effect from point.
+        }
+      });
+      window.addEventListener("keyup", function (event) {
+        _this.keyStatus[event.key] = false;
+      });
+    }
+  }, {
+    key: 'analyzeKeyMap',
+    value: function analyzeKeyMap() {
+      var direction = this.assignDirection();
+      if (!this.collides(this.point.nextPos(direction))) {
+        this.point.move(direction);
+      }
+    }
+  }, {
+    key: 'hasWon',
+    value: function hasWon() {
+      //check if player is out of bounds
+    }
+  }, {
+    key: 'step',
+    value: function step() {
+      //clear out the board
+      // this.keyStatus = {};
+      this.context.fillStyle = "#222";
+      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.analyzeKeyMap();
+      this.board.draw(); //will redraw board based on position of everything.
+      if (this.point.hasEscaped()) {
+        alert("YOU WON");
+        this.levelCount += 1;
+        this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
+        this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+        //instantiate next level board.
+        return;
+      }
+
+      requestAnimationFrame(this.step);
+    }
+  }, {
+    key: 'assignDirection',
+    value: function assignDirection() {
+      if (this.keyStatus["w"] && this.keyStatus["a"]) {
+        return "NW";
+      } else if (this.keyStatus["a"] && this.keyStatus["s"]) {
+        return "SW";
+      } else if (this.keyStatus["w"] && this.keyStatus["d"]) {
+        return "NE";
+      } else if (this.keyStatus["d"] && this.keyStatus["s"]) {
+        return "SE";
+      } else if (this.keyStatus["a"]) {
+        return "W";
+      } else if (this.keyStatus["d"]) {
+        return "E";
+      } else if (this.keyStatus["w"]) {
+        return "N";
+      } else if (this.keyStatus["s"]) {
+        return "S";
+      } else {
+        return "";
+      }
+    }
+  }, {
+    key: 'collides',
+    value: function collides(coords) {
+      return this.board.collides(coords);
+    }
+  }]);
+
+  return Game;
+}();
+
+exports.default = Game;
+
+//   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
+//   let level1 = new Level(ctx, walls);
+//   level1.draw();
+//   p.draw();
+//   document.addEventListener("keypress", event => {
+//     if (event.key === "w"){
+//       animate(p,"up");
+//     }else if (event.key === "a") {
+//       animate(p,"left");
+//     }else if (event.key === "s"){
+//       animate(p,"down");
+//     }else if (event.key === "d"){
+//       animate(p,"right");
+//     }else if (event.key === " "){
+//       let ray = new Ray(ctx, p.pos);
+//       ray.grow();
+//     }
+//   });
+// });
+//
+//
+// function animate(point, direction){
+//   console.log(direction);
+//   point.move(direction);
+//   requestAnimationFrame(() =>{
+//     animate(point, direction);
+//   });
+// }
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -176,181 +362,6 @@ var Board = function () {
 exports.default = Board;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _wall = __webpack_require__(5);
-
-var _wall2 = _interopRequireDefault(_wall);
-
-var _levels_structure = __webpack_require__(7);
-
-var _levels_structure2 = _interopRequireDefault(_levels_structure);
-
-var _level = __webpack_require__(2);
-
-var _level2 = _interopRequireDefault(_level);
-
-var _point = __webpack_require__(3);
-
-var _point2 = _interopRequireDefault(_point);
-
-var _ray = __webpack_require__(4);
-
-var _ray2 = _interopRequireDefault(_ray);
-
-var _board = __webpack_require__(0);
-
-var _board2 = _interopRequireDefault(_board);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Game = function () {
-  function Game(context, canvas, point) {
-    _classCallCheck(this, Game);
-
-    this.context = context;
-    this.levelCount = 1;
-    debugger;
-    this.board = new _board2.default(context, canvas, point, _levels_structure2.default[this.levelCount]);
-    this.point = point;
-    this.canvas = canvas;
-
-    this.point.draw();
-    this.keyStatus = {}; //keep tally of which keys are pressed down.
-    // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
-    this.createEventListeners();
-    this.step = this.step.bind(this);
-    this.step();
-  }
-
-  _createClass(Game, [{
-    key: 'createEventListeners',
-    value: function createEventListeners() {
-      var _this = this;
-
-      var self = this;
-      window.addEventListener("keydown", function (event) {
-        _this.keyStatus[event.key] = true;
-      });
-
-      window.addEventListener("keydown", function (event) {
-        if (event.key === " ") {
-          event.preventDefault();
-          _this.point.makeSound(_this.board); //needs to be separate JS effect from point.
-        }
-      });
-      window.addEventListener("keyup", function (event) {
-        _this.keyStatus[event.key] = false;
-      });
-    }
-  }, {
-    key: 'analyzeKeyMap',
-    value: function analyzeKeyMap() {
-      var direction = this.assignDirection();
-      if (!this.collides(this.point.nextPos(direction))) {
-        this.point.move(direction);
-      }
-    }
-  }, {
-    key: 'hasWon',
-    value: function hasWon() {
-      //check if player is out of bounds
-    }
-  }, {
-    key: 'step',
-    value: function step() {
-      //clear out the board
-      // this.keyStatus = {};
-      this.context.fillStyle = "#222";
-      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      this.analyzeKeyMap();
-      this.board.draw(); //will redraw board based on position of everything.
-      if (this.point.hasEscaped()) {
-        alert("YOU WON");
-
-        //instantiate next level board.
-        return;
-      }
-
-      requestAnimationFrame(this.step);
-    }
-  }, {
-    key: 'assignDirection',
-    value: function assignDirection() {
-      if (this.keyStatus["w"] && this.keyStatus["a"]) {
-        return "NW";
-      } else if (this.keyStatus["a"] && this.keyStatus["s"]) {
-        return "SW";
-      } else if (this.keyStatus["w"] && this.keyStatus["d"]) {
-        return "NE";
-      } else if (this.keyStatus["d"] && this.keyStatus["s"]) {
-        return "SE";
-      } else if (this.keyStatus["a"]) {
-        return "W";
-      } else if (this.keyStatus["d"]) {
-        return "E";
-      } else if (this.keyStatus["w"]) {
-        return "N";
-      } else if (this.keyStatus["s"]) {
-        return "S";
-      } else {
-        return "";
-      }
-    }
-  }, {
-    key: 'collides',
-    value: function collides(coords) {
-      return this.board.collides(coords);
-    }
-  }]);
-
-  return Game;
-}();
-
-exports.default = Game;
-
-//   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
-//   let level1 = new Level(ctx, walls);
-//   level1.draw();
-//   p.draw();
-//   document.addEventListener("keypress", event => {
-//     if (event.key === "w"){
-//       animate(p,"up");
-//     }else if (event.key === "a") {
-//       animate(p,"left");
-//     }else if (event.key === "s"){
-//       animate(p,"down");
-//     }else if (event.key === "d"){
-//       animate(p,"right");
-//     }else if (event.key === " "){
-//       let ray = new Ray(ctx, p.pos);
-//       ray.grow();
-//     }
-//   });
-// });
-//
-//
-// function animate(point, direction){
-//   console.log(direction);
-//   point.move(direction);
-//   requestAnimationFrame(() =>{
-//     animate(point, direction);
-//   });
-// }
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -409,7 +420,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _game = __webpack_require__(1);
+var _game = __webpack_require__(0);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -417,7 +428,7 @@ var _ray = __webpack_require__(4);
 
 var _ray2 = _interopRequireDefault(_ray);
 
-var _board = __webpack_require__(0);
+var _board = __webpack_require__(1);
 
 var _board2 = _interopRequireDefault(_board);
 
@@ -430,7 +441,7 @@ var Point = function () {
     _classCallCheck(this, Point);
 
     this.c = context;
-    this.pos = startingPos;
+    this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
@@ -537,7 +548,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _game = __webpack_require__(1);
+var _game = __webpack_require__(0);
 
 var _game2 = _interopRequireDefault(_game);
 
@@ -719,11 +730,34 @@ exports.default = Wall;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var LEVELS = {
+  1: {
+    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    pointStartPos: [.1, .27]
+  },
+  2: {
+    walls: [],
+    pointStartPos: []
+  }
+};
+
+exports.default = LEVELS;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _wall = __webpack_require__(5);
 
 var _wall2 = _interopRequireDefault(_wall);
 
-var _levels_structure = __webpack_require__(7);
+var _levels_structure = __webpack_require__(6);
 
 var _levels_structure2 = _interopRequireDefault(_levels_structure);
 
@@ -739,11 +773,11 @@ var _ray = __webpack_require__(4);
 
 var _ray2 = _interopRequireDefault(_ray);
 
-var _game = __webpack_require__(1);
+var _game = __webpack_require__(0);
 
 var _game2 = _interopRequireDefault(_game);
 
-var _board = __webpack_require__(0);
+var _board = __webpack_require__(1);
 
 var _board2 = _interopRequireDefault(_board);
 
@@ -764,8 +798,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //           [0, 0, 0.02, 1],
   //       ];
   var levelCount = 1;
-  var p = new _point2.default(ctx, canvas, [0.1 * canvas.width, canvas.height * 0.27]);
-  var game = new _game2.default(ctx, canvas, p);
+  var game = new _game2.default(ctx, canvas);
   document.addEventListener("keypress", hideSplashText);
 });
 
@@ -776,29 +809,6 @@ var hideSplashText = function hideSplashText() {
   canvas.classList.remove("hidden");
   document.removeEventListener("keypress", hideSplashText);
 };
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var LEVELS = {
-  1: {
-    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
-    pointStartPos: [.1, .27]
-  },
-  2: {
-    walls: [],
-    pointStartPos: []
-  }
-};
-
-exports.default = LEVELS;
 
 /***/ })
 /******/ ]);

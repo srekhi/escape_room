@@ -1,18 +1,40 @@
 import Wall from './wall';
-import LEVELS from './levels_structure';
+// import LEVELS from './levels_structure';
 import Level from './level';
 import Point from './point';
 import Ray from './ray';
 import Board from './board';
 
+const LEVELS = {
+  1: {
+    walls:
+    [
+        [0, 0, 0.55, 0.25],
+        [0, 0.3, 0.7, 0.25],
+        [0.25, 0, 0.4, 0.25],
+        [0, 0, 0.02, 1],
+        [0.8, 0, 0.01, 1]
+    ],
+    pointStartPos: [.1, .27],
+  },
+  2: {
+    walls: [
+
+    ],
+    pointStartPos: [],
+  },
+};
+
+
+
 class Game {
   constructor(context, canvas, point) {
     this.context = context;
     this.levelCount = 1;
-    debugger;
-    this.board = new Board(context, canvas, point, LEVELS[this.levelCount]);
-    this.point = point;
+    // debugger;
     this.canvas = canvas;
+    this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
+    this.board = new Board(context, canvas, this.point, LEVELS[this.levelCount].walls);
 
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
@@ -58,7 +80,9 @@ class Game {
     this.board.draw(); //will redraw board based on position of everything.
     if (this.point.hasEscaped()) {
       alert("YOU WON");
-
+      this.levelCount += 1;
+      this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
+      this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
       //instantiate next level board.
       return;
     }

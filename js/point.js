@@ -4,7 +4,7 @@ import Board from './board';
 class Point {
   constructor(context, canvas, startingPos){
     this.c = context;
-    this.pos = startingPos;
+    this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
