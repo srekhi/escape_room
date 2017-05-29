@@ -1,16 +1,11 @@
 import Wall from './wall';
 import Level from './level';
+
 class Board {
-  constructor(ctx, canvas, point){
+  constructor(ctx, canvas, point, wallDimensions){
     this.context = ctx;
     this.point = point;
-    this.wallDimensions = [
-              [0, 0, 0.55, 0.25],
-              [0, 0.3, 0.7, 0.25],
-              [0.25, 0, 0.4, 0.25],
-              [0, 0, 0.02, 1],
-              [0.8, 0, 0.01, 1]
-          ];
+    this.wallDimensions = wallDimensions;
     // this.walls = [
     //   new Wall(0, 0, window.innerWidth /4 - 100, window.innerHeight / 4 - 50),
     //   new Wall(0, window.innerHeight/4 + 50, window.innerWidth - 50, window.innerHeight / 4),
@@ -76,7 +71,7 @@ class Board {
     this.point.draw();
     this.advanceRays();
     this.level.draw(); //draw the structure of the level
-    
+
   }
 }
 

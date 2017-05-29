@@ -94,12 +94,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Board = function () {
-  function Board(ctx, canvas, point) {
+  function Board(ctx, canvas, point, wallDimensions) {
     _classCallCheck(this, Board);
 
     this.context = ctx;
     this.point = point;
-    this.wallDimensions = [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]];
+    this.wallDimensions = wallDimensions;
     // this.walls = [
     //   new Wall(0, 0, window.innerWidth /4 - 100, window.innerHeight / 4 - 50),
     //   new Wall(0, window.innerHeight/4 + 50, window.innerWidth - 50, window.innerHeight / 4),
@@ -192,6 +192,10 @@ var _wall = __webpack_require__(5);
 
 var _wall2 = _interopRequireDefault(_wall);
 
+var _levels_structure = __webpack_require__(7);
+
+var _levels_structure2 = _interopRequireDefault(_levels_structure);
+
 var _level = __webpack_require__(2);
 
 var _level2 = _interopRequireDefault(_level);
@@ -213,11 +217,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Game = function () {
-  function Game(context, canvas, board, point) {
+  function Game(context, canvas, point) {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.board = board;
+    this.levelCount = 1;
+    debugger;
+    this.board = new _board2.default(context, canvas, point, _levels_structure2.default[this.levelCount]);
     this.point = point;
     this.canvas = canvas;
 
@@ -273,6 +279,8 @@ var Game = function () {
       this.board.draw(); //will redraw board based on position of everything.
       if (this.point.hasEscaped()) {
         alert("YOU WON");
+
+        //instantiate next level board.
         return;
       }
 
@@ -715,6 +723,10 @@ var _wall = __webpack_require__(5);
 
 var _wall2 = _interopRequireDefault(_wall);
 
+var _levels_structure = __webpack_require__(7);
+
+var _levels_structure2 = _interopRequireDefault(_levels_structure);
+
 var _level = __webpack_require__(2);
 
 var _level2 = _interopRequireDefault(_level);
@@ -751,9 +763,9 @@ document.addEventListener("DOMContentLoaded", function () {
   //           [0.25, 0, 0.4, 0.25],
   //           [0, 0, 0.02, 1],
   //       ];
+  var levelCount = 1;
   var p = new _point2.default(ctx, canvas, [0.1 * canvas.width, canvas.height * 0.27]);
-  var board = new _board2.default(ctx, canvas, p);
-  var game = new _game2.default(ctx, canvas, board, p);
+  var game = new _game2.default(ctx, canvas, p);
   document.addEventListener("keypress", hideSplashText);
 });
 
@@ -764,6 +776,29 @@ var hideSplashText = function hideSplashText() {
   canvas.classList.remove("hidden");
   document.removeEventListener("keypress", hideSplashText);
 };
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var LEVELS = {
+  1: {
+    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    pointStartPos: [.1, .27]
+  },
+  2: {
+    walls: [],
+    pointStartPos: []
+  }
+};
+
+exports.default = LEVELS;
 
 /***/ })
 /******/ ]);

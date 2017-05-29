@@ -1,13 +1,16 @@
 import Wall from './wall';
+import LEVELS from './levels_structure';
 import Level from './level';
 import Point from './point';
 import Ray from './ray';
 import Board from './board';
 
 class Game {
-  constructor(context, canvas, board, point) {
+  constructor(context, canvas, point) {
     this.context = context;
-    this.board = board;
+    this.levelCount = 1;
+    debugger;
+    this.board = new Board(context, canvas, point, LEVELS[this.levelCount]);
     this.point = point;
     this.canvas = canvas;
 
@@ -55,6 +58,8 @@ class Game {
     this.board.draw(); //will redraw board based on position of everything.
     if (this.point.hasEscaped()) {
       alert("YOU WON");
+
+      //instantiate next level board.
       return;
     }
 
