@@ -33,14 +33,20 @@ const hideSplashText = () => {
   document.removeEventListener("keypress", hideSplashText);
 };
 
+const gameTransitions = {
+  1: "Looks like you passed level 1. But the first level is always the easiest. Let's see how you do on the next one...",
+  2: "Well, well, well. You're better than I thought. But can you handle level 3?",
+  3: "You've earned my respect, young padawan. But no man has beaten the final level.",
+  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy."
+};
+
 const levelPassed = (levelNum) => {
   const gameText = document.getElementById('game-intro');
   const canvas = document.getElementById("canvas");
   canvas.classList.add("hidden");
   gameText.classList.remove("hidden");
-  debugger;
 
-  gameText.innerHTML = `<h3> Looks like you passed level ${levelNum} . But don't get too excited. You're not in the clear yet! </h3>`;
+  gameText.innerHTML = `<h3>${gameTransitions[levelNum]}</h3>`;
 
-  setTimeout(hideSplashText, 5000);
+  setTimeout(hideSplashText, 3000);
 };

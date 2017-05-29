@@ -84,9 +84,9 @@ class Game {
     this.board.draw(); //will redraw board based on position of everything.
     if (this.point.hasEscaped()) {
       // alert("YOU WON");
-      this.levelCount += 1;
       this.keyStatus = {};
       this.levelPassed(this.levelCount);
+      this.levelCount += 1;
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
       this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
       //instantiate next level board.

@@ -180,9 +180,9 @@ var Game = function () {
       this.board.draw(); //will redraw board based on position of everything.
       if (this.point.hasEscaped()) {
         // alert("YOU WON");
-        this.levelCount += 1;
         this.keyStatus = {};
         this.levelPassed(this.levelCount);
+        this.levelCount += 1;
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
         //instantiate next level board.
@@ -811,16 +811,22 @@ var hideSplashText = function hideSplashText() {
   document.removeEventListener("keypress", hideSplashText);
 };
 
+var gameTransitions = {
+  1: "Looks like you passed level 1. But the first level is always the easiest. Let's see how you do on the next one...",
+  2: "Well, well, well. You're better than I thought. But can you handle level 3?",
+  3: "You've earned my respect, young padawan. But no man has beaten the final level.",
+  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy."
+};
+
 var levelPassed = function levelPassed(levelNum) {
   var gameText = document.getElementById('game-intro');
   var canvas = document.getElementById("canvas");
   canvas.classList.add("hidden");
   gameText.classList.remove("hidden");
-  debugger;
 
-  gameText.innerHTML = '<h3> Looks like you passed level ' + levelNum + ' . But don\'t get too excited. You\'re not in the clear yet! </h3>';
+  gameText.innerHTML = '<h3>' + gameTransitions[levelNum] + '</h3>';
 
-  setTimeout(hideSplashText, 5000);
+  setTimeout(hideSplashText, 3000);
 };
 
 /***/ })
