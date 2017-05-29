@@ -40,6 +40,7 @@ const gameTransitions = {
   4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy."
 };
 
+
 const levelPassed = (levelNum) => {
   const gameText = document.getElementById('game-intro');
   const canvas = document.getElementById("canvas");
