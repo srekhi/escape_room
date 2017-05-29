@@ -5,7 +5,7 @@ Escape room is a browser based echolocation game. The user is left in a dark roo
 
 ### MVP Features
 Allow users to interact with the game by
-  -	movinv their player around the room with keys: w, a, s, d.
+  -	moving their player around the room with keys: w, a, s, d.
   -	creating sound via spacebar
   - Display win message if user escapes maze. 
   
