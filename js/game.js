@@ -31,9 +31,10 @@ const LEVELS = {
 
 
 class Game {
-  constructor(context, canvas, point) {
+  constructor(context, canvas, levelPassed) {
     this.context = context;
     this.levelCount = 1;
+    this.levelPassed = levelPassed;
     // debugger;
     this.canvas = canvas;
     this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
@@ -82,9 +83,10 @@ class Game {
     this.analyzeKeyMap();
     this.board.draw(); //will redraw board based on position of everything.
     if (this.point.hasEscaped()) {
-      alert("YOU WON");
+      // alert("YOU WON");
       this.levelCount += 1;
       this.keyStatus = {};
+      this.levelPassed(this.levelCount);
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
       this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
       //instantiate next level board.

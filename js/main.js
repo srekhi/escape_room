@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   //           [0, 0, 0.02, 1],
   //       ];
   let levelCount = 1;
-  const game = new Game(ctx, canvas);
+  const game = new Game(ctx, canvas, levelPassed);
   document.addEventListener("keypress", hideSplashText);
 });
 
@@ -31,4 +31,16 @@ const hideSplashText = () => {
   introText.classList.add("hidden");
   canvas.classList.remove("hidden");
   document.removeEventListener("keypress", hideSplashText);
+};
+
+const levelPassed = (levelNum) => {
+  const gameText = document.getElementById('game-intro');
+  const canvas = document.getElementById("canvas");
+  canvas.classList.add("hidden");
+  gameText.classList.remove("hidden");
+  debugger;
+
+  gameText.innerHTML = `<h3> Looks like you passed level ${levelNum} . But don't get too excited. You're not in the clear yet! </h3>`;
+
+  setTimeout(hideSplashText, 5000);
 };

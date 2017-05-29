@@ -1,6 +1,40 @@
+h1, h2, h3, h4, a{
+  margin: 0;
+  text-decoration: none;
+    
+}
+
 html, main {
   height: 100%;
   width: 100%;
+}
+#game-intro{
+  padding-top: 30%;
+  text-align: center;
+  vertical-align: text-top;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+header > nav {
+  align-self: center;
+}
+
+h2, h3, h4{
+  color: #ccc;
+  font-family: inherit;
+}
+
+nav > a {
+
+}
+
+h1{
+  font-family: sans-serif;
+  color: #ccc;
 }
 #game-container {
   width: 100%;
@@ -9,6 +43,7 @@ html, main {
   display: block;
   background-color: black;
   color: white;
+  /* text-align: center; */
 }
 
 .hidden {
@@ -21,7 +56,13 @@ html, main {
 
 body {
   max-width: 800px;
+  height: 100%;
 
   width: 800px;
   margin: 0 auto;
+}
+
+
+nav > a {
+  margin: 0 5px 0 5px;
 }

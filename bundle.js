@@ -117,11 +117,12 @@ var LEVELS = {
 };
 
 var Game = function () {
-  function Game(context, canvas, point) {
+  function Game(context, canvas, levelPassed) {
     _classCallCheck(this, Game);
 
     this.context = context;
     this.levelCount = 1;
+    this.levelPassed = levelPassed;
     // debugger;
     this.canvas = canvas;
     this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
@@ -178,9 +179,10 @@ var Game = function () {
       this.analyzeKeyMap();
       this.board.draw(); //will redraw board based on position of everything.
       if (this.point.hasEscaped()) {
-        alert("YOU WON");
+        // alert("YOU WON");
         this.levelCount += 1;
         this.keyStatus = {};
+        this.levelPassed(this.levelCount);
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
         //instantiate next level board.
@@ -464,7 +466,7 @@ var Point = function () {
     key: 'draw',
     value: function draw() {
       this.c.beginPath();
-      this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
+      this.c.arc(this.pos[0], this.pos[1], 2, 0, Math.PI * 2, false);
       this.c.fillStyle = "white";
       this.c.strokeStyle = "white";
 
@@ -797,7 +799,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //           [0, 0, 0.02, 1],
   //       ];
   var levelCount = 1;
-  var game = new _game2.default(ctx, canvas);
+  var game = new _game2.default(ctx, canvas, levelPassed);
   document.addEventListener("keypress", hideSplashText);
 });
 
@@ -807,6 +809,18 @@ var hideSplashText = function hideSplashText() {
   introText.classList.add("hidden");
   canvas.classList.remove("hidden");
   document.removeEventListener("keypress", hideSplashText);
+};
+
+var levelPassed = function levelPassed(levelNum) {
+  var gameText = document.getElementById('game-intro');
+  var canvas = document.getElementById("canvas");
+  canvas.classList.add("hidden");
+  gameText.classList.remove("hidden");
+  debugger;
+
+  gameText.innerHTML = '<h3> Looks like you passed level ' + levelNum + ' . But don\'t get too excited. You\'re not in the clear yet! </h3>';
+
+  setTimeout(hideSplashText, 5000);
 };
 
 /***/ })
