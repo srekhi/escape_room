@@ -9,7 +9,7 @@ Allow users to interact with the game by
   -	creating sound via spacebar
   - Display win message if user escapes maze. 
   
-### Wireframes:
+### Wireframe:
 ![Wireframe](/docs/home-wireframe.png)
 
 ### Architecture and technologies
