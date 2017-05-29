@@ -5,10 +5,11 @@ import Ray from './ray';
 import Board from './board';
 
 class Game {
-  constructor(context, board, point) {
+  constructor(context, canvas, board, point) {
     this.context = context;
     this.board = board;
     this.point = point;
+    this.canvas = canvas;
 
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
@@ -49,9 +50,14 @@ class Game {
     //clear out the board
     // this.keyStatus = {};
     this.context.fillStyle = "#222";
-    this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.analyzeKeyMap();
     this.board.draw(); //will redraw board based on position of everything.
+    if (this.point.hasEscaped()) {
+      alert("YOU WON");
+      return;
+    }
+
     requestAnimationFrame(this.step);
   }
 

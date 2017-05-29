@@ -2,12 +2,13 @@ import Game from './game';
 import Ray from './ray';
 import Board from './board';
 class Point {
-  constructor(context, startingPos){
+  constructor(context, canvas, startingPos){
     this.c = context;
     this.pos = startingPos;
     this.dx = 5;
     this.dy = -5;
     this.moving = false;
+    this.canvas = canvas;
     // this.board = board;
     // this.draw();
     // this.animate = this.animate.bind(this);
@@ -32,8 +33,12 @@ class Point {
     this.c.stroke();
   }
 
-  hasWon(){
-    // if this.pos[0]
+  hasEscaped(){
+      // if point is outside of cavas, return false, else true
+      return (this.pos[0] > this.canvas.width
+        || this.pos[0] < 0
+        || this.pos[1] > this.canvas.height
+        || this.pos[1] < 0);
   }
 
   move(direction){

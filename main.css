@@ -1,10 +1,10 @@
-html, body, main {
+html, main {
   height: 100%;
   width: 100%;
 }
 #game-container {
-  width: 70vw;
-  height: 90vh;
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
   display: block;
   background-color: black;
@@ -12,9 +12,16 @@ html, body, main {
 }
 
 .hidden {
-  visibility: hidden;
+  display: none;
 }
 
 #canvas {
     background: black;
+}
+
+body {
+  max-width: 800px;
+
+  width: 800px;
+  margin: 0 auto;
 }
