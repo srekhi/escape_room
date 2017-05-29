@@ -42,13 +42,6 @@ class Ray {
     this.tail = this.body[0];
     }
 
-  // length(){
-  //   let xDistance = this.head[0] - this.tail[0];
-  //   let yDistance = this.head[1] - this.tail[1];
-  //
-  //   return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
-  // }
-
   draw(){
     this.c.beginPath();
     this.c.moveTo(this.tail[0], this.tail[1]);

@@ -150,7 +150,7 @@ var Game = function () {
   }, {
     key: 'hasWon',
     value: function hasWon() {
-      //check if player is out of bounds 
+      //check if player is out of bounds
     }
   }, {
     key: 'step',
@@ -421,14 +421,6 @@ var Ray = function () {
       this.body.shift();
       this.tail = this.body[0];
     }
-
-    // length(){
-    //   let xDistance = this.head[0] - this.tail[0];
-    //   let yDistance = this.head[1] - this.tail[1];
-    //
-    //   return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
-    // }
-
   }, {
     key: 'draw',
     value: function draw() {
@@ -580,7 +572,7 @@ var Board = function () {
 
     this.context = ctx;
     this.point = point;
-    this.walls = [new _wall2.default(0, 0, window.innerWidth / 2 - 50, window.innerHeight / 2 - 50), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight)];
+    this.walls = [new _wall2.default(0, 0, window.innerWidth / 2 - 50, window.innerHeight / 2 - 50), new _wall2.default(0, window.innerHeight / 2 + 50, window.innerWidth, window.innerHeight / 2), new _wall2.default(window.innerWidth / 2 + 50, 0, window.innerWidth / 2, window.innerHeight), new _wall2.default(0, 0, window.innerWidth / 35, window.innerHeight)];
     var level = new _level2.default(this.context, this.walls);
     this.level = level;
     this.rays = []; //store all rays in the game.
@@ -720,14 +712,17 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
-  var p = new _point2.default(ctx, [0, window.innerHeight / 2 + 25]);
+  0, 0, window.innerWidth / 10, window.innerHeight;
+  var p = new _point2.default(ctx, [window.innerWidth / 30 + 5, window.innerHeight / 2 + 25]);
   var board = new _board2.default(ctx, p);
   window.game = new _game2.default(ctx, board, p);
 });
 
 var hideSplashText = function hideSplashText() {
   var introText = document.getElementById("game-intro");
+  var canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
+  canvas.classList.remove("hidden");
   document.removeEventListener("keypress", hideSplashText);
 };
 

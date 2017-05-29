@@ -11,13 +11,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext("2d");
-  let p = new Point(ctx, [0, window.innerHeight / 2 + 25]);
+  (0, 0, window.innerWidth / 10, window.innerHeight)
+  let p = new Point(ctx, [window.innerWidth / 30 + 5, window.innerHeight / 2 + 25]);
   const board = new Board(ctx, p);
   window.game = new Game(ctx, board, p);
 });
 
 const hideSplashText = () => {
   let introText = document.getElementById("game-intro");
+  let canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
+  canvas.classList.remove("hidden");
   document.removeEventListener("keypress", hideSplashText);
 };

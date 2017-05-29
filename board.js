@@ -7,7 +7,8 @@ class Board {
     this.walls = [
       new Wall(0, 0, window.innerWidth /2 -50, window.innerHeight / 2 - 50),
       new Wall(0, window.innerHeight/2 + 50, window.innerWidth, window.innerHeight / 2),
-      new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight)
+      new Wall(window.innerWidth/2 + 50, 0, window.innerWidth /2, window.innerHeight),
+      new Wall(0, 0, window.innerWidth / 35, window.innerHeight)
     ];
     let level = new Level(this.context, this.walls);
     this.level = level;
