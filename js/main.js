@@ -5,6 +5,7 @@ import Point from './point';
 import Ray from './ray';
 import Game from './game';
 import Board from './board';
+import Monster from './monster';
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const canvas = document.getElementById('canvas');

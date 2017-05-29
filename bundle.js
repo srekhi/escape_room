@@ -101,6 +101,10 @@ var _board = __webpack_require__(1);
 
 var _board2 = _interopRequireDefault(_board);
 
+var _monster = __webpack_require__(8);
+
+var _monster2 = _interopRequireDefault(_monster);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -108,7 +112,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var LEVELS = {
   1: {
     walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
-    pointStartPos: [.1, .27]
+    pointStartPos: [.1, .27],
+    monsterPositions: [[0.65, 0.2]]
   },
   2: {
     walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
@@ -123,37 +128,48 @@ var Game = function () {
     this.context = context;
     this.levelCount = 1;
     this.levelPassed = levelPassed;
-    // debugger;
+
+    this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
+
+    this.monsters = this.createMonsters();
     this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
-    this.board = new _board2.default(context, canvas, this.point, LEVELS[this.levelCount].walls);
+    this.board = new _board2.default(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
 
     this.point.draw();
-    this.keyStatus = {}; //keep tally of which keys are pressed down.
-    // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
+    this.keyStatus = {};
     this.createEventListeners();
     this.step = this.step.bind(this);
     this.step();
   }
 
   _createClass(Game, [{
+    key: 'createMonsters',
+    value: function createMonsters() {
+      var _this = this;
+
+      return this.monsterPositions.map(function (monsterPos) {
+        return new _monster2.default(_this.context, _this.canvas, monsterPos);
+      });
+    }
+  }, {
     key: 'createEventListeners',
     value: function createEventListeners() {
-      var _this = this;
+      var _this2 = this;
 
       var self = this;
       window.addEventListener("keydown", function (event) {
-        _this.keyStatus[event.key] = true;
+        _this2.keyStatus[event.key] = true;
       });
 
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
           event.preventDefault();
-          _this.point.makeSound(_this.board); //needs to be separate JS effect from point.
+          _this2.point.makeSound(_this2.board); //needs to be separate JS effect from point.
         }
       });
       window.addEventListener("keyup", function (event) {
-        _this.keyStatus[event.key] = false;
+        _this2.keyStatus[event.key] = false;
       });
     }
   }, {
@@ -281,19 +297,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Board = function () {
-  function Board(ctx, canvas, point, wallDimensions) {
+  function Board(ctx, canvas, point, monsters, wallDimensions) {
     _classCallCheck(this, Board);
 
     this.context = ctx;
     this.point = point;
     this.wallDimensions = wallDimensions;
-    // this.walls = [
-    //   new Wall(0, 0, window.innerWidth /4 - 100, window.innerHeight / 4 - 50),
-    //   new Wall(0, window.innerHeight/4 + 50, window.innerWidth - 50, window.innerHeight / 4),
-    //   new Wall(window.innerWidth/4 + 50, 0, window.innerWidth /2 - 50, window.innerHeight / 4),
-    //   new Wall(0, 0, window.innerWidth / 35 , window.innerHeight)
-    // ];
-
+    this.monsters = monsters;
     this.wallDimensions = this.wallDimensions.map(function (row) {
       return row.map(function (dim, index) {
         if (index % 2 === 0) {
@@ -316,19 +326,9 @@ var Board = function () {
     value: function walls() {
       return this.walls;
     }
-
-    // inBounds(coords){
-    //   // if point is outside of cavas, return false, else true
-    //   return !(coords[0] > window.innerWidth
-    //     || coords[0] < 0
-    //     || coords[1] > window.innerHeight
-    //     || coords[1] < 0);
-    // }
-
   }, {
     key: 'advanceRays',
     value: function advanceRays() {
-      //each step reduces the rays lifetimes by 1.
       this.rays = this.removeDeadRays();
       this.rays.forEach(function (ray) {
         return ray.draw();
@@ -349,11 +349,19 @@ var Board = function () {
       });
     }
   }, {
+    key: 'drawMonsters',
+    value: function drawMonsters() {
+      this.monsters.forEach(function (monster) {
+        return monster.draw();
+      });
+    }
+  }, {
     key: 'draw',
     value: function draw() {
       this.point.draw();
+      this.drawMonsters();
       this.advanceRays();
-      this.level.draw(); //draw the structure of the level
+      this.level.draw();
     }
   }]);
 
@@ -782,6 +790,10 @@ var _board = __webpack_require__(1);
 
 var _board2 = _interopRequireDefault(_board);
 
+var _monster = __webpack_require__(8);
+
+var _monster2 = _interopRequireDefault(_monster);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -828,6 +840,122 @@ var levelPassed = function levelPassed(levelNum) {
 
   setTimeout(hideSplashText, 3000);
 };
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _game = __webpack_require__(0);
+
+var _game2 = _interopRequireDefault(_game);
+
+var _ray = __webpack_require__(4);
+
+var _ray2 = _interopRequireDefault(_ray);
+
+var _board = __webpack_require__(1);
+
+var _board2 = _interopRequireDefault(_board);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Monster = function () {
+  function Monster(context, canvas, startingPos) {
+    _classCallCheck(this, Monster);
+
+    this.c = context;
+    this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
+    this.dx = 5;
+    this.dy = -5;
+    this.awake = false;
+    this.canvas = canvas;
+    this.movementDeltas = {
+      "NW": [-this.dx, this.dy],
+      "SW": [-this.dx, -this.dy],
+      "NE": [this.dx, this.dy],
+      "SE": [this.dx, -this.dy],
+      "W": [-this.dx, 0],
+      "E": [this.dx, 0],
+      "N": [0, this.dy],
+      "S": [0, -this.dy]
+    };
+  }
+
+  _createClass(Monster, [{
+    key: 'draw',
+    value: function draw() {
+      this.c.beginPath();
+      this.c.arc(this.pos[0], this.pos[1], 100, 0, Math.PI * 2, false);
+      this.c.fillStyle = "red";
+      this.c.strokeStyle = "red";
+      this.c.stroke();
+      if (this.awake) {
+        this.makeSound(); //every time redrawn make sound if awake.
+      }
+    }
+  }, {
+    key: 'move',
+    value: function move(direction) {
+      var delta = void 0;
+      this.moving = true;
+      delta = this.movementDeltas[direction];
+      this.pos = this.nextPos(direction);
+      this.draw();
+    }
+  }, {
+    key: 'makeSound',
+    value: function makeSound(board) {
+      var _this = this;
+
+      var counter = 10;
+      _ray2.default.DIRECTIONS.forEach(function (dir) {
+        new _ray2.default(_this.c, 100, _this.pos, dir[0] * 3, dir[1] * 3, board);
+      });
+    }
+  }, {
+    key: 'nextPos',
+    value: function nextPos(direction) {
+      var delta = void 0;
+      delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant
+      return this.pos.map(function (posDir, index) {
+        return posDir + delta[index];
+      });
+    }
+  }, {
+    key: 'stopMoving',
+    value: function stopMoving() {
+      this.moving = false;
+      window.cancelAnimationFrame(window.animationFrameId);
+    }
+
+    // animate(direction){
+    //   // this.c.clearRect(0, 0, innerHeight, innerWidth);
+    //   this.move(direction);
+    //   window.animationFrameId = window.requestAnimationFrame(() =>{
+    //     if (this.moving){
+    //       this.animate(direction);
+    //       if (this.collides()) this.stopMoving();
+    //     }
+    //   });
+    // }
+
+  }]);
+
+  return Monster;
+}();
+
+exports.default = Monster;
 
 /***/ })
 /******/ ]);

@@ -4,6 +4,7 @@ import Level from './level';
 import Point from './point';
 import Ray from './ray';
 import Board from './board';
+import Monster from './monster';
 
 const LEVELS = {
   1: {
@@ -16,6 +17,9 @@ const LEVELS = {
         [0.8, 0, 0.01, 1]
     ],
     pointStartPos: [.1, .27],
+    monsterPositions: [
+      [0.65, 0.2],
+    ]
   },
   2: {
     walls: [
@@ -28,24 +32,30 @@ const LEVELS = {
   },
 };
 
-
-
 class Game {
   constructor(context, canvas, levelPassed) {
     this.context = context;
     this.levelCount = 1;
     this.levelPassed = levelPassed;
-    // debugger;
+
+    this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
+
+    this.monsters = this.createMonsters();
     this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
-    this.board = new Board(context, canvas, this.point, LEVELS[this.levelCount].walls);
+    this.board = new Board(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
 
     this.point.draw();
-    this.keyStatus = {}; //keep tally of which keys are pressed down.
-    // this.directions = { "w": "up", "s":"down", "d":"right", "a": "left"};
+    this.keyStatus = {};
     this.createEventListeners();
     this.step = this.step.bind(this);
     this.step();
+  }
+
+  createMonsters(){
+    return this.monsterPositions.map(monsterPos => {
+      return new Monster(this.context, this.canvas, monsterPos);
+    });
   }
   createEventListeners(){
     const self = this;
