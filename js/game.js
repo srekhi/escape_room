@@ -19,9 +19,12 @@ const LEVELS = {
   },
   2: {
     walls: [
-
+      [0, 0.25, 0.8, 0.2],
+      [0.6, 0.6, 0.4, 0.2],
+      [0, 0.45, 0.4, 0.55],
+      [0.4, 0.9, 0.2, 0.1]
     ],
-    pointStartPos: [],
+    pointStartPos: [0.01, 0.01],
   },
 };
 
@@ -33,8 +36,8 @@ class Game {
     this.levelCount = 1;
     // debugger;
     this.canvas = canvas;
-    this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
-    this.board = new Board(context, canvas, this.point, LEVELS[this.levelCount].walls);
+    this.point = new Point(context, canvas, LEVELS[2].pointStartPos);
+    this.board = new Board(context, canvas, this.point, LEVELS[2].walls);
 
     this.point.draw();
     this.keyStatus = {}; //keep tally of which keys are pressed down.
