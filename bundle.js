@@ -113,7 +113,7 @@ var LEVELS = {
   1: {
     walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
     pointStartPos: [.1, .27],
-    monsterPositions: [[0.2, 0.27]]
+    monsterPositions: [[0.7, 0.20]]
   },
   2: {
     walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
@@ -131,10 +131,10 @@ var Game = function () {
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
-
-    this.monsters = this.createMonsters();
     this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
     this.board = new _board2.default(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+    this.monsters = this.createMonsters();
+    this.board.monsters = this.monsters;
 
     this.point.draw();
     this.keyStatus = {};
@@ -149,7 +149,7 @@ var Game = function () {
       var _this = this;
 
       return this.monsterPositions.map(function (monsterPos) {
-        return new _monster2.default(_this.context, _this.canvas, monsterPos);
+        return new _monster2.default(_this.context, _this.canvas, monsterPos, _this.board);
       });
     }
   }, {
@@ -186,6 +186,13 @@ var Game = function () {
       //check if player is out of bounds
     }
   }, {
+    key: 'moveMonsters',
+    value: function moveMonsters() {
+      this.monsters.forEach(function (monster) {
+        return monster.move;
+      });
+    }
+  }, {
     key: 'step',
     value: function step() {
       //clear out the board
@@ -201,6 +208,7 @@ var Game = function () {
         this.levelCount += 1;
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+        moveMonsters();
         //instantiate next level board.
       }
       requestAnimationFrame(this.step);
@@ -565,7 +573,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Ray = function () {
-  function Ray(context, lifespan, startPos, xDir, yDir, board) {
+  function Ray(context, lifespan, startPos, xDir, yDir, board, fromMonster) {
     _classCallCheck(this, Ray);
 
     this.c = context;
@@ -587,6 +595,7 @@ var Ray = function () {
     this.draw();
     this.board.rays.push(this);
     this.length = 0;
+    this.fromMonster = fromMonster;
   }
 
   _createClass(Ray, [{
@@ -650,10 +659,16 @@ var Ray = function () {
       this.c.beginPath();
       this.c.moveTo(this.tail[0], this.tail[1]);
       if (this.grow()) {
+        var gradient = void 0;
+        gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
         this.c.lineTo(this.head[0], this.head[1]);
-        var gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-        gradient.addColorStop(0, '#808080');
-        gradient.addColorStop(1, 'white');
+        if (this.fromMonster) {
+          gradient.addColorStop(0, '#3d0101');
+          gradient.addColorStop(1, 'red');
+        } else {
+          gradient.addColorStop(0, '#808080');
+          gradient.addColorStop(1, 'white');
+        }
         this.c.strokeStyle = gradient;
         this.c.stroke();
       }
@@ -684,7 +699,7 @@ var Ray = function () {
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         }
-        var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board);
+        var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
         this.board.rays.push(reflection);
         this.xDir = 0;
         this.yDir = 0;
@@ -903,7 +918,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Monster = function () {
-  function Monster(context, canvas, startingPos) {
+  function Monster(context, canvas, startingPos, board) {
     _classCallCheck(this, Monster);
 
     this.c = context;
@@ -912,6 +927,8 @@ var Monster = function () {
     this.dy = -5;
     this.awake = false;
     this.canvas = canvas;
+    this.board = board;
+    this.timer = false;
     this.movementDeltas = {
       "NW": [-this.dx, this.dy],
       "SW": [-this.dx, -this.dy],
@@ -927,13 +944,20 @@ var Monster = function () {
   _createClass(Monster, [{
     key: 'draw',
     value: function draw() {
+      var _this = this;
+
       this.c.beginPath();
       this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
       this.c.fillStyle = "red";
       this.c.strokeStyle = "red";
       this.c.stroke();
       if (this.awake) {
-        this.makeSound(); //every time redrawn make sound if awake.
+        if (!this.timer) {
+          setInterval(function () {
+            return _this.makeSound(_this.board);
+          }, 1000); //add pulsing effect for monster;
+          this.timer = true;
+        }
       }
     }
   }, {
@@ -948,11 +972,11 @@ var Monster = function () {
   }, {
     key: 'makeSound',
     value: function makeSound(board) {
-      var _this = this;
+      var _this2 = this;
 
       var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
-        new _ray2.default(_this.c, 100, _this.pos, dir[0] * 3, dir[1] * 3, board);
+        new _ray2.default(_this2.c, 100, _this2.pos, dir[0] * 3, dir[1] * 3, board, true);
       });
     }
   }, {

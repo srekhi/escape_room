@@ -18,7 +18,7 @@ const LEVELS = {
     ],
     pointStartPos: [.1, .27],
     monsterPositions: [
-      [0.2, 0.27],
+      [0.7, 0.20],
     ]
   },
   2: {
@@ -40,10 +40,10 @@ class Game {
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
-
-    this.monsters = this.createMonsters();
     this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
     this.board = new Board(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+    this.monsters = this.createMonsters();
+    this.board.monsters = this.monsters;
 
     this.point.draw();
     this.keyStatus = {};
@@ -54,7 +54,7 @@ class Game {
 
   createMonsters(){
     return this.monsterPositions.map(monsterPos => {
-      return new Monster(this.context, this.canvas, monsterPos);
+      return new Monster(this.context, this.canvas, monsterPos, this.board);
     });
   }
   createEventListeners(){
@@ -85,6 +85,10 @@ class Game {
     //check if player is out of bounds
   }
 
+  moveMonsters(){
+    this.monsters.forEach(monster => monster.move);
+  }
+
   step(){
     //clear out the board
     // this.keyStatus = {};
@@ -99,6 +103,7 @@ class Game {
       this.levelCount += 1;
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
       this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+      moveMonsters();
       //instantiate next level board.
     }
     requestAnimationFrame(this.step);

@@ -2,13 +2,15 @@ import Game from './game';
 import Ray from './ray';
 import Board from './board';
 class Monster {
-  constructor(context, canvas, startingPos){
+  constructor(context, canvas, startingPos, board){
     this.c = context;
     this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
     this.awake = false;
     this.canvas = canvas;
+    this.board = board;
+    this.timer = false;
     this.movementDeltas = {
       "NW": [-this.dx, this.dy],
       "SW": [-this.dx, -this.dy],
@@ -28,7 +30,10 @@ class Monster {
     this.c.strokeStyle = "red";
     this.c.stroke();
     if (this.awake){
-      this.makeSound(); //every time redrawn make sound if awake.
+      if (!this.timer){
+        setInterval(() => this.makeSound(this.board), 1000); //add pulsing effect for monster;
+        this.timer = true;
+      }
     }
   }
 
@@ -43,7 +48,7 @@ class Monster {
   makeSound(board){
     let counter = 10;
     Ray.DIRECTIONS.forEach(dir => {
-      new Ray(this.c, 100, this.pos, dir[0] * 3, dir[1] * 3, board);
+      new Ray(this.c, 100, this.pos, dir[0] * 3, dir[1] * 3, board, true);
     });
 
   }
