@@ -117,12 +117,13 @@ var LEVELS = {
   },
   2: {
     walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
-    pointStartPos: [0.1, 0.1]
+    pointStartPos: [0.1, 0.1],
+    monsterPositions: [[]]
   }
 };
 
 var Game = function () {
-  function Game(context, canvas, levelPassed) {
+  function Game(context, canvas, levelPassed, playerEaten) {
     _classCallCheck(this, Game);
 
     this.context = context;
@@ -135,7 +136,7 @@ var Game = function () {
     this.board = new _board2.default(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
     this.monsters = this.createMonsters();
     this.board.monsters = this.monsters;
-
+    this.playerEaten = playerEaten;
     this.point.draw();
     this.keyStatus = {};
     this.createEventListeners();
@@ -181,11 +182,6 @@ var Game = function () {
       }
     }
   }, {
-    key: 'hasWon',
-    value: function hasWon() {
-      //check if player is out of bounds
-    }
-  }, {
     key: 'moveMonsters',
     value: function moveMonsters() {
       this.monsters.forEach(function (monster) {
@@ -207,9 +203,17 @@ var Game = function () {
         this.keyStatus = {};
         this.levelPassed(this.levelCount);
         this.levelCount += 1;
+        this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
+        this.monsters = this.createMonsters();
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-        this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+        this.board = new _board2.default(this.context, this.canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
         //instantiate next level board.
+      } else if (this.point.eaten) {
+        this.playerEaten(this.levelCount);
+        this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
+        this.monsters = this.createMonsters();
+        this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
+        this.board = new _board2.default(this.context, this.canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
       }
       requestAnimationFrame(this.step);
     }
@@ -327,6 +331,7 @@ var Board = function () {
     var level = new _level2.default(this.context, this.walls);
     this.level = level;
     this.rays = []; //store all rays in the game.
+    // this.draw();
   }
 
   _createClass(Board, [{
@@ -463,6 +468,7 @@ var Point = function () {
     this.dy = -5;
     this.moving = false;
     this.canvas = canvas;
+    this.eaten = false;
     // this.board = board;
     // this.draw();
     // this.animate = this.animate.bind(this);
@@ -592,17 +598,23 @@ var Ray = function () {
         if (this.length > this.maxLen) this.fadeOut();
         this.lifespan -= 1;
         // console.log(this.head);
+        if (this.fromMonster) {
+          //check if eaten player
+          if (this.compareCoordToHead(this.board.point.pos)) this.board.point.eaten = true;
+        } else {}
         this.wakeMonsters();
-
         return true;
       } else {
         return false;
       }
     }
   }, {
-    key: 'compareMonsterToHead',
-    value: function compareMonsterToHead(monster) {
-      return Math.abs(Math.floor(this.head[0]) - Math.floor(monster[0])) < 3 && Math.abs(Math.floor(this.head[1]) - Math.floor(monster[1])) < 3;
+    key: 'eatenPlayer',
+    value: function eatenPlayer() {}
+  }, {
+    key: 'compareCoordToHead',
+    value: function compareCoordToHead(coord) {
+      return Math.abs(Math.floor(this.head[0]) - Math.floor(coord[0])) < 3 && Math.abs(Math.floor(this.head[1]) - Math.floor(coord[1])) < 3;
     }
   }, {
     key: 'wakeMonsters',
@@ -613,7 +625,7 @@ var Ray = function () {
         return !monster.awake;
       });
       dormantMonsters.forEach(function (monster) {
-        if (_this.compareMonsterToHead(monster.pos)) {
+        if (_this.compareCoordToHead(monster.pos)) {
           console.log('awakened');
           monster.awake = true;
         }
@@ -842,7 +854,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //           [0, 0, 0.02, 1],
   //       ];
   var levelCount = 1;
-  var game = new _game2.default(ctx, canvas, levelPassed);
+  var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);
   document.addEventListener("keypress", hideSplashText);
 });
 
@@ -870,6 +882,16 @@ var levelPassed = function levelPassed(levelNum) {
   gameText.innerHTML = '<h3>' + gameTransitions[levelNum] + '</h3>';
 
   setTimeout(hideSplashText, 3000);
+};
+
+var playerEaten = function playerEaten() {
+  var gameText = document.getElementById('game-intro');
+  var canvas = document.getElementById("canvas");
+  canvas.classList.add("hidden");
+  gameText.classList.remove("hidden");
+
+  gameText.innerHTML = '<h3>You have been eaten! Try this level again.</h3>';
+  setTimeout(hideSplashText, 2000);
 };
 
 /***/ }),

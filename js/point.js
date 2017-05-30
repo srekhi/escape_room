@@ -9,6 +9,7 @@ class Point {
     this.dy = -5;
     this.moving = false;
     this.canvas = canvas;
+    this.eaten = false;
     // this.board = board;
     // this.draw();
     // this.animate = this.animate.bind(this);

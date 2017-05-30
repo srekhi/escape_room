@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   //           [0, 0, 0.02, 1],
   //       ];
   let levelCount = 1;
-  const game = new Game(ctx, canvas, levelPassed);
+  const game = new Game(ctx, canvas, levelPassed, playerEaten);
   document.addEventListener("keypress", hideSplashText);
 });
 
@@ -51,4 +51,14 @@ const levelPassed = (levelNum) => {
   gameText.innerHTML = `<h3>${gameTransitions[levelNum]}</h3>`;
 
   setTimeout(hideSplashText, 3000);
+};
+
+const playerEaten = () => {
+  const gameText = document.getElementById('game-intro');
+  const canvas = document.getElementById("canvas");
+  canvas.classList.add("hidden");
+  gameText.classList.remove("hidden");
+
+  gameText.innerHTML = `<h3>You have been eaten! Try this level again.</h3>`;
+  setTimeout(hideSplashText, 2000);
 };

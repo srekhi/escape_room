@@ -21,6 +21,7 @@ class Board {
     let level = new Level(this.context, this.walls);
     this.level = level;
     this.rays = []; //store all rays in the game.
+    // this.draw();
   }
 
   walls(){

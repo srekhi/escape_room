@@ -31,23 +31,31 @@ class Ray {
       if (this.length > this.maxLen) this.fadeOut();
       this.lifespan -=1;
       // console.log(this.head);
-      this.wakeMonsters();
+      if (this.fromMonster){ //check if eaten player
+        if (this.compareCoordToHead(this.board.point.pos)) this.board.point.eaten = true;
 
+      }else{
+      }
+      this.wakeMonsters();
       return true;
     } else {
       return false;
     }
   }
 
-  compareMonsterToHead(monster){
-    return (Math.abs(Math.floor(this.head[0]) - Math.floor(monster[0])) < 3)
-    && (Math.abs(Math.floor(this.head[1]) - Math.floor(monster[1])) < 3);
+  eatenPlayer(){
+
+  }
+
+  compareCoordToHead(coord){
+    return (Math.abs(Math.floor(this.head[0]) - Math.floor(coord[0])) < 3)
+    && (Math.abs(Math.floor(this.head[1]) - Math.floor(coord[1])) < 3);
   }
 
   wakeMonsters(){
     let dormantMonsters = this.board.monsters.filter(monster => !monster.awake);
     dormantMonsters.forEach(monster => {
-      if (this.compareMonsterToHead(monster.pos)){
+      if (this.compareCoordToHead(monster.pos)){
         console.log('awakened');
         monster.awake = true;
       }
