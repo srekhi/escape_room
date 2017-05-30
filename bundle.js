@@ -512,10 +512,6 @@ var Point = function () {
       _ray2.default.DIRECTIONS.forEach(function (dir) {
         new _ray2.default(_this.c, 100, _this.pos, dir[0] * 3, dir[1] * 3, board);
       });
-
-      // let ray = new Ray(this.c, this.pos, 1, 1, board);
-      //
-      // ray.grow();
     }
   }, {
     key: 'nextPos',
@@ -532,18 +528,6 @@ var Point = function () {
       this.moving = false;
       window.cancelAnimationFrame(window.animationFrameId);
     }
-
-    // animate(direction){
-    //   // this.c.clearRect(0, 0, innerHeight, innerWidth);
-    //   this.move(direction);
-    //   window.animationFrameId = window.requestAnimationFrame(() =>{
-    //     if (this.moving){
-    //       this.animate(direction);
-    //       if (this.collides()) this.stopMoving();
-    //     }
-    //   });
-    // }
-
   }]);
 
   return Point;
@@ -967,9 +951,13 @@ var Monster = function () {
       var delta = void 0;
       if (this.awake) {
         delta = [(this.board.point.pos[0] - this.pos[0]) / 100, (this.board.point.pos[1] - this.pos[1]) / 100];
-        this.pos = this.pos.map(function (posDir, index) {
+
+        var nextPos = this.pos.map(function (posDir, index) {
           return posDir + delta[index];
         });
+        if (!this.board.collides(nextPos)) {
+          this.pos = nextPos;
+        }
       }
     }
   }, {

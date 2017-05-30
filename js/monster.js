@@ -44,7 +44,11 @@ class Monster {
         (this.board.point.pos[0] - this.pos[0])/100,
         (this.board.point.pos[1] - this.pos[1])/100
       ];
-      this.pos = this.pos.map((posDir, index) => posDir + delta[index]);
+
+      let nextPos = this.pos.map((posDir, index) => posDir + delta[index]);
+      if (!this.board.collides(nextPos)){
+        this.pos = nextPos;
+      } 
     }
   }
 

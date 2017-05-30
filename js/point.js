@@ -54,13 +54,7 @@ class Point {
     Ray.DIRECTIONS.forEach(dir => {
       new Ray(this.c, 100, this.pos, dir[0] * 3, dir[1] * 3, board);
     });
-
-      // let ray = new Ray(this.c, this.pos, 1, 1, board);
-      //
-      // ray.grow();
   }
-
-
 
   nextPos(direction){
     let delta;
@@ -73,15 +67,5 @@ class Point {
     window.cancelAnimationFrame(window.animationFrameId);
   }
 
-  // animate(direction){
-  //   // this.c.clearRect(0, 0, innerHeight, innerWidth);
-  //   this.move(direction);
-  //   window.animationFrameId = window.requestAnimationFrame(() =>{
-  //     if (this.moving){
-  //       this.animate(direction);
-  //       if (this.collides()) this.stopMoving();
-  //     }
-  //   });
-  // }
 }
 export default Point;
