@@ -946,12 +946,12 @@ var Monster = function () {
     value: function draw() {
       var _this = this;
 
-      this.c.beginPath();
-      this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
-      this.c.fillStyle = "red";
-      this.c.strokeStyle = "red";
-      this.c.stroke();
       if (this.awake) {
+        this.c.beginPath();
+        this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
+        this.c.fillStyle = "red";
+        this.c.strokeStyle = "red";
+        this.c.stroke();
         if (!this.timer) {
           setInterval(function () {
             return _this.makeSound(_this.board);
@@ -965,10 +965,12 @@ var Monster = function () {
     value: function move() {
       // goal is to move toward the player
       var delta = void 0;
-      delta = [(this.board.point.pos[0] - this.pos[0]) / 100, (this.board.point.pos[1] - this.pos[1]) / 100];
-      this.pos = this.pos.map(function (posDir, index) {
-        return posDir + delta[index];
-      });
+      if (this.awake) {
+        delta = [(this.board.point.pos[0] - this.pos[0]) / 100, (this.board.point.pos[1] - this.pos[1]) / 100];
+        this.pos = this.pos.map(function (posDir, index) {
+          return posDir + delta[index];
+        });
+      }
     }
   }, {
     key: 'makeSound',

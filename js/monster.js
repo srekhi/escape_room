@@ -24,12 +24,12 @@ class Monster {
   }
 
   draw(){
+    if (this.awake){
     this.c.beginPath();
     this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
     this.c.fillStyle = "red";
     this.c.strokeStyle = "red";
     this.c.stroke();
-    if (this.awake){
       if (!this.timer){
         setInterval(() => this.makeSound(this.board), 1000); //add pulsing effect for monster;
         this.timer = true;
@@ -39,11 +39,13 @@ class Monster {
 
   move(){ // goal is to move toward the player
     let delta;
-     delta = [
-      (this.board.point.pos[0] - this.pos[0])/100,
-      (this.board.point.pos[1] - this.pos[1])/100
-    ];
-    this.pos = this.pos.map((posDir, index) => posDir + delta[index]);
+      if (this.awake){
+       delta = [
+        (this.board.point.pos[0] - this.pos[0])/100,
+        (this.board.point.pos[1] - this.pos[1])/100
+      ];
+      this.pos = this.pos.map((posDir, index) => posDir + delta[index]);
+    }
   }
 
   makeSound(board){
