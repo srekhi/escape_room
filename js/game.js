@@ -18,7 +18,7 @@ const LEVELS = {
     ],
     pointStartPos: [.1, .27],
     monsterPositions: [
-      [0.65, 0.2],
+      [0.2, 0.27],
     ]
   },
   2: {

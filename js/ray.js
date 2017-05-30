@@ -27,15 +27,39 @@ class Ray {
       this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
       this.length += 1;
       this.body.push(this.head);
-      if (this.length > this.maxLen){
-        this.fadeOut();
-      }
+      if (this.length > this.maxLen) this.fadeOut();
       this.lifespan -=1;
+      // console.log(this.head);
+      this.wakeMonsters();
+
       return true;
     } else {
       return false;
     }
   }
+
+  compareMonsterToHead(monster){
+    return (Math.abs(Math.floor(this.head[0]) - Math.floor(monster[0])) < 3)
+    && (Math.abs(Math.floor(this.head[1]) - Math.floor(monster[1])) < 3);
+  }
+
+  wakeMonsters(){
+    let dormantMonsters = this.board.monsters.filter(monster => !monster.awake);
+    dormantMonsters.forEach(monster => {
+      if (this.compareMonsterToHead(monster.pos)){
+        console.log('awakened');
+        monster.awake = true;
+      }
+    });
+  }
+  containsAll(arr1, arr2){
+    return arr2.every(arr2Item => arr1.includes(arr2Item));
+  }
+
+  sameMembers(arr1, arr2){
+    return this.containsAll(arr1, arr2) && this.containsAll(arr2, arr1);
+  }
+
 
   fadeOut(){
     this.body.shift();

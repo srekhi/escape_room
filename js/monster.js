@@ -23,7 +23,7 @@ class Monster {
 
   draw(){
     this.c.beginPath();
-    this.c.arc(this.pos[0], this.pos[1], 100, 0, Math.PI * 2, false);
+    this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
     this.c.fillStyle = "red";
     this.c.strokeStyle = "red";
     this.c.stroke();

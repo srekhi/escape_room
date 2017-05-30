@@ -113,7 +113,7 @@ var LEVELS = {
   1: {
     walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
     pointStartPos: [.1, .27],
-    monsterPositions: [[0.65, 0.2]]
+    monsterPositions: [[0.2, 0.27]]
   },
   2: {
     walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
@@ -500,7 +500,6 @@ var Point = function () {
     value: function makeSound(board) {
       var _this = this;
 
-      console.log("WAVY");
       var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
         new _ray2.default(_this.c, 100, _this.pos, dir[0] * 3, dir[1] * 3, board);
@@ -597,14 +596,47 @@ var Ray = function () {
         this.head = [this.head[0] + this.xDir, this.head[1] + this.yDir];
         this.length += 1;
         this.body.push(this.head);
-        if (this.length > this.maxLen) {
-          this.fadeOut();
-        }
+        if (this.length > this.maxLen) this.fadeOut();
         this.lifespan -= 1;
+        // console.log(this.head);
+        this.wakeMonsters();
+
         return true;
       } else {
         return false;
       }
+    }
+  }, {
+    key: 'compareMonsterToHead',
+    value: function compareMonsterToHead(monster) {
+      return Math.abs(Math.floor(this.head[0]) - Math.floor(monster[0])) < 3 && Math.abs(Math.floor(this.head[1]) - Math.floor(monster[1])) < 3;
+    }
+  }, {
+    key: 'wakeMonsters',
+    value: function wakeMonsters() {
+      var _this = this;
+
+      var dormantMonsters = this.board.monsters.filter(function (monster) {
+        return !monster.awake;
+      });
+      dormantMonsters.forEach(function (monster) {
+        if (_this.compareMonsterToHead(monster.pos)) {
+          console.log('awakened');
+          monster.awake = true;
+        }
+      });
+    }
+  }, {
+    key: 'containsAll',
+    value: function containsAll(arr1, arr2) {
+      return arr2.every(function (arr2Item) {
+        return arr1.includes(arr2Item);
+      });
+    }
+  }, {
+    key: 'sameMembers',
+    value: function sameMembers(arr1, arr2) {
+      return this.containsAll(arr1, arr2) && this.containsAll(arr2, arr1);
     }
   }, {
     key: 'fadeOut',
@@ -896,7 +928,7 @@ var Monster = function () {
     key: 'draw',
     value: function draw() {
       this.c.beginPath();
-      this.c.arc(this.pos[0], this.pos[1], 100, 0, Math.PI * 2, false);
+      this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
       this.c.fillStyle = "red";
       this.c.strokeStyle = "red";
       this.c.stroke();

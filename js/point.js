@@ -50,7 +50,6 @@ class Point {
   }
 
   makeSound(board){
-    console.log("WAVY");
     let counter = 10;
     Ray.DIRECTIONS.forEach(dir => {
       new Ray(this.c, 100, this.pos, dir[0] * 3, dir[1] * 3, board);
