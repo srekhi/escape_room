@@ -123,7 +123,7 @@ var LEVELS = {
   3: {
     walls: [[0, 0.1, 0.5, 0.1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35]],
     pointStartPos: [0.05, 0.05],
-    monsterPositions: [[]]
+    monsterPositions: [[0.8, 0.3], [0.5, 0.81]]
   }
 };
 
@@ -973,7 +973,7 @@ var Monster = function () {
     this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
-    this.awake = false;
+    this.awake = true;
     this.canvas = canvas;
     this.board = board;
     this.timer = false;

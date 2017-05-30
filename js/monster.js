@@ -7,7 +7,7 @@ class Monster {
     this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
-    this.awake = false;
+    this.awake = true;
     this.canvas = canvas;
     this.board = board;
     this.timer = false;
