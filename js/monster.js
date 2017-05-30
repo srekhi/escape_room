@@ -37,12 +37,13 @@ class Monster {
     }
   }
 
-  move(direction){
+  move(){ // goal is to move toward the player
     let delta;
-    this.moving = true;
-    delta = this.movementDeltas[direction];
-    this.pos = this.nextPos(direction);
-    this.draw();
+     delta = [
+      (this.board.point.pos[0] - this.pos[0])/100,
+      (this.board.point.pos[1] - this.pos[1])/100
+    ];
+    this.pos = this.pos.map((posDir, index) => posDir + delta[index]);
   }
 
   makeSound(board){
@@ -51,13 +52,6 @@ class Monster {
       new Ray(this.c, 100, this.pos, dir[0] * 3, dir[1] * 3, board, true);
     });
 
-  }
-
-
-  nextPos(direction){
-    let delta;
-    delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant
-    return this.pos.map((posDir, index) => posDir + delta[index]);
   }
 
   stopMoving(){

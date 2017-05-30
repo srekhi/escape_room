@@ -189,7 +189,7 @@ var Game = function () {
     key: 'moveMonsters',
     value: function moveMonsters() {
       this.monsters.forEach(function (monster) {
-        return monster.move;
+        return monster.move();
       });
     }
   }, {
@@ -200,6 +200,7 @@ var Game = function () {
       this.context.fillStyle = "#222";
       this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.analyzeKeyMap();
+      this.moveMonsters();
       this.board.draw(); //will redraw board based on position of everything.
       if (this.point.hasEscaped()) {
         // alert("YOU WON");
@@ -208,7 +209,6 @@ var Game = function () {
         this.levelCount += 1;
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-        moveMonsters();
         //instantiate next level board.
       }
       requestAnimationFrame(this.step);
@@ -962,12 +962,13 @@ var Monster = function () {
     }
   }, {
     key: 'move',
-    value: function move(direction) {
+    value: function move() {
+      // goal is to move toward the player
       var delta = void 0;
-      this.moving = true;
-      delta = this.movementDeltas[direction];
-      this.pos = this.nextPos(direction);
-      this.draw();
+      delta = [(this.board.point.pos[0] - this.pos[0]) / 100, (this.board.point.pos[1] - this.pos[1]) / 100];
+      this.pos = this.pos.map(function (posDir, index) {
+        return posDir + delta[index];
+      });
     }
   }, {
     key: 'makeSound',
@@ -977,15 +978,6 @@ var Monster = function () {
       var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
         new _ray2.default(_this2.c, 100, _this2.pos, dir[0] * 3, dir[1] * 3, board, true);
-      });
-    }
-  }, {
-    key: 'nextPos',
-    value: function nextPos(direction) {
-      var delta = void 0;
-      delta = this.movementDeltas[direction] || [0, 0]; //in case key pressed is irrelevant
-      return this.pos.map(function (posDir, index) {
-        return posDir + delta[index];
       });
     }
   }, {

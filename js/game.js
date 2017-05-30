@@ -86,7 +86,7 @@ class Game {
   }
 
   moveMonsters(){
-    this.monsters.forEach(monster => monster.move);
+    this.monsters.forEach(monster => monster.move());
   }
 
   step(){
@@ -95,6 +95,7 @@ class Game {
     this.context.fillStyle = "#222";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.analyzeKeyMap();
+    this.moveMonsters();
     this.board.draw(); //will redraw board based on position of everything.
     if (this.point.hasEscaped()) {
       // alert("YOU WON");
@@ -103,7 +104,6 @@ class Game {
       this.levelCount += 1;
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
       this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-      moveMonsters();
       //instantiate next level board.
     }
     requestAnimationFrame(this.step);
