@@ -121,7 +121,7 @@ var LEVELS = {
     monsterPositions: [[]]
   },
   3: {
-    walls: [[0, 0.1, 0.5, 0.1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.2, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.4]],
+    walls: [[0, 0.1, 0.5, 0.1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35]],
     pointStartPos: [0.05, 0.05],
     monsterPositions: [[]]
   }
@@ -132,7 +132,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 3;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -142,7 +142,6 @@ var Game = function () {
     this.monsters = this.createMonsters();
     this.board.monsters = this.monsters;
     this.playerEaten = playerEaten;
-    this.point.draw();
     this.keyStatus = {};
     this.createEventListeners();
     this.step = this.step.bind(this);
@@ -165,7 +164,9 @@ var Game = function () {
 
       var self = this;
       window.addEventListener("keydown", function (event) {
-        _this2.keyStatus[event.key.toLowerCase()] = true;
+        if (!event.metaKey && !event.ctrlKey) {
+          _this2.keyStatus[event.key.toLowerCase()] = true;
+        }
       });
 
       window.addEventListener("keydown", function (event) {
@@ -175,7 +176,9 @@ var Game = function () {
         }
       });
       window.addEventListener("keyup", function (event) {
-        _this2.keyStatus[event.key.toLowerCase()] = false;
+        // debugger;.
+        console.log('fire twice');
+        self.keyStatus[event.key.toLowerCase()] = false;
       });
     }
   }, {
@@ -498,6 +501,7 @@ var Point = function () {
       this.c.arc(this.pos[0], this.pos[1], 2, 0, Math.PI * 2, false);
       this.c.fillStyle = "white";
       this.c.strokeStyle = "white";
+      this.c.closePath();
       this.c.stroke();
     }
   }, {
@@ -585,6 +589,7 @@ var Ray = function () {
     this.lifespan -= 1;
     this.c.strokeStyle = "blue";
     this.maxLen = 50;
+    this.c.closePath();
     this.c.stroke();
     this.xDir = xDir;
     this.yDir = yDir;
@@ -592,6 +597,7 @@ var Ray = function () {
     this.draw();
     this.board.rays.push(this);
     this.length = 0;
+    // debugger;
   }
 
   _createClass(Ray, [{
@@ -657,11 +663,12 @@ var Ray = function () {
   }, {
     key: 'draw',
     value: function draw() {
-      this.c.beginPath();
-      this.c.moveTo(this.tail[0], this.tail[1]);
       if (this.grow()) {
+        this.c.beginPath();
+        this.c.moveTo(this.tail[0], this.tail[1]);
         var gradient = void 0;
         gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
+        debugger;
         if (this.fromMonster) {
           gradient.addColorStop(0, '#3d0101');
           gradient.addColorStop(1, 'red');
@@ -671,6 +678,7 @@ var Ray = function () {
         }
         this.c.strokeStyle = gradient;
         this.c.lineTo(this.head[0], this.head[1]);
+        this.c.closePath();
         this.c.stroke();
       }
     }
@@ -751,7 +759,18 @@ var Ray = function () {
 var root3over2 = Math.sqrt(3) / 2;
 var root2over2 = Math.sqrt(2) / 2;
 
-Ray.DIRECTIONS = [[0, 1], [0.5, root3over2], [root2over2, root2over2], [root3over2, 0.5], [1, 0], [root3over2, -0.5], [root2over2, -root2over2], [0.5, -root3over2], [0, -1], [-0.5, -root3over2], [-root2over2, -root2over2], [-root3over2, -0.5], [-1, 0], [-root3over2, 0.5], [-root2over2, root2over2], [-0.5, root3over2]];
+Ray.DIRECTIONS = [
+// [0, 1],
+// [0.5, root3over2],
+// [root2over2, root2over2],
+// [root3over2, 0.5],
+// [1, 0],
+// [root3over2, -0.5],
+// [root2over2, -root2over2],
+// [0.5, -root3over2],
+// [0, -1],
+// [-0.5, -root3over2],
+[-root2over2, -root2over2]];
 
 exports.default = Ray;
 
@@ -787,8 +806,9 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      context.fillStyle = "black";
-      context.fillRect(this.x, this.y, this.width, this.height);
+      // context.fillStyle = "red";
+      // context.fillRect(this.x, this.y, this.width, this.height);
+      context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -979,6 +999,7 @@ var Monster = function () {
         this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
         this.c.fillStyle = "red";
         this.c.strokeStyle = "red";
+        this.c.closePath();
         this.c.stroke();
         if (!this.timer) {
           setInterval(function () {

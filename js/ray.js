@@ -14,6 +14,7 @@ class Ray {
     this.lifespan -= 1;
     this.c.strokeStyle = "blue";
     this.maxLen = 50;
+    this.c.closePath();
     this.c.stroke();
     this.xDir = xDir;
     this.yDir = yDir;
@@ -21,6 +22,7 @@ class Ray {
     this.draw();
     this.board.rays.push(this);
     this.length = 0;
+    // debugger;
   }
 
   grow(){
@@ -73,11 +75,12 @@ class Ray {
     }
 
   draw(){
-    this.c.beginPath();
-    this.c.moveTo(this.tail[0], this.tail[1]);
     if (this.grow()){
+      this.c.beginPath();
+      this.c.moveTo(this.tail[0], this.tail[1]);
       let gradient;
       gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
+      debugger;
       if (this.fromMonster){
         gradient.addColorStop(0, '#3d0101');
         gradient.addColorStop(1, 'red');
@@ -87,6 +90,7 @@ class Ray {
       }
       this.c.strokeStyle = gradient;
       this.c.lineTo(this.head[0], this.head[1]);
+      this.c.closePath();
       this.c.stroke();
     }
   }
@@ -165,22 +169,22 @@ const root3over2 = Math.sqrt(3)/2;
 const root2over2 = Math.sqrt(2)/2;
 
 Ray.DIRECTIONS = [
-  [0, 1],
-  [0.5, root3over2],
-  [root2over2, root2over2],
-  [root3over2, 0.5],
-  [1, 0],
-  [root3over2, -0.5],
-  [root2over2, -root2over2],
-  [0.5, -root3over2],
-  [0, -1],
-  [-0.5, -root3over2],
+  // [0, 1],
+  // [0.5, root3over2],
+  // [root2over2, root2over2],
+  // [root3over2, 0.5],
+  // [1, 0],
+  // [root3over2, -0.5],
+  // [root2over2, -root2over2],
+  // [0.5, -root3over2],
+  // [0, -1],
+  // [-0.5, -root3over2],
   [-root2over2, -root2over2],
-  [-root3over2, -0.5],
-  [-1, 0],
-  [-root3over2, 0.5],
-  [-root2over2, root2over2],
-  [-0.5, root3over2],
+  // [-root3over2, -0.5],
+  // [-1, 0],
+  // [-root3over2, 0.5],
+  // [-root2over2, root2over2],
+  // [-0.5, root3over2],
 ];
 
 export default Ray;

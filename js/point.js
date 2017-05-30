@@ -30,6 +30,7 @@ class Point {
     this.c.arc(this.pos[0], this.pos[1], 2, 0, Math.PI * 2, false);
     this.c.fillStyle = "white";
     this.c.strokeStyle = "white";
+    this.c.closePath();
     this.c.stroke();
   }
 

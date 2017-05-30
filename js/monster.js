@@ -29,6 +29,7 @@ class Monster {
     this.c.arc(this.pos[0], this.pos[1], 5, 0, Math.PI * 2, false);
     this.c.fillStyle = "red";
     this.c.strokeStyle = "red";
+    this.c.closePath();
     this.c.stroke();
       if (!this.timer){
         setInterval(() => this.makeSound(this.board), 1000); //add pulsing effect for monster;

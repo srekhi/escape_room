@@ -37,9 +37,9 @@ const LEVELS = {
     walls: [
       [0, 0.1, 0.5, 0.1],
       [0.6, 0.1, 0.4, 0.1],
-      [0.2, 0.2, 0.8, 0.5],
+      [0.2, 0.3, 0.8, 0.5],
       [0.3, 0.7, 0.1, 0.2],
-      [0.6, 0.6, 0.2, 0.4]
+      [0.6, 0.6, 0.2, 0.35]
     ],
     pointStartPos: [0.05, 0.05],
     monsterPositions: [
@@ -51,7 +51,7 @@ const LEVELS = {
 class Game {
   constructor(context, canvas, levelPassed, playerEaten) {
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 3;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -61,7 +61,6 @@ class Game {
     this.monsters = this.createMonsters();
     this.board.monsters = this.monsters;
     this.playerEaten = playerEaten;
-    this.point.draw();
     this.keyStatus = {};
     this.createEventListeners();
     this.step = this.step.bind(this);
@@ -76,7 +75,9 @@ class Game {
   createEventListeners(){
     const self = this;
     window.addEventListener("keydown", event => {
-      this.keyStatus[event.key.toLowerCase()] = true;
+      if (!event.metaKey && !event.ctrlKey){
+        this.keyStatus[event.key.toLowerCase()] = true;
+      }
     });
 
     window.addEventListener("keydown", event => {
@@ -86,7 +87,9 @@ class Game {
         }
     });
     window.addEventListener("keyup", event => {
-      this.keyStatus[event.key.toLowerCase()] = false;
+      // debugger;.
+      console.log('fire twice');
+      self.keyStatus[event.key.toLowerCase()] = false;
     });
   }
 
