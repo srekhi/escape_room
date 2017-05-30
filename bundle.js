@@ -119,6 +119,11 @@ var LEVELS = {
     walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
     pointStartPos: [0.1, 0.1],
     monsterPositions: [[]]
+  },
+  3: {
+    walls: [[0, 0.1, 0.5, 0.1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.2, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.4]],
+    pointStartPos: [0.05, 0.05],
+    monsterPositions: [[]]
   }
 };
 
@@ -199,24 +204,21 @@ var Game = function () {
       this.moveMonsters();
       this.board.draw(); //will redraw board based on position of everything.
       if (this.point.hasEscaped()) {
-        // alert("YOU WON");
         this.keyStatus = {};
         this.levelPassed(this.levelCount);
         this.levelCount += 1;
         this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-
         this.monsters = this.createMonsters();
         this.board.monsters = this.monsters;
-        //instantiate next level board.
       } else if (this.point.eaten) {
+
         this.keyStatus = {};
         this.playerEaten(this.levelCount);
         this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
         this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-
         this.monsters = this.createMonsters();
         this.board.monsters = this.monsters;
       }
