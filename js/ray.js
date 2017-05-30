@@ -30,11 +30,9 @@ class Ray {
       this.body.push(this.head);
       if (this.length > this.maxLen) this.fadeOut();
       this.lifespan -=1;
-      // console.log(this.head);
       if (this.fromMonster){ //check if eaten player
         if (this.compareCoordToHead(this.board.point.pos)) this.board.point.eaten = true;
       }
-
       this.wakeMonsters();
       return true;
     } else {
@@ -56,7 +54,7 @@ class Ray {
     dormantMonsters.forEach(monster => {
       if (this.compareCoordToHead(monster.pos)){
         console.log('awakened');
-        monster.awake = true;
+        // monster.awake = true;
       }
     });
   }
@@ -109,17 +107,34 @@ class Ray {
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
     if (xCollision || yCollision){
-      if (xCollision && yCollision){
-        newXDir = -1 * this.xDir;
-        newYDir = -1 * this.yDir;
-      }else if (xCollision){
-        newXDir = -1 * this.xDir;
-      }else if (yCollision){
-        newYDir = -1 * this.yDir;
-      }
+      // if (xCollision && yCollision){
+      //   newXDir = -1 * this.xDir;
+      //   newYDir = -1 * this.yDir;
+      //   if (newXDir > 0 && newYDir > 0){
+      //     this.head = [this.head[0] + 1, this.head[1] + 1];
+      //   } else if (newXDir < 0 && newYDir < 0) {
+      //     this.head = [this.head[0] - 1, this.head[1] - 1];
+      //   } else if (newXDir < 0 && newYDir > 0){
+      //     this.head = [this.head[0] - 1, this.head[1] + 1];
+      //   } else if (newXDir > 0 && newYDir < 0) {
+      //     this.head = [this.head[0] + 1, this.head[1] - 1];
+      //   }
+      // }else if (xCollision){
+      //   newXDir = -1 * this.xDir;
+      // }else if (yCollision){
+      //   newYDir = -1 * this.yDir;
+      // }
+        if (xCollision && yCollision){
+          newXDir = -1 * this.xDir;
+          newYDir = -1 * this.yDir;
+        }else if (xCollision){
+          newXDir = -1 * this.xDir;
+        }else if (yCollision){
+          newYDir = -1 * this.yDir;
+        }
 
       const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-
+  //    constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
       this.xDir = 0;
       this.yDir = 0;
       return true;
@@ -148,8 +163,6 @@ class Ray {
 
 const root3over2 = Math.sqrt(3)/2;
 const root2over2 = Math.sqrt(2)/2;
-
-
 
 Ray.DIRECTIONS = [
   [0, 1],

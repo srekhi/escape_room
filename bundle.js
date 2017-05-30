@@ -165,7 +165,7 @@ var Game = function () {
 
       var self = this;
       window.addEventListener("keydown", function (event) {
-        _this2.keyStatus[event.key] = true;
+        _this2.keyStatus[event.key.toLowerCase()] = true;
       });
 
       window.addEventListener("keydown", function (event) {
@@ -175,7 +175,7 @@ var Game = function () {
         }
       });
       window.addEventListener("keyup", function (event) {
-        _this2.keyStatus[event.key] = false;
+        _this2.keyStatus[event.key.toLowerCase()] = false;
       });
     }
   }, {
@@ -498,7 +498,6 @@ var Point = function () {
       this.c.arc(this.pos[0], this.pos[1], 2, 0, Math.PI * 2, false);
       this.c.fillStyle = "white";
       this.c.strokeStyle = "white";
-
       this.c.stroke();
     }
   }, {
@@ -604,12 +603,10 @@ var Ray = function () {
         this.body.push(this.head);
         if (this.length > this.maxLen) this.fadeOut();
         this.lifespan -= 1;
-        // console.log(this.head);
         if (this.fromMonster) {
           //check if eaten player
           if (this.compareCoordToHead(this.board.point.pos)) this.board.point.eaten = true;
         }
-
         this.wakeMonsters();
         return true;
       } else {
@@ -635,7 +632,7 @@ var Ray = function () {
       dormantMonsters.forEach(function (monster) {
         if (_this.compareCoordToHead(monster.pos)) {
           console.log('awakened');
-          monster.awake = true;
+          // monster.awake = true;
         }
       });
     }
@@ -695,6 +692,23 @@ var Ray = function () {
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
       if (xCollision || yCollision) {
+        // if (xCollision && yCollision){
+        //   newXDir = -1 * this.xDir;
+        //   newYDir = -1 * this.yDir;
+        //   if (newXDir > 0 && newYDir > 0){
+        //     this.head = [this.head[0] + 1, this.head[1] + 1];
+        //   } else if (newXDir < 0 && newYDir < 0) {
+        //     this.head = [this.head[0] - 1, this.head[1] - 1];
+        //   } else if (newXDir < 0 && newYDir > 0){
+        //     this.head = [this.head[0] - 1, this.head[1] + 1];
+        //   } else if (newXDir > 0 && newYDir < 0) {
+        //     this.head = [this.head[0] + 1, this.head[1] - 1];
+        //   }
+        // }else if (xCollision){
+        //   newXDir = -1 * this.xDir;
+        // }else if (yCollision){
+        //   newYDir = -1 * this.yDir;
+        // }
         if (xCollision && yCollision) {
           newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
@@ -705,7 +719,7 @@ var Ray = function () {
         }
 
         var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-
+        //    constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
         this.xDir = 0;
         this.yDir = 0;
         return true;
@@ -850,8 +864,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener("DOMContentLoaded", function () {
   var canvas = document.getElementById('canvas');
   var body = document.getElementsByTagName('body')[0];
-  canvas.width = body.offsetWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = body.offsetWidth; //grab body width
+  canvas.height = body.offsetHeight; //viewport height
   var ctx = canvas.getContext("2d");
   // (0, 0, window.innerWidth / 10, window.innerHeight)
 

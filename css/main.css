@@ -54,10 +54,9 @@ h1{
 }
 
 body {
-  max-width: 800px;
+  max-width: 80vh;
   height: 100%;
 
-  width: 800px;
   margin: 0 auto;
 }
 

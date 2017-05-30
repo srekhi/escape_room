@@ -76,7 +76,7 @@ class Game {
   createEventListeners(){
     const self = this;
     window.addEventListener("keydown", event => {
-      this.keyStatus[event.key] = true;
+      this.keyStatus[event.key.toLowerCase()] = true;
     });
 
     window.addEventListener("keydown", event => {
@@ -86,7 +86,7 @@ class Game {
         }
     });
     window.addEventListener("keyup", event => {
-      this.keyStatus[event.key] = false;
+      this.keyStatus[event.key.toLowerCase()] = false;
     });
   }
 

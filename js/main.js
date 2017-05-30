@@ -10,8 +10,8 @@ import Monster from './monster';
 document.addEventListener("DOMContentLoaded", ()=>{
   const canvas = document.getElementById('canvas');
   const body = document.getElementsByTagName('body')[0];
-  canvas.width = body.offsetWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = body.offsetWidth; //grab body width
+  canvas.height = body.offsetHeight; //viewport height
   const ctx = canvas.getContext("2d");
   // (0, 0, window.innerWidth / 10, window.innerHeight)
 

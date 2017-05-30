@@ -6,7 +6,7 @@ class Board {
     this.context = ctx;
     this.point = point;
     this.wallDimensions = wallDimensions;
-    
+
     this.wallDimensions = this.wallDimensions
             .map(row => {
               return row.map((dim, index) => {
@@ -41,12 +41,11 @@ class Board {
     return this.walls.some( wall => {
       return !(
         (coords[0] < wall.topLeft[0])
-          || (coords[0] > wall.bottomRight[0]
+          || (coords[0] > wall.bottomRight[0])
           || (coords[1] < wall.topLeft[1])
           || (coords[1] > wall.bottomRight[1])
-          )
-      );
-    });
+          );
+      });
   }
 
   drawMonsters(){
