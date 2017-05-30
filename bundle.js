@@ -567,6 +567,7 @@ var Ray = function () {
     _classCallCheck(this, Ray);
 
     this.c = context;
+    this.fromMonster = fromMonster;
     this.lifespan = lifespan;
     this.head = startPos;
     this.tail = startPos;
@@ -585,7 +586,6 @@ var Ray = function () {
     this.draw();
     this.board.rays.push(this);
     this.length = 0;
-    this.fromMonster = fromMonster;
   }
 
   _createClass(Ray, [{
@@ -601,7 +601,8 @@ var Ray = function () {
         if (this.fromMonster) {
           //check if eaten player
           if (this.compareCoordToHead(this.board.point.pos)) this.board.point.eaten = true;
-        } else {}
+        }
+
         this.wakeMonsters();
         return true;
       } else {
@@ -657,7 +658,6 @@ var Ray = function () {
       if (this.grow()) {
         var gradient = void 0;
         gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-        this.c.lineTo(this.head[0], this.head[1]);
         if (this.fromMonster) {
           gradient.addColorStop(0, '#3d0101');
           gradient.addColorStop(1, 'red');
@@ -666,6 +666,7 @@ var Ray = function () {
           gradient.addColorStop(1, 'white');
         }
         this.c.strokeStyle = gradient;
+        this.c.lineTo(this.head[0], this.head[1]);
         this.c.stroke();
       }
     }
@@ -695,11 +696,11 @@ var Ray = function () {
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         }
+
         var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-        this.board.rays.push(reflection);
+
         this.xDir = 0;
         this.yDir = 0;
-
         return true;
       } else {
         return false;
@@ -972,10 +973,13 @@ var Monster = function () {
       // goal is to move toward the player
       var delta = void 0;
       if (this.awake) {
-        delta = [(this.board.point.pos[0] - this.pos[0]) / 100, (this.board.point.pos[1] - this.pos[1]) / 100];
-
+        delta = [Math.ceil(this.board.point.pos[0] - this.pos[0]), Math.ceil(this.board.point.pos[1] - this.pos[1])];
+        var deltaMagnitude = Math.sqrt(Math.pow(delta[0], 2) + Math.pow(delta[1], 2));
+        var unitVector = delta.map(function (dir) {
+          return dir / deltaMagnitude;
+        });
         var nextPos = this.pos.map(function (posDir, index) {
-          return posDir + delta[index];
+          return posDir + unitVector[index];
         });
         if (!this.board.collides(nextPos)) {
           this.pos = nextPos;
@@ -987,7 +991,6 @@ var Monster = function () {
     value: function makeSound(board) {
       var _this2 = this;
 
-      var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
         new _ray2.default(_this2.c, 100, _this2.pos, dir[0] * 3, dir[1] * 3, board, true);
       });

@@ -30,15 +30,11 @@ class Board {
 
   advanceRays(){
     this.rays = this.removeDeadRays();
-    this.rays.forEach(ray =>
-      ray.draw()
-    );
+    this.rays.forEach(ray => ray.draw());
   }
 
   removeDeadRays(){
-    return this.rays.filter(ray =>
-      ray.lifespan > 0
-    );
+    return this.rays.filter(ray => ray.lifespan > 0);
   }
 
   collides(coords) {

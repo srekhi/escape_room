@@ -2,6 +2,7 @@ import Game from './game';
 class Ray {
   constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
     this.c = context;
+    this.fromMonster = fromMonster;
     this.lifespan = lifespan;
     this.head = startPos;
     this.tail = startPos;
@@ -20,7 +21,6 @@ class Ray {
     this.draw();
     this.board.rays.push(this);
     this.length = 0;
-    this.fromMonster = fromMonster;
   }
 
   grow(){
@@ -33,9 +33,8 @@ class Ray {
       // console.log(this.head);
       if (this.fromMonster){ //check if eaten player
         if (this.compareCoordToHead(this.board.point.pos)) this.board.point.eaten = true;
-
-      }else{
       }
+
       this.wakeMonsters();
       return true;
     } else {
@@ -81,7 +80,6 @@ class Ray {
     if (this.grow()){
       let gradient;
       gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-      this.c.lineTo(this.head[0], this.head[1]);
       if (this.fromMonster){
         gradient.addColorStop(0, '#3d0101');
         gradient.addColorStop(1, 'red');
@@ -90,6 +88,7 @@ class Ray {
         gradient.addColorStop(1, 'white');
       }
       this.c.strokeStyle = gradient;
+      this.c.lineTo(this.head[0], this.head[1]);
       this.c.stroke();
     }
   }
@@ -118,11 +117,11 @@ class Ray {
       }else if (yCollision){
         newYDir = -1 * this.yDir;
       }
-      const reflection = new Ray(this.c, this.lifespan - 1,this.head, newXDir, newYDir, this.board, this.fromMonster);
-      this.board.rays.push(reflection);
+
+      const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
+
       this.xDir = 0;
       this.yDir = 0;
-
       return true;
     }else{
       return false;
