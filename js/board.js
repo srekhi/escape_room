@@ -2,11 +2,11 @@ import Wall from './wall';
 import Level from './level';
 
 class Board {
-  constructor(ctx, canvas, point, monsters, wallDimensions){
+  constructor(ctx, canvas, point, wallDimensions){
     this.context = ctx;
     this.point = point;
     this.wallDimensions = wallDimensions;
-    this.monsters = monsters;
+    
     this.wallDimensions = this.wallDimensions
             .map(row => {
               return row.map((dim, index) => {

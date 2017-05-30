@@ -60,10 +60,10 @@ class Monster {
 
   }
 
-  stopMoving(){
-    this.moving = false;
-    window.cancelAnimationFrame(window.animationFrameId);
-  }
+  // stopMoving(){
+  //   this.moving = false;
+  //   window.cancelAnimationFrame(window.animationFrameId);
+  // }
 
   // animate(direction){
   //   // this.c.clearRect(0, 0, innerHeight, innerWidth);

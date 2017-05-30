@@ -65,3 +65,8 @@ body {
 nav > a {
   margin: 0 5px 0 5px;
 }
+
+#consumed {
+  margin: 0 30px;
+  vertical-align: center;
+}

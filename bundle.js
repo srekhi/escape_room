@@ -133,7 +133,7 @@ var Game = function () {
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
     this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
-    this.board = new _board2.default(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+    this.board = new _board2.default(context, canvas, this.point, LEVELS[this.levelCount].walls);
     this.monsters = this.createMonsters();
     this.board.monsters = this.monsters;
     this.playerEaten = playerEaten;
@@ -204,16 +204,21 @@ var Game = function () {
         this.levelPassed(this.levelCount);
         this.levelCount += 1;
         this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-        this.monsters = this.createMonsters();
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-        this.board = new _board2.default(this.context, this.canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+        this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+
+        this.monsters = this.createMonsters();
+        this.board.monsters = this.monsters;
         //instantiate next level board.
       } else if (this.point.eaten) {
+        this.keyStatus = {};
         this.playerEaten(this.levelCount);
         this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-        this.monsters = this.createMonsters();
         this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-        this.board = new _board2.default(this.context, this.canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+        this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+
+        this.monsters = this.createMonsters();
+        this.board.monsters = this.monsters;
       }
       requestAnimationFrame(this.step);
     }
@@ -309,13 +314,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Board = function () {
-  function Board(ctx, canvas, point, monsters, wallDimensions) {
+  function Board(ctx, canvas, point, wallDimensions) {
     _classCallCheck(this, Board);
 
     this.context = ctx;
     this.point = point;
     this.wallDimensions = wallDimensions;
-    this.monsters = monsters;
+
     this.wallDimensions = this.wallDimensions.map(function (row) {
       return row.map(function (dim, index) {
         if (index % 2 === 0) {
@@ -891,8 +896,8 @@ var playerEaten = function playerEaten() {
   canvas.classList.add("hidden");
   gameText.classList.remove("hidden");
 
-  gameText.innerHTML = '<h3>You have been eaten! Try this level again.</h3>';
-  setTimeout(hideSplashText, 2000);
+  gameText.innerHTML = '\n    <h3 id="consumed">You have been eaten.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
+  document.addEventListener("keydown", hideSplashText);
 };
 
 /***/ }),
@@ -995,12 +1000,11 @@ var Monster = function () {
         new _ray2.default(_this2.c, 100, _this2.pos, dir[0] * 3, dir[1] * 3, board, true);
       });
     }
-  }, {
-    key: 'stopMoving',
-    value: function stopMoving() {
-      this.moving = false;
-      window.cancelAnimationFrame(window.animationFrameId);
-    }
+
+    // stopMoving(){
+    //   this.moving = false;
+    //   window.cancelAnimationFrame(window.animationFrameId);
+    // }
 
     // animate(direction){
     //   // this.c.clearRect(0, 0, innerHeight, innerWidth);

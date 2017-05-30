@@ -44,7 +44,7 @@ class Game {
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
     this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
-    this.board = new Board(context, canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+    this.board = new Board(context, canvas, this.point, LEVELS[this.levelCount].walls);
     this.monsters = this.createMonsters();
     this.board.monsters = this.monsters;
     this.playerEaten = playerEaten;
@@ -103,16 +103,21 @@ class Game {
       this.levelPassed(this.levelCount);
       this.levelCount += 1;
       this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-      this.monsters = this.createMonsters();
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-      this.board = new Board(this.context, this.canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+      this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+
+      this.monsters = this.createMonsters();
+      this.board.monsters = this.monsters;
       //instantiate next level board.
     } else if (this.point.eaten) {
+      this.keyStatus = {};
       this.playerEaten(this.levelCount);
       this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-      this.monsters = this.createMonsters();
       this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-      this.board = new Board(this.context, this.canvas, this.point, this.monsters, LEVELS[this.levelCount].walls);
+      this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
+
+      this.monsters = this.createMonsters();
+      this.board.monsters = this.monsters;
 
     }
     requestAnimationFrame(this.step);
