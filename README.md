@@ -109,3 +109,30 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
             });
           });
    ```
+   #### Sound 
+   When a user hits the space bar, their point emits sound rays **add video here** Each sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
+    ```
+    // ray.js 
+      const root3over2 = Math.sqrt(3)/2;
+      const root2over2 = Math.sqrt(2)/2;
+
+      Ray.DIRECTIONS = [
+      [0, 1],
+      [0.5, root3over2],
+      [root2over2, root2over2],
+      [root3over2, 0.5],
+      [1, 0],
+      [root3over2, -0.5],
+      [root2over2, -root2over2],
+      [0.5, -root3over2],
+      [0, -1],
+      [-0.5, -root3over2],
+      [-root2over2, -root2over2],
+      [-root3over2, -0.5],
+      [-1, 0],
+      [-root3over2, 0.5],
+      [-root2over2, root2over2],
+      [-0.5, root3over2],
+    ];
+   ```
+    Escape room rays, like real-life sound rays, have two things in common: both reflect off of obstacles, and both fade away.
