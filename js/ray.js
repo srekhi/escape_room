@@ -1,6 +1,7 @@
 import Game from './game';
 class Ray {
   constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
+    console.log('constructed');
     this.c = context;
     this.fromMonster = fromMonster;
     this.lifespan = lifespan;
@@ -56,7 +57,7 @@ class Ray {
     dormantMonsters.forEach(monster => {
       if (this.compareCoordToHead(monster.pos)){
         console.log('awakened');
-        // monster.awake = true;
+        monster.awake = true;
       }
     });
   }
@@ -80,7 +81,6 @@ class Ray {
       this.c.moveTo(this.tail[0], this.tail[1]);
       let gradient;
       gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-      debugger;
       if (this.fromMonster){
         gradient.addColorStop(0, '#3d0101');
         gradient.addColorStop(1, 'red');
@@ -169,22 +169,22 @@ const root3over2 = Math.sqrt(3)/2;
 const root2over2 = Math.sqrt(2)/2;
 
 Ray.DIRECTIONS = [
-  // [0, 1],
-  // [0.5, root3over2],
-  // [root2over2, root2over2],
-  // [root3over2, 0.5],
-  // [1, 0],
-  // [root3over2, -0.5],
-  // [root2over2, -root2over2],
-  // [0.5, -root3over2],
-  // [0, -1],
-  // [-0.5, -root3over2],
+  [0, 1],
+  [0.5, root3over2],
+  [root2over2, root2over2],
+  [root3over2, 0.5],
+  [1, 0],
+  [root3over2, -0.5],
+  [root2over2, -root2over2],
+  [0.5, -root3over2],
+  [0, -1],
+  [-0.5, -root3over2],
   [-root2over2, -root2over2],
-  // [-root3over2, -0.5],
-  // [-1, 0],
-  // [-root3over2, 0.5],
-  // [-root2over2, root2over2],
-  // [-0.5, root3over2],
+  [-root3over2, -0.5],
+  [-1, 0],
+  [-root3over2, 0.5],
+  [-root2over2, root2over2],
+  [-0.5, root3over2],
 ];
 
 export default Ray;

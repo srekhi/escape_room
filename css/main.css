@@ -22,6 +22,10 @@ header > nav {
   align-self: center;
 }
 
+h3:first-of-type {
+  margin-top: 10px;
+}
+
 h2, h3, h4{
   color: #ccc;
   font-family: inherit;
@@ -42,6 +46,7 @@ h1{
   display: block;
   background-color: black;
   color: white;
+  padding: 0 35px;
   /* text-align: center; */
 }
 

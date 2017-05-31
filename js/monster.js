@@ -7,7 +7,7 @@ class Monster {
     this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
-    this.awake = true;
+    this.awake = false;
     this.canvas = canvas;
     this.board = board;
     this.timer = false;
@@ -30,6 +30,7 @@ class Monster {
     this.c.fillStyle = "red";
     this.c.strokeStyle = "red";
     this.c.closePath();
+    this.c.fill();
     this.c.stroke();
       if (!this.timer){
         setInterval(() => this.makeSound(this.board), 1000); //add pulsing effect for monster;

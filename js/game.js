@@ -52,7 +52,7 @@ const LEVELS = {
 class Game {
   constructor(context, canvas, levelPassed, playerEaten) {
     this.context = context;
-    this.levelCount = 3;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -89,7 +89,6 @@ class Game {
     });
     window.addEventListener("keyup", event => {
       // debugger;.
-      console.log('fire twice');
       self.keyStatus[event.key.toLowerCase()] = false;
     });
   }
@@ -109,7 +108,7 @@ class Game {
   step(){
     //clear out the board
     // this.keyStatus = {};
-    this.context.fillStyle = "#222";
+    this.context.fillStyle = "black";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.analyzeKeyMap();
     this.moveMonsters();

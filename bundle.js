@@ -132,7 +132,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 3;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -177,7 +177,6 @@ var Game = function () {
       });
       window.addEventListener("keyup", function (event) {
         // debugger;.
-        console.log('fire twice');
         self.keyStatus[event.key.toLowerCase()] = false;
       });
     }
@@ -201,7 +200,7 @@ var Game = function () {
     value: function step() {
       //clear out the board
       // this.keyStatus = {};
-      this.context.fillStyle = "#222";
+      this.context.fillStyle = "black";
       this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.analyzeKeyMap();
       this.moveMonsters();
@@ -576,6 +575,7 @@ var Ray = function () {
   function Ray(context, lifespan, startPos, xDir, yDir, board, fromMonster) {
     _classCallCheck(this, Ray);
 
+    console.log('constructed');
     this.c = context;
     this.fromMonster = fromMonster;
     this.lifespan = lifespan;
@@ -638,7 +638,7 @@ var Ray = function () {
       dormantMonsters.forEach(function (monster) {
         if (_this.compareCoordToHead(monster.pos)) {
           console.log('awakened');
-          // monster.awake = true;
+          monster.awake = true;
         }
       });
     }
@@ -668,7 +668,6 @@ var Ray = function () {
         this.c.moveTo(this.tail[0], this.tail[1]);
         var gradient = void 0;
         gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
-        debugger;
         if (this.fromMonster) {
           gradient.addColorStop(0, '#3d0101');
           gradient.addColorStop(1, 'red');
@@ -759,18 +758,7 @@ var Ray = function () {
 var root3over2 = Math.sqrt(3) / 2;
 var root2over2 = Math.sqrt(2) / 2;
 
-Ray.DIRECTIONS = [
-// [0, 1],
-// [0.5, root3over2],
-// [root2over2, root2over2],
-// [root3over2, 0.5],
-// [1, 0],
-// [root3over2, -0.5],
-// [root2over2, -root2over2],
-// [0.5, -root3over2],
-// [0, -1],
-// [-0.5, -root3over2],
-[-root2over2, -root2over2]];
+Ray.DIRECTIONS = [[0, 1], [0.5, root3over2], [root2over2, root2over2], [root3over2, 0.5], [1, 0], [root3over2, -0.5], [root2over2, -root2over2], [0.5, -root3over2], [0, -1], [-0.5, -root3over2], [-root2over2, -root2over2], [-root3over2, -0.5], [-1, 0], [-root3over2, 0.5], [-root2over2, root2over2], [-0.5, root3over2]];
 
 exports.default = Ray;
 
@@ -806,9 +794,9 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      // context.fillStyle = "red";
-      // context.fillRect(this.x, this.y, this.width, this.height);
-      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.fillStyle = "black";
+      context.fillRect(this.x, this.y, this.width, this.height);
+      // context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -973,7 +961,7 @@ var Monster = function () {
     this.pos = [startingPos[0] * canvas.width, startingPos[1] * canvas.height];
     this.dx = 5;
     this.dy = -5;
-    this.awake = true;
+    this.awake = false;
     this.canvas = canvas;
     this.board = board;
     this.timer = false;
@@ -1000,6 +988,7 @@ var Monster = function () {
         this.c.fillStyle = "red";
         this.c.strokeStyle = "red";
         this.c.closePath();
+        this.c.fill();
         this.c.stroke();
         if (!this.timer) {
           setInterval(function () {

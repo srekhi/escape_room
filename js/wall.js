@@ -11,9 +11,9 @@ class Wall {
   }
 
   draw(context){
-    // context.fillStyle = "red";
-    // context.fillRect(this.x, this.y, this.width, this.height);
-    context.strokeRect(this.x, this.y, this.width, this.height);
+    context.fillStyle = "black";
+    context.fillRect(this.x, this.y, this.width, this.height);
+    // context.strokeRect(this.x, this.y, this.width, this.height);
   }
 }
 
