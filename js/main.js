@@ -34,7 +34,7 @@ const startGame = () =>{
   const canvas = document.getElementById('canvas');
   const body = document.getElementsByTagName('body')[0];
   canvas.width = body.offsetWidth; //grab body width
-  canvas.height = body.offsetHeight; //viewport height
+  canvas.height = window.innerHeight; //viewport height
   const ctx = canvas.getContext("2d");
   let levelCount = 1;
   const game = new Game(ctx, canvas, levelPassed, playerEaten);

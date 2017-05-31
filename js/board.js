@@ -30,6 +30,9 @@ class Board {
 
   advanceRays(){
     this.rays = this.removeDeadRays();
+    if (this.rays.length > 900) {
+      this.rays = this.rays.slice(300);
+    }
     this.rays.forEach(ray => ray.draw());
   }
 

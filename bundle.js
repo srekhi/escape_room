@@ -361,6 +361,9 @@ var Board = function () {
     key: 'advanceRays',
     value: function advanceRays() {
       this.rays = this.removeDeadRays();
+      if (this.rays.length > 900) {
+        this.rays = this.rays.slice(300);
+      }
       this.rays.forEach(function (ray) {
         return ray.draw();
       });
@@ -907,7 +910,7 @@ var startGame = function startGame() {
   var canvas = document.getElementById('canvas');
   var body = document.getElementsByTagName('body')[0];
   canvas.width = body.offsetWidth; //grab body width
-  canvas.height = body.offsetHeight; //viewport height
+  canvas.height = window.innerHeight; //viewport height
   var ctx = canvas.getContext("2d");
   var levelCount = 1;
   var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);
