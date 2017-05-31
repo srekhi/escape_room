@@ -112,13 +112,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Game = function () {
-  function Game(context, canvas, levelPassed, playerEaten) {
+  function Game(context, canvas, levelPassed, playerEaten, gameCompleted) {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 4;
     this.levelPassed = levelPassed;
-
+    this.gameCompleted = gameCompleted;
     this.monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
     this.canvas = canvas;
     this.point = new _point2.default(context, canvas, _levels_structure2.default[this.levelCount].pointStartPos);
@@ -201,7 +201,12 @@ var Game = function () {
       this.analyzeKeyMap();
       this.moveMonsters();
       this.board.draw();
+
       if (this.point.hasEscaped() || this.point.eaten) {
+        if (this.point.hasEscaped() && this.levelCount === 4) {
+          this.gameCompleted();
+          return;
+        }
         this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
         this.resetKeyStatus();
         this.levelCount += 1;
@@ -467,7 +472,6 @@ var Point = function () {
     key: 'move',
     value: function move(direction) {
       var delta = void 0;
-      console.log(this.pos);
       this.moving = true;
       delta = this.movementDeltas[direction];
       this.pos = this.nextPos(direction);
@@ -591,7 +595,6 @@ var Ray = function () {
       });
       dormantMonsters.forEach(function (monster) {
         if (_this.compareCoordToHead(monster.pos)) {
-          console.log('awakened');
           monster.awake = true;
         }
       });
@@ -636,9 +639,6 @@ var Ray = function () {
       }
     }
   }, {
-    key: 'nextPos',
-    value: function nextPos() {}
-  }, {
     key: 'collision',
     value: function collision() {
       var newXDir = this.xDir;
@@ -653,23 +653,9 @@ var Ray = function () {
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
       var zCollision = this.board.collides([newHeadX, newHeadY]);
-      // let newHead = [this.head[0 + 50], this.head[1] + 50];
       if (xCollision || yCollision || zCollision) {
         if (xCollision) {
           newXDir = -1 * this.xDir;
-          // if (this.xDir < 0 && this.yDir > 0){
-          //   newHead = [this.head[0] + 1000, this.head[1] - 1000];
-          //
-          // } else if (this.xDir > 0 && this.yDir > 0) {
-          //   newHead = [this.head[0] - 1000, this.head[1] - 1000];
-          //
-          // } else if (this.xDir > 0 && this.yDir < 0) {
-          //   newHead = [this.head[0] - 1000, this.head[1] + 1000];
-          //
-          //
-          // } else if (this.xDir < 0 && this.yDir < 0){
-          //   newHead = [this.head[0] + 1000, this.head[1] + 1000];
-          // }
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         } else {
@@ -690,41 +676,13 @@ var Ray = function () {
   return Ray;
 }();
 
-// The coordinates of a point with angle a with respect to x-axis on a circle of radius 1 are:
-// x = cos(a*Pi/180), y = sin(a*Pi/180)
+//unit circle calculations
 
-// const sixtyDegrees = 60 * Math.PI/180;
-// const sixtyDegreesX = Math.cos(sixtyDegrees);
-// const sixtyDegreesY = Math.sin(sixtyDegrees);
-//
-// const fortyFiveDegrees = (45 * Math.PI/180);
-// const fortyFiveDegreesX = Math.cos(fortyFiveDegrees);
-// const fortyFiveDegreesY = Math.sin(fortyFiveDegrees);
-//
-// const thirtyDegrees = (30 * Math.PI/180);
-// const thirtyDegreesX = Math.cos(thirtyDegrees);
-// const thirtyDegreesY = Math.sin(thirtyDegrees);
-//
 
 var root3over2 = Math.sqrt(3) / 2;
 var root2over2 = Math.sqrt(2) / 2;
 
-Ray.DIRECTIONS = [
-// [0, 1],
-// [0.5, root3over2],
-// [root2over2, root2over2],
-// [root3over2, 0.5],
-// [1, 0],
-// [root3over2, -0.5],
-// [root2over2, -root2over2],
-// [0.5, -root3over2],
-// [0, -1],
-// [-0.5, -root3over2],
-// [-root2over2, -root2over2],
-// [-root3over2, -0.5],
-// [-1, 0],
-// [-root3over2, 0.5],
-[-root2over2, root2over2]];
+Ray.DIRECTIONS = [[0, 1], [0.5, root3over2], [root2over2, root2over2], [root3over2, 0.5], [1, 0], [root3over2, -0.5], [root2over2, -root2over2], [0.5, -root3over2], [0, -1], [-0.5, -root3over2], [-root2over2, -root2over2], [-root3over2, -0.5], [-1, 0], [-root3over2, 0.5], [-root2over2, root2over2], [-0.5, root3over2]];
 
 exports.default = Ray;
 
@@ -786,9 +744,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 var LEVELS = {
   1: {
-    walls: [[0, 0, 0.55, 0.25],
-    // [0, 0.3, 0.7, 0.25],
-    [0.2, 0.3, 0.5, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25],
+    // [0.2, 0.3, 0.5, 0.25],
+    [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
     pointStartPos: [.1, .27],
     monsterPositions: [[0.7, 0.20]]
   },
@@ -804,7 +762,8 @@ var LEVELS = {
   },
   4: {
     walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
-    pointStartPos: [0.8, 0.05],
+    // pointStartPos: [0.8, 0.05],
+    pointStartPos: [0.50, 0.9],
     monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9], [0.05, 0.5]]
   }
 };
@@ -865,8 +824,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 var hideSplashText = function hideSplashText(event) {
-  console.log();
-  if (event && event.key.startsWith("Arrow")) event.preventDefault();
+  console.log('hidden');
+  if (event && event.key && event.key.startsWith("Arrow")) event.preventDefault();
   var introText = document.getElementById("game-intro");
   var canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
@@ -881,23 +840,35 @@ var startGame = function startGame() {
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
   var levelCount = 1;
-  var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);
+  var game = new _game2.default(ctx, canvas, levelPassed, playerEaten, gameCompleted);
   document.addEventListener("keydown", hideSplashText);
 };
 
 var gameTransitions = {
   1: "Looks like you passed level 1. But the first level is always the easiest. Let's see how you do on the next one...",
   2: "Well, well, well. You're better than I thought. But can you handle level 3?",
-  3: "You've earned my respect, young padawan. But no man has beaten the final level.",
-  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy. Once more?"
+  3: "You've earned my respect, young padawan. But no man has beaten the final level."
 };
 
-var levelPassed = function levelPassed(levelNum) {
+var gameCompleted = function gameCompleted() {
+  var gameText = hideGamePlay();
+  var htmlToDisplay = '\n  <div id="game-complete"> Congratulations & thanks for playing! <br/>\n  If you\'d like to know more about this game (or me!) check out the links below: <br>\n    <a href="https://github.com/srekhi/escape_room">\n      <i class="fa fa-github" aria-hidden="true"></i>\n    </a>\n\n    <a href="https://www.linkedin.com/in/rohit-rekhi/">\n      <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n    </a> <br/>\n    Want to play again? <button id="play-again"">Yes!</button>\n    </div>\n  ';
+
+  gameText.innerHTML = htmlToDisplay;
+
+  document.getElementById("play-again").addEventListener("click", hideSplashText);
+};
+
+var hideGamePlay = function hideGamePlay() {
   var gameText = document.getElementById('game-intro');
   var canvas = document.getElementById("canvas");
   canvas.classList.add("hidden");
   gameText.classList.remove("hidden");
+  return gameText;
+};
 
+var levelPassed = function levelPassed(levelNum) {
+  var gameText = hideGamePlay();
   gameText.innerHTML = '<h3>' + gameTransitions[levelNum] + '</h3>';
   if (levelNum === 4) {
     startGame();
@@ -907,10 +878,7 @@ var levelPassed = function levelPassed(levelNum) {
 };
 
 var playerEaten = function playerEaten() {
-  var gameText = document.getElementById('game-intro');
-  var canvas = document.getElementById("canvas");
-  canvas.classList.add("hidden");
-  gameText.classList.remove("hidden");
+  var gameText = hideGamePlay();
 
   gameText.innerHTML = '\n    <h3 id="consumed">You have been eaten.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
   document.addEventListener("keypress", hideSplashText);

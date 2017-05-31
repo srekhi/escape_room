@@ -41,7 +41,6 @@ class Point {
 
   move(direction){
     let delta;
-    console.log(this.pos);
     this.moving = true;
     delta = this.movementDeltas[direction];
     this.pos = this.nextPos(direction);

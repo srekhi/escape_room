@@ -7,11 +7,11 @@ import Board from './board';
 import Monster from './monster';
 
 class Game {
-  constructor(context, canvas, levelPassed, playerEaten) {
+  constructor(context, canvas, levelPassed, playerEaten, gameCompleted) {
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 4;
     this.levelPassed = levelPassed;
-
+    this.gameCompleted = gameCompleted;
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
     this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
@@ -56,7 +56,6 @@ class Game {
       }
     }
 
-
   moveMonsters(){
     this.monsters.forEach(monster => monster.move());
   }
@@ -79,7 +78,12 @@ class Game {
     this.analyzeKeyMap();
     this.moveMonsters();
     this.board.draw();
+
     if (this.point.hasEscaped() || this.point.eaten) {
+      if (this.point.hasEscaped() && this.levelCount === 4) {
+        this.gameCompleted();
+        return;
+      }
       this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
       this.resetKeyStatus();
       this.levelCount += 1;

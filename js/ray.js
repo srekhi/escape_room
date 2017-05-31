@@ -56,7 +56,6 @@ class Ray {
     let dormantMonsters = this.board.monsters.filter(monster => !monster.awake);
     dormantMonsters.forEach(monster => {
       if (this.compareCoordToHead(monster.pos)){
-        console.log('awakened');
         monster.awake = true;
       }
     });
@@ -95,9 +94,6 @@ class Ray {
     }
   }
 
-  nextPos(){
-
-  }
   collision(){
     let newXDir = this.xDir;
     let newYDir = this.yDir;
@@ -111,24 +107,9 @@ class Ray {
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
     let zCollision = this.board.collides([newHeadX, newHeadY]);
-    // let newHead = [this.head[0 + 50], this.head[1] + 50];
     if (xCollision || yCollision || zCollision){
         if (xCollision){
           newXDir = -1 * this.xDir;
-          // if (this.xDir < 0 && this.yDir > 0){
-          //   newHead = [this.head[0] + 1000, this.head[1] - 1000];
-          //
-          // } else if (this.xDir > 0 && this.yDir > 0) {
-          //   newHead = [this.head[0] - 1000, this.head[1] - 1000];
-          //
-          // } else if (this.xDir > 0 && this.yDir < 0) {
-          //   newHead = [this.head[0] - 1000, this.head[1] + 1000];
-          //
-          //
-          // } else if (this.xDir < 0 && this.yDir < 0){
-          //   newHead = [this.head[0] + 1000, this.head[1] + 1000];
-          // }
-
         }else if (yCollision){
           newYDir = -1 * this.yDir;
         }else {
@@ -146,44 +127,27 @@ class Ray {
   }
 }
 
-
-
-// The coordinates of a point with angle a with respect to x-axis on a circle of radius 1 are:
-// x = cos(a*Pi/180), y = sin(a*Pi/180)
-
-// const sixtyDegrees = 60 * Math.PI/180;
-// const sixtyDegreesX = Math.cos(sixtyDegrees);
-// const sixtyDegreesY = Math.sin(sixtyDegrees);
-//
-// const fortyFiveDegrees = (45 * Math.PI/180);
-// const fortyFiveDegreesX = Math.cos(fortyFiveDegrees);
-// const fortyFiveDegreesY = Math.sin(fortyFiveDegrees);
-//
-// const thirtyDegrees = (30 * Math.PI/180);
-// const thirtyDegreesX = Math.cos(thirtyDegrees);
-// const thirtyDegreesY = Math.sin(thirtyDegrees);
-//
-
+//unit circle calculations
 const root3over2 = Math.sqrt(3)/2;
 const root2over2 = Math.sqrt(2)/2;
 
 Ray.DIRECTIONS = [
-  // [0, 1],
-  // [0.5, root3over2],
-  // [root2over2, root2over2],
-  // [root3over2, 0.5],
-  // [1, 0],
-  // [root3over2, -0.5],
-  // [root2over2, -root2over2],
-  // [0.5, -root3over2],
-  // [0, -1],
-  // [-0.5, -root3over2],
-  // [-root2over2, -root2over2],
-  // [-root3over2, -0.5],
-  // [-1, 0],
-  // [-root3over2, 0.5],
+  [0, 1],
+  [0.5, root3over2],
+  [root2over2, root2over2],
+  [root3over2, 0.5],
+  [1, 0],
+  [root3over2, -0.5],
+  [root2over2, -root2over2],
+  [0.5, -root3over2],
+  [0, -1],
+  [-0.5, -root3over2],
+  [-root2over2, -root2over2],
+  [-root3over2, -0.5],
+  [-1, 0],
+  [-root3over2, 0.5],
   [-root2over2, root2over2],
-  // [-0.5, root3over2],
+  [-0.5, root3over2],
 ];
 
 export default Ray;
