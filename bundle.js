@@ -78,12 +78,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-// import LEVELS from './levels_structure';
-
 
 var _wall = __webpack_require__(5);
 
 var _wall2 = _interopRequireDefault(_wall);
+
+var _levels_structure = __webpack_require__(6);
+
+var _levels_structure2 = _interopRequireDefault(_levels_structure);
 
 var _level = __webpack_require__(2);
 
@@ -109,31 +111,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LEVELS = {
-  1: {
-    walls: [[0, 0, 0.55, 0.25],
-    // [0, 0.3, 0.7, 0.25],
-    [0.2, 0.3, 0.5, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
-    pointStartPos: [.1, .27],
-    monsterPositions: [[0.7, 0.20]]
-  },
-  2: {
-    walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
-    pointStartPos: [0.1, 0.1],
-    monsterPositions: [[0.5, 0.5]]
-  },
-  3: {
-    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
-    pointStartPos: [0.05, 0.05],
-    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9]]
-  },
-  4: {
-    walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
-    pointStartPos: [0.8, 0.05],
-    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9], [0.05, 0.5]]
-  }
-};
-
 var Game = function () {
   function Game(context, canvas, levelPassed, playerEaten) {
     _classCallCheck(this, Game);
@@ -142,10 +119,10 @@ var Game = function () {
     this.levelCount = 1;
     this.levelPassed = levelPassed;
 
-    this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
+    this.monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
     this.canvas = canvas;
-    this.point = new _point2.default(context, canvas, LEVELS[this.levelCount].pointStartPos);
-    this.board = new _board2.default(context, canvas, this.point, LEVELS[this.levelCount].walls);
+    this.point = new _point2.default(context, canvas, _levels_structure2.default[this.levelCount].pointStartPos);
+    this.board = new _board2.default(context, canvas, this.point, _levels_structure2.default[this.levelCount].walls);
     this.monsters = this.createMonsters();
     this.board.monsters = this.monsters;
     this.playerEaten = playerEaten;
@@ -209,12 +186,12 @@ var Game = function () {
   }, {
     key: 'pointStartPos',
     value: function pointStartPos() {
-      return LEVELS[this.levelCount].pointStartPos;
+      return _levels_structure2.default[this.levelCount].pointStartPos;
     }
   }, {
     key: 'walls',
     value: function walls() {
-      return LEVELS[this.levelCount].walls;
+      return _levels_structure2.default[this.levelCount].walls;
     }
   }, {
     key: 'step',
@@ -458,9 +435,7 @@ var Point = function () {
     this.moving = false;
     this.canvas = canvas;
     this.eaten = false;
-    // this.board = board;
-    // this.draw();
-    // this.animate = this.animate.bind(this);
+
     this.movementDeltas = {
       "NW": [-this.dx, this.dy],
       "SW": [-this.dx, -this.dy],
@@ -492,6 +467,7 @@ var Point = function () {
     key: 'move',
     value: function move(direction) {
       var delta = void 0;
+      console.log(this.pos);
       this.moving = true;
       delta = this.movementDeltas[direction];
       this.pos = this.nextPos(direction);
@@ -676,15 +652,28 @@ var Ray = function () {
 
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
-
-      if (xCollision || yCollision) {
-        if (xCollision && yCollision) {
+      var zCollision = this.board.collides([newHeadX, newHeadY]);
+      // let newHead = [this.head[0 + 50], this.head[1] + 50];
+      if (xCollision || yCollision || zCollision) {
+        if (xCollision) {
           newXDir = -1 * this.xDir;
-          newYDir = -1 * this.yDir;
-          console.log('collided');
-        } else if (xCollision) {
-          newXDir = -1 * this.xDir;
+          // if (this.xDir < 0 && this.yDir > 0){
+          //   newHead = [this.head[0] + 1000, this.head[1] - 1000];
+          //
+          // } else if (this.xDir > 0 && this.yDir > 0) {
+          //   newHead = [this.head[0] - 1000, this.head[1] - 1000];
+          //
+          // } else if (this.xDir > 0 && this.yDir < 0) {
+          //   newHead = [this.head[0] - 1000, this.head[1] + 1000];
+          //
+          //
+          // } else if (this.xDir < 0 && this.yDir < 0){
+          //   newHead = [this.head[0] + 1000, this.head[1] + 1000];
+          // }
         } else if (yCollision) {
+          newYDir = -1 * this.yDir;
+        } else {
+          newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
         }
         var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
@@ -720,7 +709,22 @@ var Ray = function () {
 var root3over2 = Math.sqrt(3) / 2;
 var root2over2 = Math.sqrt(2) / 2;
 
-Ray.DIRECTIONS = [[0, 1], [0.5, root3over2], [root2over2, root2over2], [root3over2, 0.5], [1, 0], [root3over2, -0.5], [root2over2, -root2over2], [0.5, -root3over2], [0, -1], [-0.5, -root3over2], [-root2over2, -root2over2], [-root3over2, -0.5], [-1, 0], [-root3over2, 0.5], [-root2over2, root2over2], [-0.5, root3over2]];
+Ray.DIRECTIONS = [
+// [0, 1],
+// [0.5, root3over2],
+// [root2over2, root2over2],
+// [root3over2, 0.5],
+// [1, 0],
+// [root3over2, -0.5],
+// [root2over2, -root2over2],
+// [0.5, -root3over2],
+// [0, -1],
+// [-0.5, -root3over2],
+// [-root2over2, -root2over2],
+// [-root3over2, -0.5],
+// [-1, 0],
+// [-root3over2, 0.5],
+[-root2over2, root2over2]];
 
 exports.default = Ray;
 
@@ -782,12 +786,26 @@ Object.defineProperty(exports, "__esModule", {
 });
 var LEVELS = {
   1: {
-    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
-    pointStartPos: [.1, .27]
+    walls: [[0, 0, 0.55, 0.25],
+    // [0, 0.3, 0.7, 0.25],
+    [0.2, 0.3, 0.5, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    pointStartPos: [.1, .27],
+    monsterPositions: [[0.7, 0.20]]
   },
   2: {
-    walls: [],
-    pointStartPos: []
+    walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
+    pointStartPos: [0.1, 0.1],
+    monsterPositions: [[0.5, 0.5]]
+  },
+  3: {
+    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
+    pointStartPos: [0.05, 0.05],
+    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9]]
+  },
+  4: {
+    walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
+    pointStartPos: [0.8, 0.05],
+    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9], [0.05, 0.5]]
   }
 };
 

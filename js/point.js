@@ -10,9 +10,7 @@ class Point {
     this.moving = false;
     this.canvas = canvas;
     this.eaten = false;
-    // this.board = board;
-    // this.draw();
-    // this.animate = this.animate.bind(this);
+
     this.movementDeltas = {
       "NW": [-this.dx, this.dy],
       "SW": [-this.dx, -this.dy],
@@ -43,6 +41,7 @@ class Point {
 
   move(direction){
     let delta;
+    console.log(this.pos);
     this.moving = true;
     delta = this.movementDeltas[direction];
     this.pos = this.nextPos(direction);

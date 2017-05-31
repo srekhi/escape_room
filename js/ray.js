@@ -110,15 +110,29 @@ class Ray {
 
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
-    
-    if (xCollision || yCollision){
-        if (xCollision && yCollision){
+    let zCollision = this.board.collides([newHeadX, newHeadY]);
+    // let newHead = [this.head[0 + 50], this.head[1] + 50];
+    if (xCollision || yCollision || zCollision){
+        if (xCollision){
           newXDir = -1 * this.xDir;
-          newYDir = -1 * this.yDir;
-          console.log('collided');
-        }else if (xCollision){
-          newXDir = -1 * this.xDir;
+          // if (this.xDir < 0 && this.yDir > 0){
+          //   newHead = [this.head[0] + 1000, this.head[1] - 1000];
+          //
+          // } else if (this.xDir > 0 && this.yDir > 0) {
+          //   newHead = [this.head[0] - 1000, this.head[1] - 1000];
+          //
+          // } else if (this.xDir > 0 && this.yDir < 0) {
+          //   newHead = [this.head[0] - 1000, this.head[1] + 1000];
+          //
+          //
+          // } else if (this.xDir < 0 && this.yDir < 0){
+          //   newHead = [this.head[0] + 1000, this.head[1] + 1000];
+          // }
+
         }else if (yCollision){
+          newYDir = -1 * this.yDir;
+        }else {
+          newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
         }
         const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
@@ -154,22 +168,22 @@ const root3over2 = Math.sqrt(3)/2;
 const root2over2 = Math.sqrt(2)/2;
 
 Ray.DIRECTIONS = [
-  [0, 1],
-  [0.5, root3over2],
-  [root2over2, root2over2],
-  [root3over2, 0.5],
-  [1, 0],
-  [root3over2, -0.5],
-  [root2over2, -root2over2],
-  [0.5, -root3over2],
-  [0, -1],
-  [-0.5, -root3over2],
-  [-root2over2, -root2over2],
-  [-root3over2, -0.5],
-  [-1, 0],
-  [-root3over2, 0.5],
+  // [0, 1],
+  // [0.5, root3over2],
+  // [root2over2, root2over2],
+  // [root3over2, 0.5],
+  // [1, 0],
+  // [root3over2, -0.5],
+  // [root2over2, -root2over2],
+  // [0.5, -root3over2],
+  // [0, -1],
+  // [-0.5, -root3over2],
+  // [-root2over2, -root2over2],
+  // [-root3over2, -0.5],
+  // [-1, 0],
+  // [-root3over2, 0.5],
   [-root2over2, root2over2],
-  [-0.5, root3over2],
+  // [-0.5, root3over2],
 ];
 
 export default Ray;
