@@ -107,27 +107,10 @@ class Ray {
 
     const newHeadY = this.head[1] + (this.yDir);
     const newYPoint = [this.head[0], newHeadY];
-    // console.log(this.lifespan);
+    
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
     if (xCollision || yCollision){
-      // if (xCollision && yCollision){
-      //   newXDir = -1 * this.xDir;
-      //   newYDir = -1 * this.yDir;
-      //   if (newXDir > 0 && newYDir > 0){
-      //     this.head = [this.head[0] + 1, this.head[1] + 1];
-      //   } else if (newXDir < 0 && newYDir < 0) {
-      //     this.head = [this.head[0] - 1, this.head[1] - 1];
-      //   } else if (newXDir < 0 && newYDir > 0){
-      //     this.head = [this.head[0] - 1, this.head[1] + 1];
-      //   } else if (newXDir > 0 && newYDir < 0) {
-      //     this.head = [this.head[0] + 1, this.head[1] - 1];
-      //   }
-      // }else if (xCollision){
-      //   newXDir = -1 * this.xDir;
-      // }else if (yCollision){
-      //   newYDir = -1 * this.yDir;
-      // }
         if (xCollision && yCollision){
           newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
@@ -136,9 +119,7 @@ class Ray {
         }else if (yCollision){
           newYDir = -1 * this.yDir;
         }
-
       const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-  //    constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
       this.xDir = 0;
       this.yDir = 0;
       return true;
@@ -147,6 +128,7 @@ class Ray {
     }
   }
 }
+
 
 
 // The coordinates of a point with angle a with respect to x-axis on a circle of radius 1 are:

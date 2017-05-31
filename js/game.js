@@ -120,7 +120,6 @@ class Game {
 
     window.addEventListener("keydown", event => {
       if (event.key === " ") {
-
           event.preventDefault();
           this.point.makeSound(this.board); //needs to be separate JS effect from point.
         }
@@ -143,42 +142,36 @@ class Game {
     this.monsters.forEach(monster => monster.move());
   }
 
+  resetKeyStatus(){
+    this.keyStatus = {};
+  }
+
+  pointStartPos(){
+    return LEVELS[this.levelCount].pointStartPos;
+  }
+
+  walls(){
+    return LEVELS[this.levelCount].walls;
+  }
+
   step(){
-    //clear out the board
-    // this.keyStatus = {};
     this.context.fillStyle = "black";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.analyzeKeyMap();
     this.moveMonsters();
-    this.board.draw(); //will redraw board based on position of everything.
-    if (this.point.hasEscaped()) {
-      this.keyStatus = {};
-      this.levelPassed(this.levelCount);
+    this.board.draw();
+    if (this.point.hasEscaped() || this.point.eaten) {
+      this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
+      this.resetKeyStatus();
       this.levelCount += 1;
-      this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-      this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-      this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-      this.monsters = this.createMonsters();
-      this.board.monsters = this.monsters;
-
-    } else if (this.point.eaten) {
-
-      this.keyStatus = {};
-      this.playerEaten(this.levelCount);
-      this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-      this.point = new Point(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-      this.board = new Board(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-      this.monsters = this.createMonsters();
-      this.board.monsters = this.monsters;
+      this.point = new Point(this.context, this.canvas, this.pointStartPos());
+      this.board = new Board(this.context, this.canvas, this.point, this.walls());
+      this.board.monsters = this.createMonsters();
     }
     requestAnimationFrame(this.step);
   }
 
   assignDirection() {
-    //  ArrowRight
-    //  ArrowDown
-    //  ArrowLeft
-    // ArrowUp
       if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowLeft"]) {
           return "NW";
       } else if (this.keyStatus["ArrowLeft"] && this.keyStatus["ArrowDown"]){
@@ -206,34 +199,3 @@ class Game {
 }
 
 export default Game;
-
-
-
-//   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
-//   let level1 = new Level(ctx, walls);
-//   level1.draw();
-//   p.draw();
-//   document.addEventListener("keypress", event => {
-//     if (event.key === "w"){
-//       animate(p,"up");
-//     }else if (event.key === "a") {
-//       animate(p,"left");
-//     }else if (event.key === "s"){
-//       animate(p,"down");
-//     }else if (event.key === "ArrowRight"){
-//       animate(p,"right");
-//     }else if (event.key === " "){
-//       let ray = new Ray(ctx, p.pos);
-//       ray.grow();
-//     }
-//   });
-// });
-//
-//
-// function animate(point, direction){
-//   console.log(direction);
-//   point.move(direction);
-//   requestAnimationFrame(() =>{
-//     animate(point, direction);
-//   });
-// }

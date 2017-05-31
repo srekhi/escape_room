@@ -31,11 +31,10 @@ const hideSplashText = (event) => {
 };
 
 const startGame = () =>{
-  const canvas = document.getElementById('canvas');
   const body = document.getElementsByTagName('body')[0];
-  
-  canvas.width = body.offsetWidth; //grab body width
-  canvas.height = window.innerHeight; //viewport height
+  const canvas = document.getElementById('canvas');
+  canvas.width = body.offsetWidth;
+  canvas.height = window.innerHeight;
   const ctx = canvas.getContext("2d");
   let levelCount = 1;
   const game = new Game(ctx, canvas, levelPassed, playerEaten);

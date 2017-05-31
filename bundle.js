@@ -175,7 +175,6 @@ var Game = function () {
 
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
-
           event.preventDefault();
           _this2.point.makeSound(_this2.board); //needs to be separate JS effect from point.
         }
@@ -201,43 +200,41 @@ var Game = function () {
       });
     }
   }, {
+    key: 'resetKeyStatus',
+    value: function resetKeyStatus() {
+      this.keyStatus = {};
+    }
+  }, {
+    key: 'pointStartPos',
+    value: function pointStartPos() {
+      return LEVELS[this.levelCount].pointStartPos;
+    }
+  }, {
+    key: 'walls',
+    value: function walls() {
+      return LEVELS[this.levelCount].walls;
+    }
+  }, {
     key: 'step',
     value: function step() {
-      //clear out the board
-      // this.keyStatus = {};
       this.context.fillStyle = "black";
       this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.analyzeKeyMap();
       this.moveMonsters();
-      this.board.draw(); //will redraw board based on position of everything.
-      if (this.point.hasEscaped()) {
-        this.keyStatus = {};
-        this.levelPassed(this.levelCount);
+      this.board.draw();
+      if (this.point.hasEscaped() || this.point.eaten) {
+        this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
+        this.resetKeyStatus();
         this.levelCount += 1;
-        this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-        this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-        this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-        this.monsters = this.createMonsters();
-        this.board.monsters = this.monsters;
-      } else if (this.point.eaten) {
-
-        this.keyStatus = {};
-        this.playerEaten(this.levelCount);
-        this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
-        this.point = new _point2.default(this.context, this.canvas, LEVELS[this.levelCount].pointStartPos);
-        this.board = new _board2.default(this.context, this.canvas, this.point, LEVELS[this.levelCount].walls);
-        this.monsters = this.createMonsters();
-        this.board.monsters = this.monsters;
+        this.point = new _point2.default(this.context, this.canvas, this.pointStartPos());
+        this.board = new _board2.default(this.context, this.canvas, this.point, this.walls());
+        this.board.monsters = this.createMonsters();
       }
       requestAnimationFrame(this.step);
     }
   }, {
     key: 'assignDirection',
     value: function assignDirection() {
-      //  ArrowRight
-      //  ArrowDown
-      //  ArrowLeft
-      // ArrowUp
       if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowLeft"]) {
         return "NW";
       } else if (this.keyStatus["ArrowLeft"] && this.keyStatus["ArrowDown"]) {
@@ -270,35 +267,6 @@ var Game = function () {
 
 exports.default = Game;
 
-//   let p = new Point(ctx, [0, window.innerHeight / 2 + 25] );
-//   let level1 = new Level(ctx, walls);
-//   level1.draw();
-//   p.draw();
-//   document.addEventListener("keypress", event => {
-//     if (event.key === "w"){
-//       animate(p,"up");
-//     }else if (event.key === "a") {
-//       animate(p,"left");
-//     }else if (event.key === "s"){
-//       animate(p,"down");
-//     }else if (event.key === "ArrowRight"){
-//       animate(p,"right");
-//     }else if (event.key === " "){
-//       let ray = new Ray(ctx, p.pos);
-//       ray.grow();
-//     }
-//   });
-// });
-//
-//
-// function animate(point, direction){
-//   console.log(direction);
-//   point.move(direction);
-//   requestAnimationFrame(() =>{
-//     animate(point, direction);
-//   });
-// }
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -327,14 +295,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Board = function () {
-  function Board(ctx, canvas, point, wallDimensions) {
+  function Board(ctx, canvas, point, scalarWallDimensions) {
     _classCallCheck(this, Board);
 
     this.context = ctx;
     this.point = point;
-    this.wallDimensions = wallDimensions;
 
-    this.wallDimensions = this.wallDimensions.map(function (row) {
+    this.wallDimensions = scalarWallDimensions.map(function (row) {
       return row.map(function (dim, index) {
         if (index % 2 === 0) {
           return dim * canvas.width;
@@ -431,7 +398,6 @@ var Level = function () {
 
     this.walls = walls;
     this.context = context;
-    // this.point = new Point(context
   }
 
   _createClass(Level, [{
@@ -535,7 +501,6 @@ var Point = function () {
     value: function makeSound(board) {
       var _this = this;
 
-      var counter = 10;
       _ray2.default.DIRECTIONS.forEach(function (dir) {
         new _ray2.default(_this.c, 100, _this.pos, dir[0] * 3, dir[1] * 3, board);
       });
@@ -707,27 +672,10 @@ var Ray = function () {
 
       var newHeadY = this.head[1] + this.yDir;
       var newYPoint = [this.head[0], newHeadY];
-      // console.log(this.lifespan);
+
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
       if (xCollision || yCollision) {
-        // if (xCollision && yCollision){
-        //   newXDir = -1 * this.xDir;
-        //   newYDir = -1 * this.yDir;
-        //   if (newXDir > 0 && newYDir > 0){
-        //     this.head = [this.head[0] + 1, this.head[1] + 1];
-        //   } else if (newXDir < 0 && newYDir < 0) {
-        //     this.head = [this.head[0] - 1, this.head[1] - 1];
-        //   } else if (newXDir < 0 && newYDir > 0){
-        //     this.head = [this.head[0] - 1, this.head[1] + 1];
-        //   } else if (newXDir > 0 && newYDir < 0) {
-        //     this.head = [this.head[0] + 1, this.head[1] - 1];
-        //   }
-        // }else if (xCollision){
-        //   newXDir = -1 * this.xDir;
-        // }else if (yCollision){
-        //   newYDir = -1 * this.yDir;
-        // }
         if (xCollision && yCollision) {
           newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
@@ -736,9 +684,7 @@ var Ray = function () {
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         }
-
         var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-        //    constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
         this.xDir = 0;
         this.yDir = 0;
         return true;
@@ -907,11 +853,10 @@ var hideSplashText = function hideSplashText(event) {
 };
 
 var startGame = function startGame() {
-  var canvas = document.getElementById('canvas');
   var body = document.getElementsByTagName('body')[0];
-
-  canvas.width = body.offsetWidth; //grab body width
-  canvas.height = window.innerHeight; //viewport height
+  var canvas = document.getElementById('canvas');
+  canvas.width = body.offsetWidth;
+  canvas.height = window.innerHeight;
   var ctx = canvas.getContext("2d");
   var levelCount = 1;
   var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);

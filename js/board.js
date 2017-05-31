@@ -2,12 +2,11 @@ import Wall from './wall';
 import Level from './level';
 
 class Board {
-  constructor(ctx, canvas, point, wallDimensions){
+  constructor(ctx, canvas, point, scalarWallDimensions){
     this.context = ctx;
     this.point = point;
-    this.wallDimensions = wallDimensions;
 
-    this.wallDimensions = this.wallDimensions
+    this.wallDimensions = scalarWallDimensions
             .map(row => {
               return row.map((dim, index) => {
                 if (index % 2 === 0) {
