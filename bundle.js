@@ -909,6 +909,7 @@ var hideSplashText = function hideSplashText(event) {
 var startGame = function startGame() {
   var canvas = document.getElementById('canvas');
   var body = document.getElementsByTagName('body')[0];
+
   canvas.width = body.offsetWidth; //grab body width
   canvas.height = window.innerHeight; //viewport height
   var ctx = canvas.getContext("2d");

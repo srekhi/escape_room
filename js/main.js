@@ -33,6 +33,7 @@ const hideSplashText = (event) => {
 const startGame = () =>{
   const canvas = document.getElementById('canvas');
   const body = document.getElementsByTagName('body')[0];
+  
   canvas.width = body.offsetWidth; //grab body width
   canvas.height = window.innerHeight; //viewport height
   const ctx = canvas.getContext("2d");
