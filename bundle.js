@@ -126,9 +126,9 @@ var LEVELS = {
     monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9]]
   },
   4: {
-    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
-    pointStartPos: [0.05, 0.05],
-    monsterPositions: [[]]
+    walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
+    pointStartPos: [0.8, 0.05],
+    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9], [0.05, 0.5]]
   }
 };
 
@@ -137,7 +137,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 4;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -804,11 +804,11 @@ var Wall = function () {
     key: "draw",
     value: function draw(context) {
       context.beginPath();
-      // context.fillStyle = "black";
-      // context.fillRect(this.x, this.y, this.width, this.height);
-      // context.closePath();
-      // context.stroke();
-      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.fillStyle = "red";
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.closePath();
+      context.stroke();
+      // context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -882,11 +882,7 @@ var _monster2 = _interopRequireDefault(_monster);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  var canvas = document.getElementById('canvas');
-  var body = document.getElementsByTagName('body')[0];
-  canvas.width = body.offsetWidth; //grab body width
-  canvas.height = body.offsetHeight; //viewport height
-  var ctx = canvas.getContext("2d");
+  startGame();
   // (0, 0, window.innerWidth / 10, window.innerHeight)
 
   // this.wallDimensions = [
@@ -895,14 +891,11 @@ document.addEventListener("DOMContentLoaded", function () {
   //           [0.25, 0, 0.4, 0.25],
   //           [0, 0, 0.02, 1],
   //       ];
-  var levelCount = 1;
-  var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);
-  document.addEventListener("keydown", hideSplashText);
 });
 
 var hideSplashText = function hideSplashText(event) {
   console.log();
-  if (event.key.startsWith("Arrow")) event.preventDefault();
+  if (event && event.key.startsWith("Arrow")) event.preventDefault();
   var introText = document.getElementById("game-intro");
   var canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
@@ -910,11 +903,22 @@ var hideSplashText = function hideSplashText(event) {
   document.removeEventListener("keydown", hideSplashText);
 };
 
+var startGame = function startGame() {
+  var canvas = document.getElementById('canvas');
+  var body = document.getElementsByTagName('body')[0];
+  canvas.width = body.offsetWidth; //grab body width
+  canvas.height = body.offsetHeight; //viewport height
+  var ctx = canvas.getContext("2d");
+  var levelCount = 1;
+  var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);
+  document.addEventListener("keydown", hideSplashText);
+};
+
 var gameTransitions = {
   1: "Looks like you passed level 1. But the first level is always the easiest. Let's see how you do on the next one...",
   2: "Well, well, well. You're better than I thought. But can you handle level 3?",
   3: "You've earned my respect, young padawan. But no man has beaten the final level.",
-  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy."
+  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy. Once more?"
 };
 
 var levelPassed = function levelPassed(levelNum) {
@@ -924,8 +928,11 @@ var levelPassed = function levelPassed(levelNum) {
   gameText.classList.remove("hidden");
 
   gameText.innerHTML = '<h3>' + gameTransitions[levelNum] + '</h3>';
-
-  setTimeout(hideSplashText, 3000);
+  if (levelNum === 4) {
+    startGame();
+  } else {
+    setTimeout(hideSplashText, 3000);
+  }
 };
 
 var playerEaten = function playerEaten() {

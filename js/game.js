@@ -59,19 +59,30 @@ const LEVELS = {
   },
   4: {
     walls:[
-      [0, 0.1, 0.55, 0.1],
-      [0, 0.01, 1, 0.01],
+      [0.1, 0.02, 1, 0.02],
+      [0, 0, 0.2, 0.2],
+      [0, 0.2, 0.2, 0.05],
+      [0.3, 0.2, 0.5, 0.02],
+      [0, 0.4, 0.2, 0.02],
+      [0, 0.2, 0.1, 0.02],
+      [0.1, 0.4, 0.05, 0.02],
+      [0.2, 0.4, 0.5, 0.02],
       [0, 0, 0.01, 1],
       [0.9, 0, 0.01, 1],
       [0.6, 0.1, 0.4, 0.1],
-      [0.2, 0.3, 0.8, 0.5],
+      [0.2, 0.3, 0.2, 0.3],
+      [0.2, 0.3, 0.2, 0.3],
       [0.3, 0.7, 0.1, 0.2],
-      [0.6, 0.6, 0.2, 0.35],
-      [0, 0.98, 0.8, 0.01]
+      [0.6, 0.6, 0.4, 0.35],
+      [0, 0.98, 0.8, 0.5]
     ],
-    pointStartPos: [0.05, 0.05],
+    pointStartPos: [0.8, 0.05],
     monsterPositions: [
-      []
+      [0.8, 0.3],
+      [0.5, 0.81],
+      [0.1, 0.9],
+      [0.05, 0.5]
+
     ]
   }
 };
@@ -79,7 +90,7 @@ const LEVELS = {
 class Game {
   constructor(context, canvas, levelPassed, playerEaten) {
     this.context = context;
-    this.levelCount = 4;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;

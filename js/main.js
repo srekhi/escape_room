@@ -8,11 +8,7 @@ import Board from './board';
 import Monster from './monster';
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  const canvas = document.getElementById('canvas');
-  const body = document.getElementsByTagName('body')[0];
-  canvas.width = body.offsetWidth; //grab body width
-  canvas.height = body.offsetHeight; //viewport height
-  const ctx = canvas.getContext("2d");
+  startGame();
   // (0, 0, window.innerWidth / 10, window.innerHeight)
 
   // this.wallDimensions = [
@@ -21,14 +17,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
   //           [0.25, 0, 0.4, 0.25],
   //           [0, 0, 0.02, 1],
   //       ];
-  let levelCount = 1;
-  const game = new Game(ctx, canvas, levelPassed, playerEaten);
-  document.addEventListener("keydown", hideSplashText);
+
 });
 
 const hideSplashText = (event) => {
   console.log();
-  if (event.key.startsWith("Arrow")) event.preventDefault();
+  if (event && event.key.startsWith("Arrow")) event.preventDefault();
   let introText = document.getElementById("game-intro");
   let canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
@@ -36,11 +30,22 @@ const hideSplashText = (event) => {
   document.removeEventListener("keydown", hideSplashText);
 };
 
+const startGame = () =>{
+  const canvas = document.getElementById('canvas');
+  const body = document.getElementsByTagName('body')[0];
+  canvas.width = body.offsetWidth; //grab body width
+  canvas.height = body.offsetHeight; //viewport height
+  const ctx = canvas.getContext("2d");
+  let levelCount = 1;
+  const game = new Game(ctx, canvas, levelPassed, playerEaten);
+  document.addEventListener("keydown", hideSplashText);
+};
+
 const gameTransitions = {
   1: "Looks like you passed level 1. But the first level is always the easiest. Let's see how you do on the next one...",
   2: "Well, well, well. You're better than I thought. But can you handle level 3?",
   3: "You've earned my respect, young padawan. But no man has beaten the final level.",
-  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy."
+  4: "You are a god amongst men. Congratulations on your remarkable success. I am not worthy. Once more?"
 };
 
 
@@ -51,8 +56,11 @@ const levelPassed = (levelNum) => {
   gameText.classList.remove("hidden");
 
   gameText.innerHTML = `<h3>${gameTransitions[levelNum]}</h3>`;
-
-  setTimeout(hideSplashText, 3000);
+  if (levelNum === 4){
+    startGame();
+  } else{
+    setTimeout(hideSplashText, 3000);
+  }
 };
 
 const playerEaten = () => {
