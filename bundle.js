@@ -111,7 +111,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var LEVELS = {
   1: {
-    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    walls: [[0, 0, 0.55, 0.25],
+    // [0, 0.3, 0.7, 0.25],
+    [0.2, 0.3, 0.5, 0.25], [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
     pointStartPos: [.1, .27],
     monsterPositions: [[0.7, 0.20]]
   },
@@ -300,7 +302,7 @@ var Board = function () {
 
     this.context = ctx;
     this.point = point;
-
+    this.canvas = canvas;
     this.wallDimensions = scalarWallDimensions.map(function (row) {
       return row.map(function (dim, index) {
         if (index % 2 === 0) {
@@ -316,7 +318,6 @@ var Board = function () {
     var level = new _level2.default(this.context, this.walls);
     this.level = level;
     this.rays = []; //store all rays in the game.
-    // this.draw();
   }
 
   _createClass(Board, [{
@@ -359,10 +360,11 @@ var Board = function () {
   }, {
     key: 'draw',
     value: function draw() {
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.level.draw();
       this.point.draw();
       this.drawMonsters();
       this.advanceRays();
-      this.level.draw();
     }
   }]);
 
@@ -484,7 +486,6 @@ var Point = function () {
   }, {
     key: 'hasEscaped',
     value: function hasEscaped() {
-      // if point is outside of cavas, return false, else true
       return this.pos[0] > this.canvas.width || this.pos[0] < 0 || this.pos[1] > this.canvas.height || this.pos[1] < 0;
     }
   }, {
@@ -640,10 +641,10 @@ var Ray = function () {
   }, {
     key: 'draw',
     value: function draw() {
+      var gradient = void 0;
       if (this.grow()) {
         this.c.beginPath();
         this.c.moveTo(this.tail[0], this.tail[1]);
-        var gradient = void 0;
         gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
         if (this.fromMonster) {
           gradient.addColorStop(0, '#3d0101');
@@ -675,16 +676,19 @@ var Ray = function () {
 
       var xCollision = this.board.collides(newXPoint);
       var yCollision = this.board.collides(newYPoint);
+
       if (xCollision || yCollision) {
         if (xCollision && yCollision) {
           newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
+          console.log('collided');
         } else if (xCollision) {
           newXDir = -1 * this.xDir;
         } else if (yCollision) {
           newYDir = -1 * this.yDir;
         }
         var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
+
         this.xDir = 0;
         this.yDir = 0;
         return true;
@@ -752,12 +756,12 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      context.beginPath();
-      context.fillStyle = "red";
-      context.fillRect(this.x, this.y, this.width, this.height);
-      context.closePath();
-      context.stroke();
-      // context.strokeRect(this.x, this.y, this.width, this.height);
+      // context.beginPath();
+      // context.fillStyle = "red";
+      // context.fillRect(this.x, this.y, this.width, this.height);
+      // context.closePath();
+      // context.stroke();
+      context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 

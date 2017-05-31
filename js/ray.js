@@ -76,10 +76,10 @@ class Ray {
     }
 
   draw(){
+    let gradient;
     if (this.grow()){
       this.c.beginPath();
       this.c.moveTo(this.tail[0], this.tail[1]);
-      let gradient;
       gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
       if (this.fromMonster){
         gradient.addColorStop(0, '#3d0101');
@@ -107,19 +107,22 @@ class Ray {
 
     const newHeadY = this.head[1] + (this.yDir);
     const newYPoint = [this.head[0], newHeadY];
-    
+
     let xCollision = this.board.collides(newXPoint);
     let yCollision = this.board.collides(newYPoint);
+    
     if (xCollision || yCollision){
         if (xCollision && yCollision){
           newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
+          console.log('collided');
         }else if (xCollision){
           newXDir = -1 * this.xDir;
         }else if (yCollision){
           newYDir = -1 * this.yDir;
         }
-      const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
+        const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
+
       this.xDir = 0;
       this.yDir = 0;
       return true;

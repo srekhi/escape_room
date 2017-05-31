@@ -5,7 +5,7 @@ class Board {
   constructor(ctx, canvas, point, scalarWallDimensions){
     this.context = ctx;
     this.point = point;
-
+    this.canvas = canvas;
     this.wallDimensions = scalarWallDimensions
             .map(row => {
               return row.map((dim, index) => {
@@ -20,7 +20,6 @@ class Board {
     let level = new Level(this.context, this.walls);
     this.level = level;
     this.rays = []; //store all rays in the game.
-    // this.draw();
   }
 
   walls(){
@@ -40,7 +39,7 @@ class Board {
   }
 
   collides(coords) {
-    return this.walls.some( wall => {
+    return this.walls.some(wall => {
       return !(
         (coords[0] < wall.topLeft[0])
           || (coords[0] > wall.bottomRight[0])
@@ -55,10 +54,11 @@ class Board {
   }
 
   draw(){
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.level.draw();
     this.point.draw();
     this.drawMonsters();
     this.advanceRays();
-    this.level.draw();
   }
 }
 

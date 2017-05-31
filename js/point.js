@@ -35,7 +35,6 @@ class Point {
   }
 
   hasEscaped(){
-      // if point is outside of cavas, return false, else true
       return (this.pos[0] > this.canvas.width
         || this.pos[0] < 0
         || this.pos[1] > this.canvas.height
