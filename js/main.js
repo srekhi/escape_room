@@ -23,15 +23,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
   //       ];
   let levelCount = 1;
   const game = new Game(ctx, canvas, levelPassed, playerEaten);
-  document.addEventListener("keypress", hideSplashText);
+  document.addEventListener("keydown", hideSplashText);
 });
 
-const hideSplashText = () => {
+const hideSplashText = (event) => {
+  console.log();
+  if (event.key.startsWith("Arrow")) event.preventDefault();
   let introText = document.getElementById("game-intro");
   let canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
   canvas.classList.remove("hidden");
-  document.removeEventListener("keypress", hideSplashText);
+  document.removeEventListener("keydown", hideSplashText);
 };
 
 const gameTransitions = {
@@ -64,5 +66,5 @@ const playerEaten = () => {
         An untimely death for so promising of a player.
         If you think you can handle it, press any key to try again.
     </h3>`;
-    document.addEventListener("keydown", hideSplashText);
+    document.addEventListener("keypress", hideSplashText);
 };

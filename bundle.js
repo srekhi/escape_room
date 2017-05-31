@@ -116,14 +116,19 @@ var LEVELS = {
     monsterPositions: [[0.7, 0.20]]
   },
   2: {
-    walls: [[0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1]],
+    walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
     pointStartPos: [0.1, 0.1],
-    monsterPositions: [[]]
+    monsterPositions: [[0.5, 0.5]]
   },
   3: {
-    walls: [[0, 0.1, 0.5, 0.1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35]],
+    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
     pointStartPos: [0.05, 0.05],
-    monsterPositions: [[0.8, 0.3], [0.5, 0.81]]
+    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9]]
+  },
+  4: {
+    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
+    pointStartPos: [0.05, 0.05],
+    monsterPositions: [[]]
   }
 };
 
@@ -132,7 +137,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 4;
     this.levelPassed = levelPassed;
 
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -164,20 +169,20 @@ var Game = function () {
 
       var self = this;
       window.addEventListener("keydown", function (event) {
-        if (!event.metaKey && !event.ctrlKey) {
-          _this2.keyStatus[event.key.toLowerCase()] = true;
-        }
+        if (event.key.startsWith("Arrow")) event.preventDefault();
+        _this2.keyStatus[event.key] = true;
       });
 
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
+
           event.preventDefault();
           _this2.point.makeSound(_this2.board); //needs to be separate JS effect from point.
         }
       });
       window.addEventListener("keyup", function (event) {
         // debugger;.
-        self.keyStatus[event.key.toLowerCase()] = false;
+        self.keyStatus[event.key] = false;
       });
     }
   }, {
@@ -229,21 +234,25 @@ var Game = function () {
   }, {
     key: 'assignDirection',
     value: function assignDirection() {
-      if (this.keyStatus["w"] && this.keyStatus["a"]) {
+      //  ArrowRight
+      //  ArrowDown
+      //  ArrowLeft
+      // ArrowUp
+      if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowLeft"]) {
         return "NW";
-      } else if (this.keyStatus["a"] && this.keyStatus["s"]) {
+      } else if (this.keyStatus["ArrowLeft"] && this.keyStatus["ArrowDown"]) {
         return "SW";
-      } else if (this.keyStatus["w"] && this.keyStatus["d"]) {
+      } else if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowRight"]) {
         return "NE";
-      } else if (this.keyStatus["d"] && this.keyStatus["s"]) {
+      } else if (this.keyStatus["ArrowRight"] && this.keyStatus["ArrowDown"]) {
         return "SE";
-      } else if (this.keyStatus["a"]) {
+      } else if (this.keyStatus["ArrowLeft"]) {
         return "W";
-      } else if (this.keyStatus["d"]) {
+      } else if (this.keyStatus["ArrowRight"]) {
         return "E";
-      } else if (this.keyStatus["w"]) {
+      } else if (this.keyStatus["ArrowUp"]) {
         return "N";
-      } else if (this.keyStatus["s"]) {
+      } else if (this.keyStatus["ArrowDown"]) {
         return "S";
       } else {
         return "";
@@ -272,7 +281,7 @@ exports.default = Game;
 //       animate(p,"left");
 //     }else if (event.key === "s"){
 //       animate(p,"down");
-//     }else if (event.key === "d"){
+//     }else if (event.key === "ArrowRight"){
 //       animate(p,"right");
 //     }else if (event.key === " "){
 //       let ray = new Ray(ctx, p.pos);
@@ -794,9 +803,12 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      context.fillStyle = "black";
-      context.fillRect(this.x, this.y, this.width, this.height);
-      // context.strokeRect(this.x, this.y, this.width, this.height);
+      context.beginPath();
+      // context.fillStyle = "black";
+      // context.fillRect(this.x, this.y, this.width, this.height);
+      // context.closePath();
+      // context.stroke();
+      context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -885,15 +897,17 @@ document.addEventListener("DOMContentLoaded", function () {
   //       ];
   var levelCount = 1;
   var game = new _game2.default(ctx, canvas, levelPassed, playerEaten);
-  document.addEventListener("keypress", hideSplashText);
+  document.addEventListener("keydown", hideSplashText);
 });
 
-var hideSplashText = function hideSplashText() {
+var hideSplashText = function hideSplashText(event) {
+  console.log();
+  if (event.key.startsWith("Arrow")) event.preventDefault();
   var introText = document.getElementById("game-intro");
   var canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
   canvas.classList.remove("hidden");
-  document.removeEventListener("keypress", hideSplashText);
+  document.removeEventListener("keydown", hideSplashText);
 };
 
 var gameTransitions = {
@@ -921,7 +935,7 @@ var playerEaten = function playerEaten() {
   gameText.classList.remove("hidden");
 
   gameText.innerHTML = '\n    <h3 id="consumed">You have been eaten.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
-  document.addEventListener("keydown", hideSplashText);
+  document.addEventListener("keypress", hideSplashText);
 };
 
 /***/ }),
