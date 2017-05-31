@@ -53,6 +53,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
   };
  ```
  ```css
+  /* main.css */
    body {
       height: 100vh;
       max-height: 800px;
@@ -136,3 +137,65 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
     ];
    ```
     Escape room rays, like real-life sound rays, have two things in common: both reflect off of obstacles, and both fade away.
+    #### Reflections
+    If a sound ray's next position is going to result in a collision with one of the many walls on the level, they're reversed depending on three categories: whether the X, Y, or Z coordinates resulted in a collision:
+    ```javascript 
+    let newXDir = this.xDir;
+    let newYDir = this.yDir;
+
+    const newHeadX = this.head[0] + (this.xDir);
+    const newXPoint = [newHeadX, this.head[1]];
+
+    const newHeadY = this.head[1] + (this.yDir);
+    const newYPoint = [this.head[0], newHeadY];
+    
+    let xCollision = this.board.collides(newXPoint);
+    let yCollision = this.board.collides(newYPoint);
+    if (xCollision || yCollision){
+        if (xCollision && yCollision){
+          newXDir = -1 * this.xDir;
+          newYDir = -1 * this.yDir;
+        }else if (xCollision){
+          newXDir = -1 * this.xDir;
+        }else if (yCollision){
+          newYDir = -1 * this.yDir;
+        }
+      const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
+      return true;
+    }else{
+      return false;
+    }
+    ```
+    Each ray has a max length & a body property. The body array contains each position along the ray's axis. To grow the ray, new positions are pushed onto the body array. Similarly, when a ray must be faded out, the first positions in the array are shifted off:
+    ```
+    ///ray.js
+      fadeOut(){
+        this.body.shift();
+        this.tail = this.body[0];
+      }
+    ```
+
+  To provide accurate visuals, HTML Canvas's createLinearGradient()  method was used. 
+    ```javascript
+        //ray.js 
+
+        draw(){
+        let gradient;
+        if (this.grow()){
+          this.c.beginPath();
+          this.c.moveTo(this.tail[0], this.tail[1]);
+          gradient = this.c.createLinearGradient(this.tail[0], this.tail[1], this.head[0], this.head[1]);
+          if (this.fromMonster){
+            gradient.addColorStop(0, '#3d0101');
+            gradient.addColorStop(1, 'red');
+          }else{
+            gradient.addColorStop(0, '#808080');
+            gradient.addColorStop(1, 'white');
+          }
+          this.c.strokeStyle = gradient;
+          this.c.lineTo(this.head[0], this.head[1]);
+          this.c.closePath();
+          this.c.stroke();
+        }
+      }
+      ```
