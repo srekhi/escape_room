@@ -53,6 +53,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
   };
  ```
  ```css
+  /* main.css */
    body {
       height: 100vh;
       max-height: 800px;
