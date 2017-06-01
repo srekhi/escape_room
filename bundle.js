@@ -116,7 +116,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 3;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
@@ -217,9 +217,9 @@ var Game = function () {
         }
         this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
         this.resetKeyStatus();
-        this.levelCount += 1;
         this.redrawGame();
         this.board.monsters = this.createMonsters();
+        this.levelCount += 1;
       }
       requestAnimationFrame(this.step);
     }
@@ -765,7 +765,7 @@ var LEVELS = {
   3: {
     walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
     pointStartPos: [0.05, 0.05],
-    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9]]
+    monsterPositions: [[0.8, 0.305], [0.5, 0.81], [0.1, 0.9]]
   },
   4: {
     walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
@@ -892,7 +892,7 @@ var playerEaten = function playerEaten() {
   var gameText = hideGamePlay();
 
   gameText.innerHTML = '\n    <h3 id="consumed">You have been eaten.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
-  document.addEventListener("keypress", hideSplashText);
+  document.addEventListener("keydown", hideSplashText);
 };
 
 /***/ }),

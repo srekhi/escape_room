@@ -9,7 +9,7 @@ import Monster from './monster';
 class Game {
   constructor(context, canvas, levelPassed, playerEaten, gameCompleted) {
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 3;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
@@ -94,9 +94,9 @@ class Game {
       }
       this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
       this.resetKeyStatus();
-      this.levelCount += 1;
       this.redrawGame();
       this.board.monsters = this.createMonsters();
+      this.levelCount += 1;
     }
     requestAnimationFrame(this.step);
   }

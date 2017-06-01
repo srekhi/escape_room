@@ -98,5 +98,5 @@ const playerEaten = () => {
         An untimely death for so promising of a player.
         If you think you can handle it, press any key to try again.
     </h3>`;
-    document.addEventListener("keypress", hideSplashText);
+    document.addEventListener("keydown", hideSplashText);
 };
