@@ -11,7 +11,8 @@ const LEVELS = {
     ],
     pointStartPos: [.1, .27],
     monsterPositions: [
-      [0.7, 0.20],
+      [0.72, 0.24],
+      [0.61, 0.6]
     ]
   },
   2: {
@@ -27,7 +28,9 @@ const LEVELS = {
     ],
     pointStartPos: [0.1, 0.1],
     monsterPositions: [
-      [0.5, 0.5],
+      [0.55, 0.55],
+      [0.2, 0.1],
+      [0.8, 0.92]
     ]
   },
   3: {
@@ -45,9 +48,9 @@ const LEVELS = {
     ],
     pointStartPos: [0.05, 0.05],
     monsterPositions: [
-      [0.8, 0.305],
-      [0.5, 0.81],
-      [0.1, 0.9]
+      [0.6, 0.28],
+      [0.5, 0.90],
+      [0.1, 0.90]
     ]
   },
   4: {
@@ -72,8 +75,9 @@ const LEVELS = {
     pointStartPos: [0.8, 0.05],
     // pointStartPos: [0.50, 0.9],
     monsterPositions: [
-      [0.8, 0.3],
-      [0.5, 0.81],
+      [0.8, 0.4],
+      [0.8, 0.1],
+      [0.55, 0.90],
       [0.1, 0.9],
       [0.05, 0.5]
 

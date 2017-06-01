@@ -116,7 +116,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 4;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.canvas = canvas;
@@ -729,12 +729,12 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      // context.beginPath();
-      // context.fillStyle = "black";
-      // context.fillRect(this.x, this.y, this.width, this.height);
-      // context.closePath();
-      // context.stroke();
-      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.beginPath();
+      context.fillStyle = "black";
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.closePath();
+      context.stroke();
+      // context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -759,23 +759,23 @@ var LEVELS = {
     // [0.2, 0.3, 0.5, 0.25],
     [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
     pointStartPos: [.1, .27],
-    monsterPositions: [[0.7, 0.20]]
+    monsterPositions: [[0.72, 0.24], [0.61, 0.6]]
   },
   2: {
     walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
     pointStartPos: [0.1, 0.1],
-    monsterPositions: [[0.5, 0.5]]
+    monsterPositions: [[0.55, 0.55], [0.2, 0.1], [0.8, 0.92]]
   },
   3: {
     walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
     pointStartPos: [0.05, 0.05],
-    monsterPositions: [[0.8, 0.305], [0.5, 0.81], [0.1, 0.9]]
+    monsterPositions: [[0.6, 0.28], [0.5, 0.90], [0.1, 0.90]]
   },
   4: {
     walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
     pointStartPos: [0.8, 0.05],
     // pointStartPos: [0.50, 0.9],
-    monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9], [0.05, 0.5]]
+    monsterPositions: [[0.8, 0.4], [0.8, 0.1], [0.55, 0.90], [0.1, 0.9], [0.05, 0.5]]
   }
 };
 
