@@ -64,9 +64,12 @@ const gameCompleted = () => {
   `;
 
   gameText.innerHTML = htmlToDisplay;
+  document.getElementById("play-again").addEventListener("click", restartGame);
+};
 
-  document.getElementById("play-again").addEventListener("click", hideSplashText);
-
+const restartGame = () => {
+  hideSplashText();
+  startGame();
 };
 
 const hideGamePlay = () => {

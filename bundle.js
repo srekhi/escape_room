@@ -116,7 +116,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 4;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
@@ -194,6 +194,12 @@ var Game = function () {
       return _levels_structure2.default[this.levelCount].walls;
     }
   }, {
+    key: 'redrawGame',
+    value: function redrawGame() {
+      this.point = new _point2.default(this.context, this.canvas, this.pointStartPos());
+      this.board = new _board2.default(this.context, this.canvas, this.point, this.walls());
+    }
+  }, {
     key: 'step',
     value: function step() {
       this.context.fillStyle = "black";
@@ -204,14 +210,15 @@ var Game = function () {
 
       if (this.point.hasEscaped() || this.point.eaten) {
         if (this.point.hasEscaped() && this.levelCount === 4) {
+          this.levelCount = 1;
+          // this.redrawGame();
           this.gameCompleted();
           return;
         }
         this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
         this.resetKeyStatus();
         this.levelCount += 1;
-        this.point = new _point2.default(this.context, this.canvas, this.pointStartPos());
-        this.board = new _board2.default(this.context, this.canvas, this.point, this.walls());
+        this.redrawGame();
         this.board.monsters = this.createMonsters();
       }
       requestAnimationFrame(this.step);
@@ -719,7 +726,7 @@ var Wall = function () {
     key: "draw",
     value: function draw(context) {
       // context.beginPath();
-      // context.fillStyle = "red";
+      // context.fillStyle = "black";
       // context.fillRect(this.x, this.y, this.width, this.height);
       // context.closePath();
       // context.stroke();
@@ -855,8 +862,12 @@ var gameCompleted = function gameCompleted() {
   var htmlToDisplay = '\n  <div id="game-complete"> Congratulations & thanks for playing! <br/>\n  If you\'d like to know more about this game (or me!) check out the links below: <br>\n    <a href="https://github.com/srekhi/escape_room">\n      <i class="fa fa-github" aria-hidden="true"></i>\n    </a>\n\n    <a href="https://www.linkedin.com/in/rohit-rekhi/">\n      <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n    </a> <br/>\n    Want to play again? <button id="play-again"">Yes!</button>\n    </div>\n  ';
 
   gameText.innerHTML = htmlToDisplay;
+  document.getElementById("play-again").addEventListener("click", restartGame);
+};
 
-  document.getElementById("play-again").addEventListener("click", hideSplashText);
+var restartGame = function restartGame() {
+  hideSplashText();
+  startGame();
 };
 
 var hideGamePlay = function hideGamePlay() {

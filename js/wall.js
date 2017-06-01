@@ -12,7 +12,7 @@ class Wall {
 
   draw(context){
     // context.beginPath();
-    // context.fillStyle = "red";
+    // context.fillStyle = "black";
     // context.fillRect(this.x, this.y, this.width, this.height);
     // context.closePath();
     // context.stroke();
