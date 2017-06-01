@@ -91,7 +91,7 @@ const playerEaten = () => {
   let gameText = hideGamePlay();
 
   gameText.innerHTML = `
-    <h3 id="consumed">You have been eaten.
+    <h3 id="consumed">The monsters have caught you.
         An untimely death for so promising of a player.
         If you think you can handle it, press any key to try again.
     </h3>`;
