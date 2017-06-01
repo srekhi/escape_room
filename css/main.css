@@ -86,12 +86,12 @@ h1{
 #canvas {
     height: 100%;
     max-width: 800px;
-    max-height: 99vh;
+    max-height: 95vh;
     background: black;
 }
 
 body {
-  height: 99vh;
+  height: 95vh;
   /*max-height: 800px;*/
   max-width: 800px;
   margin: 0 auto;

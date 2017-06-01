@@ -741,41 +741,9 @@ exports.default = Wall;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var LEVELS = {
-  1: {
-    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25],
-    // [0.2, 0.3, 0.5, 0.25],
-    [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
-    pointStartPos: [.1, .27],
-    monsterPositions: [[0.72, 0.24], [0.61, 0.6], [0.8, 0.2]]
-  },
-  2: {
-    walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
-    pointStartPos: [0.1, 0.1],
-    monsterPositions: [[0.55, 0.55], [0.2, 0.1], [0.8, 0.92]]
-  },
-  3: {
-    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
-    pointStartPos: [0.05, 0.05],
-    monsterPositions: [[0.6, 0.28], [0.5, 0.90], [0.1, 0.90]]
-  },
-  4: {
-    walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
-    pointStartPos: [0.8, 0.05],
-    // pointStartPos: [0.50, 0.9],
-    monsterPositions: [[0.8, 0.4], [0.8, 0.1], [0.55, 0.90], [0.1, 0.9], [0.05, 0.5]]
-  }
-};
-
-exports.default = LEVELS;
+throw new Error("Module build failed: SyntaxError: Unexpected token (16:0)\n\n\u001b[0m \u001b[90m 14 | \u001b[39m      \u001b[90m// [0.72, 0.22],\u001b[39m\n \u001b[90m 15 | \u001b[39m      [\u001b[35m0.61\u001b[39m\u001b[33m,\u001b[39m \u001b[35m0.6\u001b[39m]\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 16 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\n \u001b[90m    | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 17 | \u001b[39m      [\u001b[35m0.8\u001b[39m\u001b[33m,\u001b[39m \u001b[35m0.2\u001b[39m]\n \u001b[90m 18 | \u001b[39m\u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\n \u001b[90m 19 | \u001b[39m      [\u001b[35m0.9\u001b[39m\u001b[33m,\u001b[39m \u001b[35m0.27\u001b[39m]\u001b[0m\n");
 
 /***/ }),
 /* 7 */
@@ -1023,7 +991,7 @@ var levelPassed = function levelPassed(levelNum) {
 var playerEaten = function playerEaten() {
   var gameText = hideGamePlay();
 
-  gameText.innerHTML = '\n    <h3 id="consumed">The monsters have entrapped you.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
+  gameText.innerHTML = '\n<<<<<<< HEAD\n    <h3 id="consumed">The monsters have entrapped you.\n=======\n    <h3 id="consumed">The monsters have caught you.\n>>>>>>> gh-pages\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
   setTimeout(document.addEventListener("keypress", hideSplashText), 1000);
 };
 
