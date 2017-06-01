@@ -116,7 +116,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 4;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.canvas = canvas;

@@ -9,7 +9,7 @@ import Monster from './monster';
 class Game {
   constructor(context, canvas, levelPassed, playerEaten, gameCompleted) {
     this.context = context;
-    this.levelCount = 4;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.canvas = canvas;
