@@ -56,17 +56,32 @@ class Monster {
       let nextPos = this.pos.map((posDir, index) => posDir + unitVector[index]);
       let nextPosX = [nextPos[0], this.pos[1]];
       let nextPosY = [this.pos[0], nextPos[1]];
+      let newPos = nextPos;
 
-      if (this.board.collides(nextPos)){
-        if (this.board.collides(nextPos)){
-          nextPos = [this.pos[0], nextPos[1]];
+      if (this.board.collides(newPos)){ //if it collides with the new point
+        newPos = [nextPos[0], this.pos[1]]; //only move the x value, keep y steady
+        if (this.board.collides(newPos)){ // if still collides only move y and keep x steady
+          newPos = [this.pos[0], nextPos[1]];
+        }
+        if (this.board.collides(newPos)) {
+          //still collides in both axes.
         }
 
-
       }
-      if (this.board.collides(nextPosY)) this.pos = nextPosX;
-      if (this.board.collides(nextPosY) && this.board.collides(nextPosX)) return;
-      if (!this.board.collides(nextPos)) this.pos = nextPos;
+      this.pos = newPos;
+
+      //
+      // if (this.board.collides(nextPos)){
+      //   if (this.board.collides(nextPos)){
+      //     nextPos = [this.pos[0], nextPos[1]];
+      //   }
+      // }
+      //
+      //
+      // if (this.board.collides(nextPosY)) this.pos = nextPosX;
+      // if (this.board.collides(nextPosX)) this.pos = nextPosY;
+      // if (this.board.collides(nextPosX) && this.board.collides(nextPosY)) return;
+      // if (!this.board.collides(nextPos)) this.pos = nextPos;
 
   }
 }
