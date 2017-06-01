@@ -44,7 +44,7 @@ h3:first-of-type {
 }
 
 h2, h3, h4{
-  color: #ccc;
+  color: white;
   font-family: inherit;
 }
 
@@ -102,7 +102,7 @@ nav > a {
 }
 
 #game-complete{
-  font-size: 26px;
+  font-size: 32px;
 }
 
 #game-complete > a{
@@ -112,5 +112,11 @@ nav > a {
 }
 
 #game-complete > button {
-
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+  background: none;
+  border: 1px solid white;
+  font-size: 18px;
 }

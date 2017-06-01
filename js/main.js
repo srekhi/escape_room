@@ -9,19 +9,9 @@ import Monster from './monster';
 
 document.addEventListener("DOMContentLoaded", ()=>{
   startGame();
-  // (0, 0, window.innerWidth / 10, window.innerHeight)
-
-  // this.wallDimensions = [
-  //           [0, 0, 0.55, 0.25],
-  //           [0, 0.3, 0.7, 0.25],
-  //           [0.25, 0, 0.4, 0.25],
-  //           [0, 0, 0.02, 1],
-  //       ];
-
 });
 
 const hideSplashText = (event) => {
-  console.log('hidden');
   if (event && event.key && event.key.startsWith("Arrow")) event.preventDefault();
   let introText = document.getElementById("game-intro");
   let canvas = document.getElementById("canvas");
@@ -50,7 +40,7 @@ const gameTransitions = {
 const gameCompleted = () => {
   let gameText = hideGamePlay();
   let htmlToDisplay = `
-  <div id="game-complete"> Congratulations & thanks for playing! <br/>
+  <div id="game-complete"> <h2>Congratulations & thanks for playing!</h2> <br/>
   If you'd like to know more about this game (or me!) check out the links below: <br>
     <a href="https://github.com/srekhi/escape_room">
       <i class="fa fa-github" aria-hidden="true"></i>
@@ -59,7 +49,7 @@ const gameCompleted = () => {
     <a href="https://www.linkedin.com/in/rohit-rekhi/">
       <i class="fa fa-linkedin-square" aria-hidden="true"></i>
     </a> <br/>
-    Want to play again? <button id="play-again"">Yes!</button>
+    <button id="play-again"">Play again?</button>
     </div>
   `;
 

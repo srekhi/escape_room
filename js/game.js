@@ -9,10 +9,9 @@ import Monster from './monster';
 class Game {
   constructor(context, canvas, levelPassed, playerEaten, gameCompleted) {
     this.context = context;
-    this.levelCount = 3;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
-    this.monsterPositions = LEVELS[this.levelCount].monsterPositions;
     this.canvas = canvas;
     this.point = new Point(context, canvas, LEVELS[this.levelCount].pointStartPos);
     this.board = new Board(context, canvas, this.point, LEVELS[this.levelCount].walls);
@@ -26,25 +25,27 @@ class Game {
   }
 
   createMonsters(){
-    return this.monsterPositions.map(monsterPos => {
+    let monsterPositions = LEVELS[this.levelCount].monsterPositions;
+    this.monsters = monsterPositions.map(monsterPos => {
       return new Monster(this.context, this.canvas, monsterPos, this.board);
     });
+    return this.monsters;
   }
   createEventListeners(){
     const self = this;
     window.addEventListener("keydown", event => {
         if (event.key.startsWith("Arrow")) event.preventDefault();
+        if (event.key === "Meta") return;
         this.keyStatus[event.key] = true;
     });
 
     window.addEventListener("keydown", event => {
       if (event.key === " ") {
           event.preventDefault();
-          this.point.makeSound(this.board); //needs to be separate JS effect from point.
+          this.point.makeSound(this.board);
         }
     });
     window.addEventListener("keyup", event => {
-      // debugger;.
       self.keyStatus[event.key] = false;
     });
   }
@@ -75,7 +76,7 @@ class Game {
   redrawGame(){
     this.point = new Point(this.context, this.canvas, this.pointStartPos());
     this.board = new Board(this.context, this.canvas, this.point, this.walls());
-
+    this.board.monsters = this.createMonsters();
   }
 
   step(){
@@ -88,15 +89,17 @@ class Game {
     if (this.point.hasEscaped() || this.point.eaten) {
       if (this.point.hasEscaped() && this.levelCount === 4) {
         this.levelCount = 1;
-        // this.redrawGame();
         this.gameCompleted();
         return;
       }
-      this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
+      if (this.point.hasEscaped()) {
+        this.levelPassed(this.levelCount);
+        this.levelCount += 1;
+      } else{
+          this.playerEaten(this.levelCount);
+      }
       this.resetKeyStatus();
       this.redrawGame();
-      this.board.monsters = this.createMonsters();
-      this.levelCount += 1;
     }
     requestAnimationFrame(this.step);
   }

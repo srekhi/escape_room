@@ -116,10 +116,9 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 3;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
-    this.monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
     this.canvas = canvas;
     this.point = new _point2.default(context, canvas, _levels_structure2.default[this.levelCount].pointStartPos);
     this.board = new _board2.default(context, canvas, this.point, _levels_structure2.default[this.levelCount].walls);
@@ -137,9 +136,11 @@ var Game = function () {
     value: function createMonsters() {
       var _this = this;
 
-      return this.monsterPositions.map(function (monsterPos) {
+      var monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
+      this.monsters = monsterPositions.map(function (monsterPos) {
         return new _monster2.default(_this.context, _this.canvas, monsterPos, _this.board);
       });
+      return this.monsters;
     }
   }, {
     key: 'createEventListeners',
@@ -149,17 +150,17 @@ var Game = function () {
       var self = this;
       window.addEventListener("keydown", function (event) {
         if (event.key.startsWith("Arrow")) event.preventDefault();
+        if (event.key === "Meta") return;
         _this2.keyStatus[event.key] = true;
       });
 
       window.addEventListener("keydown", function (event) {
         if (event.key === " ") {
           event.preventDefault();
-          _this2.point.makeSound(_this2.board); //needs to be separate JS effect from point.
+          _this2.point.makeSound(_this2.board);
         }
       });
       window.addEventListener("keyup", function (event) {
-        // debugger;.
         self.keyStatus[event.key] = false;
       });
     }
@@ -198,6 +199,7 @@ var Game = function () {
     value: function redrawGame() {
       this.point = new _point2.default(this.context, this.canvas, this.pointStartPos());
       this.board = new _board2.default(this.context, this.canvas, this.point, this.walls());
+      this.board.monsters = this.createMonsters();
     }
   }, {
     key: 'step',
@@ -211,15 +213,17 @@ var Game = function () {
       if (this.point.hasEscaped() || this.point.eaten) {
         if (this.point.hasEscaped() && this.levelCount === 4) {
           this.levelCount = 1;
-          // this.redrawGame();
           this.gameCompleted();
           return;
         }
-        this.point.hasEscaped() ? this.levelPassed(this.levelCount) : this.playerEaten(this.levelCount);
+        if (this.point.hasEscaped()) {
+          this.levelPassed(this.levelCount);
+          this.levelCount += 1;
+        } else {
+          this.playerEaten(this.levelCount);
+        }
         this.resetKeyStatus();
         this.redrawGame();
-        this.board.monsters = this.createMonsters();
-        this.levelCount += 1;
       }
       requestAnimationFrame(this.step);
     }
@@ -725,12 +729,12 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      // context.beginPath();
-      // context.fillStyle = "black";
-      // context.fillRect(this.x, this.y, this.width, this.height);
-      // context.closePath();
-      // context.stroke();
-      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.beginPath();
+      context.fillStyle = "black";
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.closePath();
+      context.stroke();
+      // context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -769,8 +773,8 @@ var LEVELS = {
   },
   4: {
     walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
-    // pointStartPos: [0.8, 0.05],
-    pointStartPos: [0.50, 0.9],
+    pointStartPos: [0.8, 0.05],
+    // pointStartPos: [0.50, 0.9],
     monsterPositions: [[0.8, 0.3], [0.5, 0.81], [0.1, 0.9], [0.05, 0.5]]
   }
 };
@@ -820,18 +824,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener("DOMContentLoaded", function () {
   startGame();
-  // (0, 0, window.innerWidth / 10, window.innerHeight)
-
-  // this.wallDimensions = [
-  //           [0, 0, 0.55, 0.25],
-  //           [0, 0.3, 0.7, 0.25],
-  //           [0.25, 0, 0.4, 0.25],
-  //           [0, 0, 0.02, 1],
-  //       ];
 });
 
 var hideSplashText = function hideSplashText(event) {
-  console.log('hidden');
   if (event && event.key && event.key.startsWith("Arrow")) event.preventDefault();
   var introText = document.getElementById("game-intro");
   var canvas = document.getElementById("canvas");
@@ -859,7 +854,7 @@ var gameTransitions = {
 
 var gameCompleted = function gameCompleted() {
   var gameText = hideGamePlay();
-  var htmlToDisplay = '\n  <div id="game-complete"> Congratulations & thanks for playing! <br/>\n  If you\'d like to know more about this game (or me!) check out the links below: <br>\n    <a href="https://github.com/srekhi/escape_room">\n      <i class="fa fa-github" aria-hidden="true"></i>\n    </a>\n\n    <a href="https://www.linkedin.com/in/rohit-rekhi/">\n      <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n    </a> <br/>\n    Want to play again? <button id="play-again"">Yes!</button>\n    </div>\n  ';
+  var htmlToDisplay = '\n  <div id="game-complete"> <h2>Congratulations & thanks for playing!</h2> <br/>\n  If you\'d like to know more about this game (or me!) check out the links below: <br>\n    <a href="https://github.com/srekhi/escape_room">\n      <i class="fa fa-github" aria-hidden="true"></i>\n    </a>\n\n    <a href="https://www.linkedin.com/in/rohit-rekhi/">\n      <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n    </a> <br/>\n    <button id="play-again"">Play again?</button>\n    </div>\n  ';
 
   gameText.innerHTML = htmlToDisplay;
   document.getElementById("play-again").addEventListener("click", restartGame);
