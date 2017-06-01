@@ -41,17 +41,33 @@ class Monster {
 
   move(){ // goal is to move toward the player
     let delta;
+
     if (this.awake){
      delta = [
-      Math.ceil((this.board.point.pos[0] - this.pos[0])),
-      Math.ceil((this.board.point.pos[1] - this.pos[1]))
-    ];
-    let deltaMagnitude = Math.sqrt(Math.pow(delta[0], 2) + Math.pow(delta[1], 2));
-    let unitVector = delta.map(dir => dir/deltaMagnitude);
-    let nextPos = this.pos.map((posDir, index) => posDir + unitVector[index]);
-    if (!this.board.collides(nextPos)){
-      this.pos = nextPos;
-    }
+       Math.ceil((this.board.point.pos[0] - this.pos[0])),
+        Math.ceil((this.board.point.pos[1] - this.pos[1]))
+      ];
+
+      let newYDir = this.yDir;
+
+
+      let deltaMagnitude = Math.sqrt(Math.pow(delta[0], 2) + Math.pow(delta[1], 2));
+      let unitVector = delta.map(dir => dir/deltaMagnitude);
+      let nextPos = this.pos.map((posDir, index) => posDir + unitVector[index]);
+      let nextPosX = [nextPos[0], this.pos[1]];
+      let nextPosY = [this.pos[0], nextPos[1]];
+
+      if (this.board.collides(nextPos)){
+        if (this.board.collides(nextPos)){
+          nextPos = [this.pos[0], nextPos[1]];
+        }
+
+
+      }
+      if (this.board.collides(nextPosY)) this.pos = nextPosX;
+      if (this.board.collides(nextPosY) && this.board.collides(nextPosX)) return;
+      if (!this.board.collides(nextPos)) this.pos = nextPos;
+
   }
 }
 
@@ -62,20 +78,5 @@ class Monster {
 
   }
 
-  // stopMoving(){
-  //   this.moving = false;
-  //   window.cancelAnimationFrame(window.animationFrameId);
-  // }
-
-  // animate(direction){
-  //   // this.c.clearRect(0, 0, innerHeight, innerWidth);
-  //   this.move(direction);
-  //   window.animationFrameId = window.requestAnimationFrame(() =>{
-  //     if (this.moving){
-  //       this.animate(direction);
-  //       if (this.collides()) this.stopMoving();
-  //     }
-  //   });
-  // }
 }
 export default Monster;
