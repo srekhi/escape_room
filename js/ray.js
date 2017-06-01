@@ -42,9 +42,6 @@ class Ray {
     }
   }
 
-  eatenPlayer(){
-
-  }
 
   compareCoordToHead(coord){
     return (Math.abs(Math.floor(this.head[0]) - Math.floor(coord[0])) < 3)

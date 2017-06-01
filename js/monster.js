@@ -63,9 +63,7 @@ class Monster {
         if (this.board.collides(newPos)){ // if still collides only move y and keep x steady
           newPos = [this.pos[0], nextPos[1]];
         }
-        if (this.board.collides(newPos)) {
-          return;
-        }
+        if (this.board.collides(newPos)) return;
 
       }
       this.pos = newPos;

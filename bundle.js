@@ -435,9 +435,6 @@ var Ray = function () {
       }
     }
   }, {
-    key: 'eatenPlayer',
-    value: function eatenPlayer() {}
-  }, {
     key: 'compareCoordToHead',
     value: function compareCoordToHead(coord) {
       return Math.abs(Math.floor(this.head[0]) - Math.floor(coord[0])) < 3 && Math.abs(Math.floor(this.head[1]) - Math.floor(coord[1])) < 3;
@@ -883,9 +880,7 @@ var Monster = function () {
             // if still collides only move y and keep x steady
             newPos = [this.pos[0], nextPos[1]];
           }
-          if (this.board.collides(newPos)) {
-            return;
-          }
+          if (this.board.collides(newPos)) return;
         }
         this.pos = newPos;
 
