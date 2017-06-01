@@ -116,7 +116,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 4;
+    this.levelCount = 1;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.monsterPositions = _levels_structure2.default[this.levelCount].monsterPositions;
@@ -718,12 +718,12 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      // context.beginPath();
-      // context.fillStyle = "red";
-      // context.fillRect(this.x, this.y, this.width, this.height);
-      // context.closePath();
-      // context.stroke();
-      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.beginPath();
+      context.fillStyle = "red";
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.closePath();
+      context.stroke();
+      // context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
