@@ -15,7 +15,7 @@ class Wall {
     context.fillStyle = "black";
     context.fillRect(this.x, this.y, this.width, this.height);
     context.closePath();
-    context.stroke();
+    context.stroke(); 
     // context.strokeRect(this.x, this.y, this.width, this.height);
   }
 }

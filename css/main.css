@@ -84,9 +84,9 @@ h1{
 }
 
 #canvas {
+    height: 100%;  
     max-width: 800px;
     max-height: 800px;
-    height: 100vh;
     background: black;
 }
 
