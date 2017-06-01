@@ -25,8 +25,11 @@ const hideSplashText = (event) => {
 const startGame = () =>{
   const body = document.getElementsByTagName('body')[0];
   const canvas = document.getElementById('canvas');
-  canvas.width = body.offsetWidth;
-  canvas.height = window.innerHeight;
+  setTimeout( ()=> {
+    canvas.width = body.offsetWidth;
+    canvas.height = body.offsetHeight;
+  },10);
+
   const ctx = canvas.getContext("2d");
   let levelCount = 1;
   const game = new Game(ctx, canvas, levelPassed, playerEaten, gameCompleted);
@@ -54,6 +57,7 @@ const gameCompleted = () => {
     <button id="play-again"">Play again?</button>
     </div>
   `;
+
 
   gameText.innerHTML = htmlToDisplay;
   document.getElementById("play-again").addEventListener("click", restartGame);

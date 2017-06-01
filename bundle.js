@@ -729,12 +729,12 @@ var Wall = function () {
   _createClass(Wall, [{
     key: "draw",
     value: function draw(context) {
-      context.beginPath();
-      context.fillStyle = "black";
-      context.fillRect(this.x, this.y, this.width, this.height);
-      context.closePath();
-      context.stroke();
-      // context.strokeRect(this.x, this.y, this.width, this.height);
+      // context.beginPath();
+      // context.fillStyle = "black";
+      // context.fillRect(this.x, this.y, this.width, this.height);
+      // context.closePath();
+      // context.stroke();
+      context.strokeRect(this.x, this.y, this.width, this.height);
     }
   }]);
 
@@ -840,8 +840,11 @@ var hideSplashText = function hideSplashText(event) {
 var startGame = function startGame() {
   var body = document.getElementsByTagName('body')[0];
   var canvas = document.getElementById('canvas');
-  canvas.width = body.offsetWidth;
-  canvas.height = window.innerHeight;
+  setTimeout(function () {
+    canvas.width = body.offsetWidth;
+    canvas.height = body.offsetHeight;
+  }, 10);
+
   var ctx = canvas.getContext("2d");
   var levelCount = 1;
   var game = new _game2.default(ctx, canvas, levelPassed, playerEaten, gameCompleted);
