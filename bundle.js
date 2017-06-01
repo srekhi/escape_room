@@ -827,7 +827,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 var hideSplashText = function hideSplashText(event) {
-  if (event && event.key && event.key.startsWith("Arrow")) event.preventDefault();
+  if (event && event.key && event.key.startsWith("Arrow")) {
+    event.preventDefault();
+  }
   var introText = document.getElementById("game-intro");
   var canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
@@ -887,7 +889,7 @@ var playerEaten = function playerEaten() {
   var gameText = hideGamePlay();
 
   gameText.innerHTML = '\n    <h3 id="consumed">You have been eaten.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
-  document.addEventListener("keydown", hideSplashText);
+  setTimeout(document.addEventListener("keypress", hideSplashText), 1000);
 };
 
 /***/ }),

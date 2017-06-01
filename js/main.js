@@ -12,7 +12,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 const hideSplashText = (event) => {
-  if (event && event.key && event.key.startsWith("Arrow")) event.preventDefault();
+  if (event && event.key && event.key.startsWith("Arrow")) {
+    event.preventDefault();
+  }
   let introText = document.getElementById("game-intro");
   let canvas = document.getElementById("canvas");
   introText.classList.add("hidden");
@@ -80,6 +82,8 @@ const levelPassed = (levelNum) => {
   }
 };
 
+
+
 const playerEaten = () => {
   let gameText = hideGamePlay();
 
@@ -88,5 +92,5 @@ const playerEaten = () => {
         An untimely death for so promising of a player.
         If you think you can handle it, press any key to try again.
     </h3>`;
-    document.addEventListener("keydown", hideSplashText);
+    setTimeout(document.addEventListener("keypress", hideSplashText), 1000);
 };
