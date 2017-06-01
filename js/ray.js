@@ -1,7 +1,6 @@
 import Game from './game';
 class Ray {
   constructor(context, lifespan, startPos, xDir, yDir, board, fromMonster){
-    console.log('constructed');
     this.c = context;
     this.fromMonster = fromMonster;
     this.lifespan = lifespan;

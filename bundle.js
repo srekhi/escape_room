@@ -116,7 +116,7 @@ var Game = function () {
     _classCallCheck(this, Game);
 
     this.context = context;
-    this.levelCount = 1;
+    this.levelCount = 4;
     this.levelPassed = levelPassed;
     this.gameCompleted = gameCompleted;
     this.canvas = canvas;
@@ -544,7 +544,6 @@ var Ray = function () {
   function Ray(context, lifespan, startPos, xDir, yDir, board, fromMonster) {
     _classCallCheck(this, Ray);
 
-    console.log('constructed');
     this.c = context;
     this.fromMonster = fromMonster;
     this.lifespan = lifespan;
