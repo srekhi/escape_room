@@ -28,12 +28,11 @@ const startGame = () =>{
   setTimeout( ()=> {
     canvas.width = body.offsetWidth;
     canvas.height = body.offsetHeight;
-  },10);
-
-  const ctx = canvas.getContext("2d");
-  let levelCount = 1;
-  const game = new Game(ctx, canvas, levelPassed, playerEaten, gameCompleted);
-  document.addEventListener("keydown", hideSplashText);
+    const ctx = canvas.getContext("2d");
+    let levelCount = 1;
+    const game = new Game(ctx, canvas, levelPassed, playerEaten, gameCompleted);
+    document.addEventListener("keydown", hideSplashText);
+  }, 10);
 };
 
 const gameTransitions = {
