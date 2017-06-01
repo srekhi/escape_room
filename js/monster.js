@@ -64,7 +64,7 @@ class Monster {
           newPos = [this.pos[0], nextPos[1]];
         }
         if (this.board.collides(newPos)) {
-          //still collides in both axes.
+          return;
         }
 
       }

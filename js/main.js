@@ -39,7 +39,7 @@ const startGame = () =>{
 const gameTransitions = {
   1: "Looks like you passed level 1. But the first level is always the easiest. Let's see how you do on the next one...",
   2: "Well, well, well. You're better than I thought. But can you handle level 3?",
-  3: "You've earned my respect, young padawan. But no man has beaten the final level.",
+  3: "You've earned my respect, young padawan. But no mortal has beaten the final level.",
 };
 
 const gameCompleted = () => {
