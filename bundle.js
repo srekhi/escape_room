@@ -755,7 +755,7 @@ var LEVELS = {
     // [0.2, 0.3, 0.5, 0.25],
     [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
     pointStartPos: [.1, .27],
-    monsterPositions: [[0.72, 0.24], [0.61, 0.6], [0.5, 0.27]]
+    monsterPositions: [[0.72, 0.24], [0.61, 0.6], [0.8, 0.2]]
   },
   2: {
     walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
@@ -1023,7 +1023,7 @@ var levelPassed = function levelPassed(levelNum) {
 var playerEaten = function playerEaten() {
   var gameText = hideGamePlay();
 
-  gameText.innerHTML = '\n    <h3 id="consumed">You have been eaten.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
+  gameText.innerHTML = '\n    <h3 id="consumed">The monsters have entrapped you.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
   setTimeout(document.addEventListener("keypress", hideSplashText), 1000);
 };
 
