@@ -5,9 +5,11 @@
 Browser-based echolocation game built with HTML/CSS & Javascript.
 
 ## Story
-User is trapped in a dark room and must use echolocation to escape. Hitting the space bar allows the user to generate sound waves which bounce off of nearby obstacles and guide the user to the exit.
+The user is trapped in a dark room and must use echolocation to escape. Hitting the space bar allows the user to generate sound waves which bounce off of nearby obstacles and guide the user to the exit.
 
 There's just one catch. Monsters are sleeping all across the map. If the user makes too much sound, the monster will wake up..hungry.
+
+
 
 ## Implementation
 ### Overview 
@@ -45,7 +47,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
     const body = document.getElementsByTagName('body')[0];
     const canvas = document.getElementById('canvas');
     canvas.width = body.offsetWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = body.offsetHeight;
     const ctx = canvas.getContext("2d");
     let levelCount = 1;
     const game = new Game(ctx, canvas, levelPassed, playerEaten);
@@ -54,47 +56,50 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
  ```
  ```css
   /* main.css */
-   body {
-      height: 100vh;
-      max-height: 800px;
+    body {
+      height: 95vh;
       max-width: 800px;
       margin: 0 auto;
     }
  ```
   Additionally, all levels are constructed in scalar values and rendered by multiplying with the canvas width and height attributes.
-  **make this LEVELS export its own file and add comment in-line to code snippet**
   ```javascript
+    //levels_structure.js 
     const LEVELS = {
-    1: {
-      walls:
-      [
-          [0, 0, 0.55, 0.25],
-          [0, 0.3, 0.7, 0.25],
-          [0.25, 0, 0.4, 0.25],
-          [0, 0, 0.02, 1],
-          [0.8, 0, 0.01, 1]
-      ],
-      pointStartPos: [.1, .27],
-      monsterPositions: [
-        [0.7, 0.20],
-      ]
-    },
-    2: {
-      walls: [
-        [0.0, 0.01, 1, 0.05],
-        [0.0, 0.01, 0.01, 1],
-        [0, 0.25, 0.8, 0.2],
-        [0.6, 0.6, 0.4, 0.2],
-        [0, 0.45, 0.4, 0.55],
-        [0.4, 0.9, 0.2, 0.1],
-        [0.9, 0, 0.2, 1]
+      1: {
+        walls:
+        [
+            [0, 0, 0.55, 0.25],
+            [0, 0.3, 0.7, 0.25],
+            // [0.2, 0.3, 0.5, 0.25],
+            [0.25, 0, 0.4, 0.25],
+            [0, 0, 0.02, 1],
+            [0.8, 0, 0.01, 1]
+        ],
+        pointStartPos: [.1, .27],
+        monsterPositions: [
+          [0.61, 0.6],
+          [0.9, 0.27]
+        ]
+      },
+      2: {
+        walls: [
+          [0.0, 0.01, 1, 0.05],
+          [0.0, 0.01, 0.01, 1],
+          [0, 0.25, 0.8, 0.2],
+          [0.6, 0.6, 0.4, 0.2],
+          [0, 0.45, 0.4, 0.55],
+          [0.4, 0.9, 0.2, 0.1],
+          [0.9, 0, 0.2, 1]
 
-      ],
-      pointStartPos: [0.1, 0.1],
-      monsterPositions: [
-        [0.5, 0.5],
-      ]
-    }, ...
+        ],
+        pointStartPos: [0.1, 0.1],
+        monsterPositions: [
+          [0.55, 0.55],
+          [0.2, 0.1],
+          [0.8, 0.92]
+        ]
+      }, ...
   ```
   
   ```javascript
@@ -111,7 +116,9 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
           });
    ```
    #### Sound 
-   When a user hits the space bar, their point emits sound rays **add video here** Each sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
+   When a user hits the space bar, their point emits sound rays **add video here** 
+   
+   Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
     ```
     // ray.js 
       const root3over2 = Math.sqrt(3)/2;
@@ -140,31 +147,20 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
     #### Reflections
     If a sound ray's next position is going to result in a collision with one of the many walls on the level, they're reversed depending on three categories: whether the X, Y, or Z coordinates resulted in a collision:
     ```javascript 
-    let newXDir = this.xDir;
-    let newYDir = this.yDir;
-
-    const newHeadX = this.head[0] + (this.xDir);
-    const newXPoint = [newHeadX, this.head[1]];
-
-    const newHeadY = this.head[1] + (this.yDir);
-    const newYPoint = [this.head[0], newHeadY];
-    
-    let xCollision = this.board.collides(newXPoint);
-    let yCollision = this.board.collides(newYPoint);
-    if (xCollision || yCollision){
-        if (xCollision && yCollision){
-          newXDir = -1 * this.xDir;
-          newYDir = -1 * this.yDir;
-        }else if (xCollision){
-          newXDir = -1 * this.xDir;
-        }else if (yCollision){
-          newYDir = -1 * this.yDir;
-        }
-      const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-      return true;
-    }else{
-      return false;
-    }
+      if (xCollision || yCollision || zCollision){
+          if (xCollision){
+            newXDir = -1 * this.xDir;
+          }else if (yCollision){
+            newYDir = -1 * this.yDir;
+          }else {
+            newXDir = -1 * this.xDir;
+            newYDir = -1 * this.yDir;
+          }
+        const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
+        this.xDir = 0;
+        this.yDir = 0;
+        return true;
+      }
     ```
     Each ray has a max length & a body property. The body array contains each position along the ray's axis. To grow the ray, new positions are pushed onto the body array. Similarly, when a ray must be faded out, the first positions in the array are shifted off:
     ```
@@ -175,7 +171,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
       }
     ```
 
-  To provide accurate visuals, HTML Canvas's createLinearGradient()  method was used. 
+  To provide the ray's fading out visualization, HTML Canvas's createLinearGradient()  method was used. 
     ```javascript
         //ray.js 
 
@@ -199,3 +195,23 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
         }
       }
       ```
+      ### Monster AI
+      Monster's are awakened if a user sound wave overlaps with their locations. Upon awakening, they generate deadly waves to capture the player. The monster moves toward the user based upon the unit vector delta between their respective positions: 
+      ```javascript
+      //monster.js
+      
+      move(){
+        let delta;
+          if (this.awake){
+           delta = [
+             Math.ceil((this.board.point.pos[0] - this.pos[0])),
+              Math.ceil((this.board.point.pos[1] - this.pos[1]))
+            ];
+            let deltaMagnitude = Math.sqrt(Math.pow(delta[0], 2) + Math.pow(delta[1], 2));
+
+            let unitVector = delta.map(dir => dir/deltaMagnitude);
+            let nextPos = this.pos.map((posDir, index) => posDir + unitVector[index]);
+        }
+     ```
+     
+     
