@@ -111,7 +111,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
   #### Sound
   When a user hits the space bar, their point emits sound rays.
     <p align="center">
-    <img src="https://github.com/srekhi/escape_room/blob/master/docs/make-sound.gif" alt="Make sound"/>
+    <img src="https://github.com/srekhi/escape_room/blob/master/docs/generate-sound.gif" alt="Make sound"/>
   </p>
 
   
