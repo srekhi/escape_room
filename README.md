@@ -1,14 +1,12 @@
 # Escape Room
 [Live website](https://srekhi.github.io/escape_room/)
 
-Browser-based echolocation game built with HTML/CSS & Javascript.
+Escape Room is a browser-based echolocation game built with HTML/CSS & Javascript.
 
 ## Story
 The user is trapped in a dark room and must use echolocation to escape. Hitting the space bar allows the user to generate sound waves which bounce off of nearby obstacles and guide the user to the exit.
 
 There's just one catch. Monsters are sleeping all across the map. If the user makes too much sound, the monster will wake up..hungry.
-
-
 
 ## Implementation
 ### Overview
@@ -111,7 +109,9 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
         });
    ```
   #### Sound
-  When a user hits the space bar, their point emits sound rays (add video here). Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
+  When a user hits the space bar, their point emits sound rays.
+  ![Sound waves](/docs/generate_sound1.gif)
+  Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
 
   ```javascript
       // ray.js
@@ -195,6 +195,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
   ```
   ### Monster AI
   Monster's are awakened if a user sound wave overlaps with their locations. Upon awakening, they generate deadly waves to capture the player. The monster moves toward the user based upon the unit vector delta between their respective positions:
+    ![Monster awaken](/docs/monster_awaken.gif)
 
   ```javascript
     //monster.js
