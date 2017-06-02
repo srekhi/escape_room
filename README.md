@@ -103,22 +103,21 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
   ```
   
   ```javascript
-   //board.js
-     this.wallDimensions = scalarWallDimensions
-          .map(row => {
-            return row.map((dim, index) => {
-              if (index % 2 === 0) {
-                return dim * canvas.width;
-              } else {
-                return dim * canvas.height;
-              }
+     //board.js
+       this.wallDimensions = scalarWallDimensions
+            .map(row => {
+              return row.map((dim, index) => {
+                if (index % 2 === 0) {
+                  return dim * canvas.width;
+                } else {
+                  return dim * canvas.height;
+                }
+              });
             });
-          });
-   ```
-   #### Sound 
-   When a user hits the space bar, their point emits sound rays **add video here** 
-   Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations.
-     ```javascript 
+     ```
+  #### Sound 
+  When a user hits the space bar, their point emits sound rays (add video here). Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
+    ```javascript 
       // ray.js 
         const root3over2 = Math.sqrt(3)/2;
         const root2over2 = Math.sqrt(2)/2;
@@ -142,12 +141,12 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
         [-0.5, root3over2],
       ];
     ```
+  Escape room rays, like real-life sound rays, have two things in common: both reflect off of obstacles, and both fade away.
     
-    Escape room rays, like real-life sound rays, have two things in common: both reflect off of obstacles, and both fade away.
-    
-    #### Reflections
-    If a sound ray's next position is going to result in a collision with one of the many walls on the level, they're reversed depending on three categories: whether the X, Y, or Z coordinates resulted in a collision:
+  #### Reflections
+  If a sound ray's next position is going to result in a collision with one of the many walls on the level, they're reversed depending on three categories: whether the X, Y, or Z coordinates resulted in a collision:
     ```javascript 
+      //ray.js
       if (xCollision || yCollision || zCollision){
           if (xCollision){
             newXDir = -1 * this.xDir;
@@ -163,14 +162,14 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
         return true;
       }
     ```
-    Each ray has a max length & a body property. The body array contains each position along the ray's axis. To grow the ray, new positions are pushed onto the body array. Similarly, when a ray must be faded out, the first positions in the array are shifted off:
+  Each ray has a max length & a body property. The body array contains each position along the ray's axis. To grow the ray, new positions are pushed onto the body array. Similarly, when a ray must be faded out, the first positions in the array are shifted off:
     ```javascript
-    ///ray.js
-      fadeOut(){
-        this.body.shift();
-        this.tail = this.body[0];
-      }
-    ```
+       //ray.js
+        fadeOut(){
+          this.body.shift();
+          this.tail = this.body[0];
+        }
+      ```
 
   To provide the ray's fading out visualization, HTML Canvas's createLinearGradient()  method was used. 
     ```javascript
@@ -196,9 +195,9 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
         }
       }
       ```
-      ### Monster AI
-      Monster's are awakened if a user sound wave overlaps with their locations. Upon awakening, they generate deadly waves to capture the player. The monster moves toward the user based upon the unit vector delta between their respective positions: 
-      ```javascript
+  ### Monster AI
+  Monster's are awakened if a user sound wave overlaps with their locations. Upon awakening, they generate deadly waves to capture the player. The monster moves toward the user based upon the unit vector delta between their respective positions: 
+     ```javascript
       //monster.js
       
       move(){
@@ -214,5 +213,9 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
             let nextPos = this.pos.map((posDir, index) => posDir + unitVector[index]);
         }
      ```
-     
-     
+### Future Directions
+  #### Collision-Check Efficiency
+    Collision detection is an expensive operation. If there are just 100 objects that need to be checked for collisions, this results in 10,000 operations. A potential improvement on this front is the use of a quadtreee algorithm (https://en.wikipedia.org/wiki/Quadtree) to pare down unnecessary collision checks.
+    
+  #### Monster AI 
+    A real-life monster (not referring to the way I look in the morning) would traverse the obstacles in a more intelligent way. Currently, the monsters grab the differential between the player's position and their own, and move in the direction of the corresponding unit vector. A better approach would be to use a shortest-path finding algorithm, such as A\* search algorithm. Given that the entire HTML Canvas is displayed on a grid, this would be a feasible approach.
