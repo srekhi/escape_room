@@ -34,11 +34,7 @@ class Game {
   createEventListeners(){
     const self = this;
     window.addEventListener("keydown", event => {
-        let key;
-        key = event.keyIdentifier;
-        console.log(event);
-        console.log(event.keyIdentifier);
-        console.log(key, event.keyIdentifier);
+        let key = event.key || event.keyIdentifier;
         if (key.startsWith("Arrow") || key.startsWith("Right")
         || key.startsWith("Down") || key.startsWith("Left") ||
         key.startsWith("Up")) event.preventDefault();
@@ -47,15 +43,15 @@ class Game {
     });
 
     window.addEventListener("keydown", event => {
-      event.key = event.key || event.keyIdentifier;
-      if (event.key === " " || event.key === "U+0020") {
+      let key = event.key || event.keyIdentifier;
+      if (key === " " || key === "U+0020") {
           event.preventDefault();
           this.point.makeSound(this.board);
         }
     });
     window.addEventListener("keyup", event => {
-      event.key = event.key || event.keyIdentifier;
-      self.keyStatus[event.key] = false;
+      let key = event.key || event.keyIdentifier;
+      self.keyStatus[key] = false;
     });
   }
 

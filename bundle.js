@@ -253,26 +253,22 @@ var Game = function () {
 
       var self = this;
       window.addEventListener("keydown", function (event) {
-        var key = void 0;
-        key = event.keyIdentifier;
-        console.log(event);
-        console.log(event.keyIdentifier);
-        console.log(key, event.keyIdentifier);
+        var key = event.key || event.keyIdentifier;
         if (key.startsWith("Arrow") || key.startsWith("Right") || key.startsWith("Down") || key.startsWith("Left") || key.startsWith("Up")) event.preventDefault();
         if (key === "Meta") return;
         _this2.keyStatus[key] = true;
       });
 
       window.addEventListener("keydown", function (event) {
-        event.key = event.key || event.keyIdentifier;
-        if (event.key === " " || event.key === "U+0020") {
+        var key = event.key || event.keyIdentifier;
+        if (key === " " || key === "U+0020") {
           event.preventDefault();
           _this2.point.makeSound(_this2.board);
         }
       });
       window.addEventListener("keyup", function (event) {
-        event.key = event.key || event.keyIdentifier;
-        self.keyStatus[event.key] = false;
+        var key = event.key || event.keyIdentifier;
+        self.keyStatus[key] = false;
       });
     }
   }, {
