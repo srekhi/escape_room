@@ -11,14 +11,8 @@ const LEVELS = {
     ],
     pointStartPos: [.1, .27],
     monsterPositions: [
-      // [0.72, 0.22],
       [0.61, 0.6],
-<<<<<<< HEAD
-      [0.8, 0.2]
-=======
       [0.9, 0.27]
->>>>>>> gh-pages
-
     ]
   },
   2: {
@@ -35,7 +29,7 @@ const LEVELS = {
     pointStartPos: [0.1, 0.1],
     monsterPositions: [
       [0.55, 0.55],
-      [0.2, 0.1],
+      [0.4, 0.1],
       [0.8, 0.92]
     ]
   },
@@ -79,7 +73,6 @@ const LEVELS = {
       [0, 0.98, 0.8, 0.5]
     ],
     pointStartPos: [0.8, 0.05],
-    // pointStartPos: [0.50, 0.9],
     monsterPositions: [
       [0.8, 0.4],
       [0.8, 0.1],

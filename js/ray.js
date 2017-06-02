@@ -112,8 +112,7 @@ class Ray {
           newXDir = -1 * this.xDir;
           newYDir = -1 * this.yDir;
         }
-        const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-
+      const reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
       this.xDir = 0;
       this.yDir = 0;
       return true;

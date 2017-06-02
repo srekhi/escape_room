@@ -520,7 +520,6 @@ var Ray = function () {
           newYDir = -1 * this.yDir;
         }
         var reflection = new Ray(this.c, this.lifespan - 1, this.head, newXDir, newYDir, this.board, this.fromMonster);
-
         this.xDir = 0;
         this.yDir = 0;
         return true;
@@ -745,9 +744,40 @@ exports.default = Wall;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: Unexpected token (16:0)\n\n\u001b[0m \u001b[90m 14 | \u001b[39m      \u001b[90m// [0.72, 0.22],\u001b[39m\n \u001b[90m 15 | \u001b[39m      [\u001b[35m0.61\u001b[39m\u001b[33m,\u001b[39m \u001b[35m0.6\u001b[39m]\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 16 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\n \u001b[90m    | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 17 | \u001b[39m      [\u001b[35m0.8\u001b[39m\u001b[33m,\u001b[39m \u001b[35m0.2\u001b[39m]\n \u001b[90m 18 | \u001b[39m\u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\n \u001b[90m 19 | \u001b[39m      [\u001b[35m0.9\u001b[39m\u001b[33m,\u001b[39m \u001b[35m0.27\u001b[39m]\u001b[0m\n");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var LEVELS = {
+  1: {
+    walls: [[0, 0, 0.55, 0.25], [0, 0.3, 0.7, 0.25],
+    // [0.2, 0.3, 0.5, 0.25],
+    [0.25, 0, 0.4, 0.25], [0, 0, 0.02, 1], [0.8, 0, 0.01, 1]],
+    pointStartPos: [.1, .27],
+    monsterPositions: [[0.61, 0.6], [0.9, 0.27]]
+  },
+  2: {
+    walls: [[0.0, 0.01, 1, 0.05], [0.0, 0.01, 0.01, 1], [0, 0.25, 0.8, 0.2], [0.6, 0.6, 0.4, 0.2], [0, 0.45, 0.4, 0.55], [0.4, 0.9, 0.2, 0.1], [0.9, 0, 0.2, 1]],
+    pointStartPos: [0.1, 0.1],
+    monsterPositions: [[0.55, 0.55], [0.4, 0.1], [0.8, 0.92]]
+  },
+  3: {
+    walls: [[0, 0.1, 0.55, 0.1], [0, 0.01, 1, 0.01], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.8, 0.5], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.2, 0.35], [0, 0.98, 0.8, 0.01]],
+    pointStartPos: [0.05, 0.05],
+    monsterPositions: [[0.6, 0.28], [0.5, 0.90], [0.1, 0.90]]
+  },
+  4: {
+    walls: [[0.1, 0.02, 1, 0.02], [0, 0, 0.2, 0.2], [0, 0.2, 0.2, 0.05], [0.3, 0.2, 0.5, 0.02], [0, 0.4, 0.2, 0.02], [0, 0.2, 0.1, 0.02], [0.1, 0.4, 0.05, 0.02], [0.2, 0.4, 0.5, 0.02], [0, 0, 0.01, 1], [0.9, 0, 0.01, 1], [0.6, 0.1, 0.4, 0.1], [0.2, 0.3, 0.2, 0.3], [0.2, 0.3, 0.2, 0.3], [0.3, 0.7, 0.1, 0.2], [0.6, 0.6, 0.4, 0.35], [0, 0.98, 0.8, 0.5]],
+    pointStartPos: [0.8, 0.05],
+    monsterPositions: [[0.8, 0.4], [0.8, 0.1], [0.55, 0.90], [0.1, 0.9], [0.05, 0.5]]
+  }
+};
+
+exports.default = LEVELS;
 
 /***/ }),
 /* 7 */
@@ -831,20 +861,15 @@ var Monster = function () {
 
       if (this.awake) {
         delta = [Math.ceil(this.board.point.pos[0] - this.pos[0]), Math.ceil(this.board.point.pos[1] - this.pos[1])];
-
-        var newYDir = this.yDir;
-
         var deltaMagnitude = Math.sqrt(Math.pow(delta[0], 2) + Math.pow(delta[1], 2));
+
         var unitVector = delta.map(function (dir) {
           return dir / deltaMagnitude;
         });
         var nextPos = this.pos.map(function (posDir, index) {
           return posDir + unitVector[index];
         });
-        var nextPosX = [nextPos[0], this.pos[1]];
-        var nextPosY = [this.pos[0], nextPos[1]];
         var newPos = nextPos;
-
         if (this.board.collides(newPos)) {
           //if it collides with the new point
           newPos = [nextPos[0], this.pos[1]]; //only move the x value, keep y steady
@@ -855,19 +880,6 @@ var Monster = function () {
           if (this.board.collides(newPos)) return;
         }
         this.pos = newPos;
-
-        //
-        // if (this.board.collides(nextPos)){
-        //   if (this.board.collides(nextPos)){
-        //     nextPos = [this.pos[0], nextPos[1]];
-        //   }
-        // }
-        //
-        //
-        // if (this.board.collides(nextPosY)) this.pos = nextPosX;
-        // if (this.board.collides(nextPosX)) this.pos = nextPosY;
-        // if (this.board.collides(nextPosX) && this.board.collides(nextPosY)) return;
-        // if (!this.board.collides(nextPos)) this.pos = nextPos;
       }
     }
   }, {
