@@ -939,6 +939,7 @@ var _monster2 = _interopRequireDefault(_monster);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var game = void 0;
 document.addEventListener("DOMContentLoaded", function () {
   startGame();
 });
@@ -952,6 +953,7 @@ var hideSplashText = function hideSplashText(event) {
   introText.classList.add("hidden");
   canvas.classList.remove("hidden");
   document.removeEventListener("keydown", hideSplashText);
+  game.redrawGame();
 };
 
 var startGame = function startGame() {
@@ -961,8 +963,7 @@ var startGame = function startGame() {
     canvas.width = body.offsetWidth;
     canvas.height = body.offsetHeight;
     var ctx = canvas.getContext("2d");
-    var levelCount = 1;
-    var game = new _game2.default(ctx, canvas, levelPassed, playerEaten, gameCompleted);
+    game = new _game2.default(ctx, canvas, levelPassed, playerEaten, gameCompleted);
     document.addEventListener("keydown", hideSplashText);
   }, 10);
 };
@@ -1005,10 +1006,13 @@ var levelPassed = function levelPassed(levelNum) {
 };
 
 var playerEaten = function playerEaten() {
+  document.removeEventListener("keydown", hideSplashText);
   var gameText = hideGamePlay();
 
-  gameText.innerHTML = '\n<<<<<<< HEAD\n    <h3 id="consumed">The monsters have entrapped you.\n=======\n    <h3 id="consumed">The monsters have caught you.\n>>>>>>> gh-pages\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
-  setTimeout(document.addEventListener("keypress", hideSplashText), 1000);
+  gameText.innerHTML = '\n    <h3 id="consumed">The monsters have caught you.\n        An untimely death for so promising of a player.\n        If you think you can handle it, press any key to try again.\n    </h3>';
+  setTimeout(function () {
+    document.addEventListener("keydown", hideSplashText);
+  }, 1000);
 };
 
 /***/ })
