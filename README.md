@@ -117,33 +117,34 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
    ```
    #### Sound 
    When a user hits the space bar, their point emits sound rays **add video here** 
-   
-   Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
-    ```
-    // ray.js 
-      const root3over2 = Math.sqrt(3)/2;
-      const root2over2 = Math.sqrt(2)/2;
+   Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations.
+     ```javascript 
+      // ray.js 
+        const root3over2 = Math.sqrt(3)/2;
+        const root2over2 = Math.sqrt(2)/2;
 
       Ray.DIRECTIONS = [
-      [0, 1],
-      [0.5, root3over2],
-      [root2over2, root2over2],
-      [root3over2, 0.5],
-      [1, 0],
-      [root3over2, -0.5],
-      [root2over2, -root2over2],
-      [0.5, -root3over2],
-      [0, -1],
-      [-0.5, -root3over2],
-      [-root2over2, -root2over2],
-      [-root3over2, -0.5],
-      [-1, 0],
-      [-root3over2, 0.5],
-      [-root2over2, root2over2],
-      [-0.5, root3over2],
-    ];
-   ```
+        [0, 1],
+        [0.5, root3over2],
+        [root2over2, root2over2],
+        [root3over2, 0.5],
+        [1, 0],
+        [root3over2, -0.5],
+        [root2over2, -root2over2],
+        [0.5, -root3over2],
+        [0, -1],
+        [-0.5, -root3over2],
+        [-root2over2, -root2over2],
+        [-root3over2, -0.5],
+        [-1, 0],
+        [-root3over2, 0.5],
+        [-root2over2, root2over2],
+        [-0.5, root3over2],
+      ];
+    ```
+    
     Escape room rays, like real-life sound rays, have two things in common: both reflect off of obstacles, and both fade away.
+    
     #### Reflections
     If a sound ray's next position is going to result in a collision with one of the many walls on the level, they're reversed depending on three categories: whether the X, Y, or Z coordinates resulted in a collision:
     ```javascript 
@@ -163,7 +164,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
       }
     ```
     Each ray has a max length & a body property. The body array contains each position along the ray's axis. To grow the ray, new positions are pushed onto the body array. Similarly, when a ray must be faded out, the first positions in the array are shifted off:
-    ```
+    ```javascript
     ///ray.js
       fadeOut(){
         this.body.shift();
