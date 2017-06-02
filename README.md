@@ -110,7 +110,11 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
    ```
   #### Sound
   When a user hits the space bar, their point emits sound rays.
-  ![Sound waves](/docs/make-sound.gif)
+    <p align="center">
+    <img src="https://github.com/srekhi/escape_room/blob/master/docs/make-sound.gif" alt="Make sound"/>
+  </p>
+
+  
   Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
 
   ```javascript
@@ -195,7 +199,10 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
   ```
   ### Monster AI
   Monster's are awakened if a user sound wave overlaps with their locations. Upon awakening, they generate deadly waves to capture the player. The monster moves toward the user based upon the unit vector delta between their respective positions:
-    ![Monster awaken](/docs/monster_awaken.gif)
+  
+  <p align="center">
+    <img src="https://github.com/srekhi/escape_room/blob/master/docs/monster_awaken.gif" alt="Monster awkane"/>
+  </p>
 
   ```javascript
     //monster.js
