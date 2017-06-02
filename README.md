@@ -110,7 +110,7 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
    ```
   #### Sound
   When a user hits the space bar, their point emits sound rays.
-  ![Sound waves](/docs/generate_sound1.gif)
+  ![Sound waves](/docs/make-sound.gif)
   Sound ray logic is encompassed by the Ray class. The circular emission pattern was based off of unit circle calculations:
 
   ```javascript
