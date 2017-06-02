@@ -7,6 +7,7 @@ import Game from './game';
 import Board from './board';
 import Monster from './monster';
 
+let game;
 document.addEventListener("DOMContentLoaded", ()=>{
   startGame();
 });
@@ -20,6 +21,7 @@ const hideSplashText = (event) => {
   introText.classList.add("hidden");
   canvas.classList.remove("hidden");
   document.removeEventListener("keydown", hideSplashText);
+  game.redrawGame();
 };
 
 const startGame = () =>{
@@ -29,8 +31,7 @@ const startGame = () =>{
     canvas.width = body.offsetWidth;
     canvas.height = body.offsetHeight;
     const ctx = canvas.getContext("2d");
-    let levelCount = 1;
-    const game = new Game(ctx, canvas, levelPassed, playerEaten, gameCompleted);
+    game = new Game(ctx, canvas, levelPassed, playerEaten, gameCompleted);
     document.addEventListener("keydown", hideSplashText);
   }, 10);
 };
@@ -86,16 +87,15 @@ const levelPassed = (levelNum) => {
 };
 
 const playerEaten = () => {
+  document.removeEventListener("keydown", hideSplashText);
   let gameText = hideGamePlay();
 
   gameText.innerHTML = `
-<<<<<<< HEAD
-    <h3 id="consumed">The monsters have entrapped you.
-=======
     <h3 id="consumed">The monsters have caught you.
->>>>>>> gh-pages
         An untimely death for so promising of a player.
         If you think you can handle it, press any key to try again.
     </h3>`;
-    setTimeout(document.addEventListener("keypress", hideSplashText), 1000);
+    setTimeout( ()=> {
+      document.addEventListener("keydown", hideSplashText);
+    }, 1000);
 };
