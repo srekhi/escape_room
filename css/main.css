@@ -34,7 +34,7 @@ html, main {
   height: 100%;
 }
 #game-intro{
-  padding-top: 30%;
+  /* padding-top: 30%; */
   /* padding-top: 30%; */
   text-align: center;
   /* vertical-align: text-bottom; */
@@ -74,6 +74,7 @@ h1{
   color: white;
 }
 #game-container {
+  display: flex;
   width: 100%;
   font-size: 28px;
   height: 100%;
@@ -83,6 +84,11 @@ h1{
   color: white;
   padding: 0 35px;
   /* text-align: center; */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-items: center;
+  justify-content: center;
 }
 
 .hidden {
@@ -106,6 +112,7 @@ body {
 #consumed {
   margin: 0 30px;
   vertical-align: center;
+  margin-bottom: 15%;
 }
 
 #game-complete{
@@ -126,4 +133,8 @@ body {
   background: none;
   border: 1px solid white;
   font-size: 18px;
+}
+
+.game-transition{
+  margin-bottom: 15%;
 }

@@ -77,11 +77,11 @@ const hideGamePlay = () => {
 
 const levelPassed = (levelNum) => {
   let gameText = hideGamePlay();
-  gameText.innerHTML = `<h3>${gameTransitions[levelNum]}</h3>`;
+  gameText.innerHTML = `<h3 class='game-transition'>${gameTransitions[levelNum]}</h3>`;
   if (levelNum === 4){
     startGame();
   } else{
-    setTimeout(hideSplashText, 3000);
+    setTimeout(hideSplashText, 4000);
   }
 };
 
