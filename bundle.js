@@ -253,18 +253,25 @@ var Game = function () {
 
       var self = this;
       window.addEventListener("keydown", function (event) {
-        if (event.key.startsWith("Arrow")) event.preventDefault();
-        if (event.key === "Meta") return;
-        _this2.keyStatus[event.key] = true;
+        var key = void 0;
+        key = event.keyIdentifier;
+        console.log(event);
+        console.log(event.keyIdentifier);
+        console.log(key, event.keyIdentifier);
+        if (key.startsWith("Arrow") || key.startsWith("Right") || key.startsWith("Down") || key.startsWith("Left") || key.startsWith("Up")) event.preventDefault();
+        if (key === "Meta") return;
+        _this2.keyStatus[key] = true;
       });
 
       window.addEventListener("keydown", function (event) {
-        if (event.key === " ") {
+        event.key = event.key || event.keyIdentifier;
+        if (event.key === " " || event.key === "U+0020") {
           event.preventDefault();
           _this2.point.makeSound(_this2.board);
         }
       });
       window.addEventListener("keyup", function (event) {
+        event.key = event.key || event.keyIdentifier;
         self.keyStatus[event.key] = false;
       });
     }
@@ -334,21 +341,21 @@ var Game = function () {
   }, {
     key: 'assignDirection',
     value: function assignDirection() {
-      if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowLeft"]) {
+      if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowLeft"] || this.keyStatus["Up"] && this.keyStatus["Left"]) {
         return "NW";
-      } else if (this.keyStatus["ArrowLeft"] && this.keyStatus["ArrowDown"]) {
+      } else if (this.keyStatus["ArrowLeft"] && this.keyStatus["ArrowDown"] || this.keyStatus["Down"] && this.keyStatus["Left"]) {
         return "SW";
-      } else if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowRight"]) {
+      } else if (this.keyStatus["ArrowUp"] && this.keyStatus["ArrowRight"] || this.keyStatus["Up"] && this.keyStatus["Right"]) {
         return "NE";
-      } else if (this.keyStatus["ArrowRight"] && this.keyStatus["ArrowDown"]) {
+      } else if (this.keyStatus["ArrowRight"] && this.keyStatus["ArrowDown"] || this.keyStatus["Right"] && this.keyStatus["Down"]) {
         return "SE";
-      } else if (this.keyStatus["ArrowLeft"]) {
+      } else if (this.keyStatus["ArrowLeft"] || this.keyStatus["Left"]) {
         return "W";
-      } else if (this.keyStatus["ArrowRight"]) {
+      } else if (this.keyStatus["ArrowRight"] || this.keyStatus["Right"]) {
         return "E";
-      } else if (this.keyStatus["ArrowUp"]) {
+      } else if (this.keyStatus["ArrowUp"] || this.keyStatus["Up"]) {
         return "N";
-      } else if (this.keyStatus["ArrowDown"]) {
+      } else if (this.keyStatus["ArrowDown"] || this.keyStatus["Down"]) {
         return "S";
       } else {
         return "";

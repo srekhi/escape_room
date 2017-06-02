@@ -85,8 +85,6 @@ const levelPassed = (levelNum) => {
   }
 };
 
-
-
 const playerEaten = () => {
   let gameText = hideGamePlay();
 
