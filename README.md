@@ -218,9 +218,9 @@ There's just one catch. Monsters are sleeping all across the map. If the user ma
           let nextPos = this.pos.map((posDir, index) => posDir + unitVector[index]);
       }
   ```
-### Future Directions
-#### Collision-Check Efficiency
+## Future Directions
+### Collision-Check Efficiency
   Collision detection is an expensive operation. If there are just 100 objects that need to be checked for collisions, this results in 10,000 operations. A potential improvement on this front is the use of a [quadtreee algorithm](https://en.wikipedia.org/wiki/Quadtree) to pare down unnecessary collision checks.
 
-#### Monster AI
+### Monster AI
   A real-life monster (not referring to the way I look in the morning) would traverse the obstacles in a more intelligent way. Currently, the monsters grab the differential between the player's position and their own, and move in the direction of the corresponding unit vector. A better approach would be to use a shortest-path finding algorithm, such as A\* search algorithm. Given that the entire HTML Canvas is displayed on a grid, this would be a feasible approach.
