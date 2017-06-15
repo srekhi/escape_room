@@ -11,7 +11,9 @@ h3, h4, h5, h6 {
 }
 
 h1:first-of-type{
-  color: #ccc;
+  /*color: #ccc;*/
+  color: #2f4f4f;
+
 }
 
 html, main {
@@ -33,6 +35,8 @@ header {
       -ms-flex-pack: justify;
           justify-content: space-between;
   width: 109%;
+  padding-top: 2px
+  padding-bottom: 2px
 }
 
 header > nav {
