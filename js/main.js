@@ -28,8 +28,9 @@ const startGame = () =>{
   const body = document.getElementsByTagName('body')[0];
   const canvas = document.getElementById('canvas');
   setTimeout( ()=> {
-    // canvas.width = body.offsetWidth;
-    // canvas.height = body.offsetHeight;
+    const cs = getComputedStyle(canvas);
+    canvas.width = parseInt(cs.getPropertyValue('width'), 10);
+    canvas.height = parseInt(cs.getPropertyValue('height'), 10);
     const ctx = canvas.getContext("2d");
     game = new Game(ctx, canvas, levelPassed, playerEaten, gameCompleted);
     document.addEventListener("keydown", hideSplashText);
